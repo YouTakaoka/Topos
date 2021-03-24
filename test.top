@@ -18,3 +18,7 @@ let foo = Function x -> x * x
 print ( foo 4 )
 let bar = Function x y -> ( x + y ) / 2
 print ( bar 3 5 )
+print ( foo ( foo 4 ) )
+let f = Function g x -> g ( g x )
+print ( f foo 4 )
+print "Hello, world!"

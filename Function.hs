@@ -4,22 +4,40 @@ import Debug.Trace
 
 type Fun = (Exp, Exp) -- 仮引数文字列のリストと式
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func a) (Func b) = a == b
     (==) (Bnd a) (Bnd b) = a == b
+    (==) (Tobe a) (Tobe b) = a == b
+    (==) (Num a) (Num b) = a == b
+    (==) (Bool a) (Bool b) = a == b
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
     show (Func f) = show f
     show (Bnd (w, ex)) = show (show w, map show ex)
     show (Print p) = p
+    show (Tobe s) = s
+    show (Num n) = show n
+    show (Bool b) = show b
+    show Null = ""
 
 type Exp = [Wrd]
 
-_toExp :: [String] -> Exp
-_toExp ss = map (\ s -> Str s) ss
+_toExp0 :: String -> Exp
+_toExp0 str = map (\ w -> Tobe w) $ words str
+
+_toExp :: Char -> String -> Bool -> Exp -> Exp
+_toExp q str inq expr =  -- inq: 引用符の中にいるかどうかのフラグ．初期状態でfalse
+    case divListBy q str of
+        Nothing -> expr ++ (_toExp0 str)
+        Just (_, str1, str2)
+            | inq -> _toExp q str2 (not inq) $ expr ++ [Str str1]
+            | otherwise -> _toExp q str2 (not inq) $ expr ++ (_toExp0 str1)
+
+toExp :: String -> Exp
+toExp str = _toExp '"' str False []
 
 _fromExp :: Exp -> [String]
 _fromExp expr = map show expr
@@ -40,12 +58,3 @@ _macroGen (ws, expr) =
     \ args -> 
         let argsl = map (\ a -> [a]) args
         in _mulSubst expr (zip ws argsl)
-
-_removeSpace :: Exp -> Exp
-_removeSpace ex = concat $ divListInto (Str " ") ex
-
-_removeEmpty :: Exp -> Exp
-_removeEmpty ex = concat $ divListInto (Str "") ex
-
-trim :: Exp -> Exp
-trim ex = _removeEmpty $ _removeSpace ex

@@ -4,7 +4,7 @@ import System.Environment (getArgs)
 
 interpret :: [String] -> [Bind] -> IO ()
 interpret (str: rest) binds =
-    case _eval binds (_toExp $ words str) of
+    case _eval binds (toExp str) of
         Left s -> do print s
         Right ((Print res: _), binds2) -> do
             print res

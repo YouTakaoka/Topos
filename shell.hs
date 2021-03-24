@@ -8,7 +8,7 @@ shell :: [Bind] -> IO ()
 shell binds = do
     prompt
     str <- getLine
-    case _eval binds $ _toExp $ words str of
+    case _eval binds $ toExp str of
         Left s -> do
             print $ "Error: " ++ s
             shell binds
