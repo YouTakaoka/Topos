@@ -5,9 +5,9 @@ import System.Environment (getArgs)
 interpret :: [String] -> [Bind] -> IO ()
 interpret (str: rest) binds =
     case _eval binds (toExp str) of
-        Left s -> do print s
+        Left s -> do putStrLn s
         Right ((Print res: _), binds2) -> do
-            print res
+            putStrLn res
             interpret rest binds2
         Right (_, binds2) -> do
             interpret rest binds2

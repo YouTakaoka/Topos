@@ -10,10 +10,10 @@ shell binds = do
     str <- getLine
     case _eval binds $ toExp str of
         Left s -> do
-            print $ "Error: " ++ s
+            putStrLn $ "Error: " ++ s
             shell binds
         Right (expr, binds2) -> do
-            print $ concat $ _fromExp expr
+            putStrLn $ concat $ _fromExp expr
             shell binds2
 
 main = do
