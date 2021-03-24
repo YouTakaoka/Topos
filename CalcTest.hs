@@ -1,0 +1,20 @@
+import Calc
+
+main = do
+    print $ eval "2 * 3" == "6.0"
+    print $ eval "2 * 3 * 4" == "24.0"
+    print $ eval "succ 4" == "5.0"
+    print $ eval "3 * succ 4" == "15.0"
+    print $ eval "4 * 3 + 2" == "14.0"
+    print $ eval "2 + 4 * 3" == "14.0"
+    print $ eval "5 / 2 - 1" == "1.5"
+    print $ eval "3 / 2 * 5" == "7.5"
+    print $ eval "1 - 2  + 3" == "2.0"
+    print $ eval "4 * ( 2 + 3 ) " == "20.0"
+    print $ eval "4 / ( ( 3 + 5 ) * 2 )" == "0.25"
+    print $ eval "( Function x -> x * x ) 3" == "9.0"
+    print $ eval "( Function x y -> ( x + y ) / 2 ) 3 5" == "4.0"
+    print $ eval "( let x = 4 ) 3 * x" == "12.0"
+    print $ eval "( let foo = Function x -> x * x ) foo 4" == "16.0"
+    print $ eval "( let x = 4 ) ( let y = 3 ) x * y" == "12.0"
+    print $ eval "( let foo = Function x y -> ( x + y ) / 2 ) foo 3 5" == "4.0"
