@@ -42,9 +42,29 @@ _sub = _binary _subBin
 _succ :: Op
 _succ _ (Num x : _) = [Num (x + 1.0)]
 
+_eq :: Op
+_eq a b = [Bool (a == b)]
+
+_gt :: Op
+_gt (Num a : _) (Num b : _) = [Bool (a > b)]
+
+_geq :: Op
+_geq (Num a : _) (Num b : _) = [Bool (a >= b)]
+
+_lt :: Op
+_lt (Num a : _) (Num b : _) = [Bool (a < b)]
+
+_leq :: Op
+_leq (Num a : _) (Num b : _) = [Bool (a <= b)]
+
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
             ("print", _print),
+            ("==", _eq),
+            (">", _gt),
+            (">=", _geq),
+            ("<", _lt),
+            ("<=", _leq),
             ("+", _add),
             ("-", _sub),
             ("*", _mul),
