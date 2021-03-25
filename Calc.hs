@@ -54,6 +54,13 @@ _eval binds (Tobe "let" : rest) =
     let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
         (Right (ex2, binds2)) = _eval binds ex
     in _eval ([(w, ex2)] ++ binds2) [Null]
+_eval binds (Tobe "if" : rest) =
+    let Just (_, cond, rest2) = divListBy (Tobe "then") rest
+        Just (_, thn, els) = divListBy (Tobe "else") rest2
+    in case _eval binds cond of
+        Left s -> Left s
+        Right ((Bool truth : _), binds2) -> if truth then _eval binds2 thn else _eval binds2 els
+        _ -> Left "Entered a non-boolean value into `if` statement."
 _eval binds ws =
     case findParenthesis ws "(" ")" of -- 括弧探し
     Found (ws1, ws2, ws3) -> -- 括弧見つかった
