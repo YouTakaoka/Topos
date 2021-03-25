@@ -53,7 +53,7 @@ _eval binds (Tobe "Function" : rest) =
 _eval binds (Tobe "let" : rest) =
     let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
         (Right (ex2, binds2)) = _eval binds ex
-    in _eval ([(w, ex2)] ++ binds2) [Null]
+    in _eval ([(w, ex2)] ++ binds2) ex2
 _eval binds (Tobe "if" : rest) =
     let Just (_, cond, rest2) = divListBy (Tobe "then") rest
         Just (_, thn, els) = divListBy (Tobe "else") rest2
