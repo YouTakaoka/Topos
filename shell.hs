@@ -8,12 +8,12 @@ shell :: [Bind] -> IO ()
 shell binds = do
     prompt
     str <- getLine
-    case _eval binds $ toExp str of
+    case _eval binds (toExp str) of
         Left s -> do
             putStrLn $ "Error: " ++ s
             shell binds
-        Right (expr, binds2) -> do
-            putStrLn $ concat $ _fromExp expr
+        Right (res, binds2) -> do
+            putStrLn $ concat $ _fromExp res
             shell binds2
 
 main = do

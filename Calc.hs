@@ -75,14 +75,15 @@ _eval binds (Tobe "Function" : rest) =
         Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
 _eval binds (Tobe "let" : rest) =
     let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
-        (Right (ex2, binds2)) = _eval binds ex
-    in _eval ([(w, ex2)] ++ binds2) ex2
+        Right (ex2, binds2) = _eval binds ex
+    in Right (ex2, [(w, ex2)] ++ binds2)
 _eval binds (Tobe "if" : rest) =
     let Just (_, cond, rest2) = divListBy (Tobe "then") rest
         Just (_, thn, els) = divListBy (Tobe "else") rest2
     in case _eval binds cond of
         Left s -> Left s
-        Right ((Bool truth : _), binds2) -> if truth then _eval binds2 thn else _eval binds2 els
+        Right ((Bool truth : _), binds2) ->
+            if truth then _eval binds2 thn else _eval binds2 els
         _ -> Left "Entered a non-boolean value into `if` statement."
 _eval binds ws =
     case findParenthesis ws "(" ")" of -- 括弧探し
@@ -95,7 +96,7 @@ _eval binds ws =
         case ws of -- 最初が関数かどうかを見る
         (Func fun : expr) ->
             let res = concat $ map _evalWrd expr
-            in _eval binds $ (_macroGen fun) $ trace ("res: " ++ show res) res
+            in _eval binds $ (_macroGen fun) res
         _ ->
             case _iterOps _opls ws of -- オペレータ探し
             Nothing -> -- オペレーターが見つからなかった
