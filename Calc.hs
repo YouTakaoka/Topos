@@ -2,6 +2,7 @@ module Calc where
 import Parser
 import Ops
 import Function
+import Text.Read
 import Debug.Trace
 
 data Parenthesis = Found (Exp, Exp, Exp) | NotFound | Error String
@@ -45,7 +46,29 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
+myReadNum :: Either String Wrd -> Either String Wrd
+myReadNum (Right u) = Right u
+myReadNum (Left s) =
+    case readMaybe s :: Maybe Double of
+        Nothing -> Left s
+        Just u -> Right (Num u)
+
+myReadBool :: Either String Wrd -> Either String Wrd
+myReadBool (Right w) = Right w
+myReadBool (Left s) =
+    case readMaybe s :: Maybe Bool of
+        Nothing -> Left s
+        Just w -> Right (Bool w)
+
+_evalWrd :: Wrd -> Exp
+_evalWrd (Tobe s) =
+    case myReadBool $ myReadNum (Left s) of
+        Left s -> [Print "Failed to parse."]
+        Right w -> [w]
+_evalWrd w = [w]
+
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第二引数は空リスト
+_eval binds (Tobe "#" : _) = Right ([], binds)
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
         Just (_, ex1, ex2) -> Right ([(Func (ex1, ex2))], binds)
@@ -70,7 +93,9 @@ _eval binds ws =
     Error s -> Left s
     NotFound -> -- 括弧見つからなかった
         case ws of -- 最初が関数かどうかを見る
-        (Func fun : expr) -> _eval binds $ (_macroGen fun) expr
+        (Func fun : expr) ->
+            let res = concat $ map _evalWrd expr
+            in _eval binds $ (_macroGen fun) $ trace ("res: " ++ show res) res
         _ ->
             case _iterOps _opls ws of -- オペレータ探し
             Nothing -> -- オペレーターが見つからなかった
@@ -78,13 +103,9 @@ _eval binds ws =
                 then _eval binds $ _mulSubst ws binds 
                 else case ws of -- 最終的にここに行き着く！！
                     [] -> Right ([], binds)
-                    (w: []) ->
-                        case w of
-                        (Tobe "True") -> Right ([(Bool True)], binds)
-                        (Tobe "False") -> Right ([(Bool False)], binds)
-                        (Tobe n) -> Right ([(Num (read n :: Double))], binds)
-                        _ -> Right ([w], binds)
-                    _ -> Left ("Parse failed: " ++ show ws)
+                    (w: []) -> Right (_evalWrd w, binds)
+                    --_ -> Left ("Parse failed: " ++ show ws)
+                    _ -> Right (ws, binds)
             Just ((op, f), (ws1, ws2)) -> -- オペレータが見つかった
                 case (_eval binds ws1, _eval binds ws2) of
                 (Right (res1, _), Right (res2, _)) -> Right ((f res1 res2), binds)
