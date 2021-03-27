@@ -43,7 +43,7 @@ _sub :: Op
 _sub = _binary _subBin
 
 _succ :: Op
-_succ _ (Num x : _) = [Num (x + 1.0)]
+_succ xs (Num y : ys) = xs ++ [Num (y + 1.0)] ++ ys
 
 _eq :: Op
 _eq a b = [Bool (a == b)]
@@ -51,26 +51,44 @@ _eq a b = [Bool (a == b)]
 _neq :: Op
 _neq a b = [Bool (not (a == b))]
 
+_gtBin :: Wrd -> Wrd -> Wrd
+_gtBin (Num a) (Num b) = Bool (a > b)
+
 _gt :: Op
-_gt (Num a : _) (Num b : _) = [Bool (a > b)]
+_gt = _binary _gtBin
+
+_geqBin :: Wrd -> Wrd -> Wrd
+_geqBin (Num a) (Num b) = Bool (a >= b)
 
 _geq :: Op
-_geq (Num a : _) (Num b : _) = [Bool (a >= b)]
+_geq = _binary _geqBin
+
+_ltBin :: Wrd -> Wrd -> Wrd
+_ltBin (Num a) (Num b) = Bool (a < b)
 
 _lt :: Op
-_lt (Num a : _) (Num b : _) = [Bool (a < b)]
+_lt = _binary _ltBin
+
+_leqBin :: Wrd -> Wrd -> Wrd
+_leqBin (Num a) (Num b) = Bool (a <= b)
 
 _leq :: Op
-_leq (Num a : _) (Num b : _) = [Bool (a <= b)]
+_leq = _binary _leqBin
+
+_andBin :: Wrd -> Wrd -> Wrd
+_andBin (Bool a) (Bool b) = Bool (a && b)
 
 _and :: Op
-_and (Bool a : _) (Bool b : _) = [Bool (a && b)]
+_and = _binary _andBin
+
+_orBin :: Wrd -> Wrd -> Wrd
+_orBin (Bool a) (Bool b) = Bool (a || b)
 
 _or :: Op
-_or (Bool a : _) (Bool b : _) = [Bool (a || b)]
+_or = _binary _orBin
 
 _not :: Op
-_not _ (Bool b : _) = [Bool (not b)]
+_not xs (Bool b : ys) = xs ++ [Bool (not b)] ++ ys
 
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
