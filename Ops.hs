@@ -55,10 +55,10 @@ _head :: Op
 _head = UnOp (\ (List ls) -> head ls)
 
 _fst :: Op
-_fst = UnOp (\ (Tuple (w1, w2)) -> w1)
+_fst = UnOp (\ (Pair (w1, w2)) -> w1)
 
 _snd :: Op
-_snd = UnOp (\ (Tuple (w1, w2)) -> w2)
+_snd = UnOp (\ (Pair (w1, w2)) -> w2)
 
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [

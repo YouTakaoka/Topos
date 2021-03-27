@@ -8,7 +8,7 @@ data Op = BinOp BinaryOp | UnOp UnaryOp
 type StrOp = (String, Op)
 type Fun = (Exp, Exp) -- 仮引数文字列のリストと式
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | Op Op | List Exp | Err String | Tuple (Wrd, Wrd)
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | Op Op | List Exp | Err String | Pair (Wrd, Wrd)
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func a) (Func b) = a == b
@@ -28,7 +28,7 @@ instance Show Wrd where
     show Null = ""
     show (Err s) = s
     show (List l) = show l
-    show (Tuple t) = show t
+    show (Pair t) = show t
 
 type Exp = [Wrd]
 

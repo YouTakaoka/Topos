@@ -87,18 +87,18 @@ _toList binds expr =
             in List (w : ws)
         Right (expr2, _) -> Err ("_toList: Parse error: " ++ (show expr2))
 
-_toTuple :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
-_toTuple binds expr =
+_toPair :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
+_toPair binds expr =
     case divListBy (Tobe ",") expr of
     Nothing ->
-        Err ("_toTuple: ',' not found: " ++ (show expr))
+        Err ("_toPair: ',' not found: " ++ (show expr))
     Just (_, expr1, expr2) ->
         case (_eval binds expr1, _eval binds expr2) of
         (Left s, _) -> Err s
         (_, Left s) -> Err s
         (Right ((w1: []), _), Right ((w2: []), _)) ->
-            Tuple (w1, w2)
-        _ -> Err "_toTuple: Parse error"
+            Pair (w1, w2)
+        _ -> Err "_toPair: Parse error"
 
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
@@ -138,7 +138,7 @@ _eval binds expr =
                 NotFound ->
                     case findParenthesis ws "((" "))" of -- タプル探し
                     Found (ws1, ws2, ws3) ->
-                        _eval binds $ ws1 ++ [_toTuple binds ws2] ++ ws3
+                        _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
                     Error s -> Left s
                     NotFound ->
                         case divList isFunc ws of -- 関数探し
