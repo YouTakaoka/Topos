@@ -72,7 +72,6 @@ _evalWrd (Tobe s) =
 _evalWrd w = w
 
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
-_eval binds (Tobe "#" : _) = Right ([], binds)
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
         Just (_, ex1, ex2) -> Right ([(Func (ex1, ex2))], binds)
@@ -92,34 +91,37 @@ _eval binds (Tobe "if" : rest) =
 _eval binds expr =
     let ws = _mulSubst expr binds
     in
-        case findParenthesis ws "(" ")" of -- 括弧探し
-        Found (ws1, ws2, ws3) -> -- 括弧見つかった
-            case _eval binds ws2 of
-            Right (res, binds2) -> _eval binds2 $ ws1 ++ res ++ ws3
-            Left s -> Left s
-        Error s -> Left s
-        NotFound -> -- 括弧見つからなかった
-            case divList isFunc ws of -- 関数探し
-            Just (Func f, expr1, expr2) -> -- 関数見つかった
-                let l = length $ fst f
-                    args = take l expr2
-                    rest = drop l expr2
-                in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen f) args) ++ [Tobe ")"] ++ rest
-            Nothing ->
-                case _iterOps _opls_dec ws of -- オペレータ探し
-                Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
-                    case op of
-                    BinOp binop -> 
-                        let x = last ws1
-                            rest1 = init ws1
-                            ret = rest1 ++ [binop (_evalWrd x) (_evalWrd y)] ++ rest2
-                        in _eval binds ret
-                    UnOp unop ->
-                        let ret = ws1 ++ [unop (_evalWrd y)] ++ rest2
-                        in _eval binds ret
-                Nothing -> -- オペレーターが見つからなかった
-                    case ws of -- 最終的にここに行き着く！！
-                        [] -> Right ([], binds)
-                        (w: []) -> Right ([_evalWrd w], binds)
-                        _ -> Left ("Parse failed: " ++ show ws)
-                        -- _ -> Right (ws, binds)
+        case divListBy (Tobe "#") ws of --コメント探し
+        Just (_, expr1, expr2) ->
+            _eval binds expr1
+        Nothing ->
+            case findParenthesis ws "(" ")" of -- 括弧探し
+            Found (ws1, ws2, ws3) -> -- 括弧見つかった
+                case _eval binds ws2 of
+                Right (res, binds2) -> _eval binds2 $ ws1 ++ res ++ ws3
+                Left s -> Left s
+            Error s -> Left s
+            NotFound -> -- 括弧見つからなかった
+                case divList isFunc ws of -- 関数探し
+                Just (Func f, expr1, expr2) -> -- 関数見つかった
+                    let l = length $ fst f
+                        args = take l expr2
+                        rest = drop l expr2
+                    in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen f) args) ++ [Tobe ")"] ++ rest
+                Nothing ->
+                    case _iterOps _opls_dec ws of -- オペレータ探し
+                    Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
+                        case op of
+                        BinOp binop -> 
+                            let x = last ws1
+                                rest1 = init ws1
+                                ret = rest1 ++ [binop (_evalWrd x) (_evalWrd y)] ++ rest2
+                            in _eval binds ret
+                        UnOp unop ->
+                            let ret = ws1 ++ [unop (_evalWrd y)] ++ rest2
+                            in _eval binds ret
+                    Nothing -> -- オペレーターが見つからなかった
+                        case ws of -- 最終的にここに行き着く！！
+                            [] -> Right ([], binds)
+                            (w: []) -> Right ([_evalWrd w], binds)
+                            _ -> Left ("Parse failed: " ++ show ws)

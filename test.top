@@ -30,7 +30,7 @@ print ( g 4 + 1 == 25 )
 print ( 1 + g 4 )
 
 print ( f succ 4 )
-print ( succ ( succ 4 ) )
+print ( succ ( succ 4 ) ) # piyopiyo
 # let a = 4
 # let a = 5
 # print a
