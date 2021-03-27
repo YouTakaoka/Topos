@@ -7,7 +7,10 @@ type Op = Exp -> Exp -> Exp
 type StrOp = (String, Op)
 
 _binary :: (Wrd -> Wrd -> Wrd) -> Op
-_binary f (x:_) (y:_) = [f x y]
+_binary f xs (y : yrest) = 
+    let x = last xs
+        xrest = init xs
+    in xrest ++ [f x y] ++ yrest
 
 _double :: Wrd -> Double
 _double (Num x) = x
