@@ -6,12 +6,16 @@ interpret :: [String] -> [Bind] -> IO ()
 interpret (str: rest) binds =
     case _eval binds (toExp str) of
         Left s -> do putStrLn s
-        Right ((Print res: _), binds2) -> do
+        Right ((Print res: []), binds2) -> do
             putStrLn res
             interpret rest binds2
-        Right (_, binds2) -> do
+        Right ((_: []), binds2) -> do
             interpret rest binds2
-        _ -> return ()
+        Right ([], binds2) -> do
+            interpret rest binds2
+        Right (expr, _) -> do
+            putStrLn $ "Parse error: " ++ (show expr)
+            return ()
 interpret [] _ = return ()
 
 main = do

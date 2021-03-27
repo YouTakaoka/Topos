@@ -1,5 +1,7 @@
-print ( 2 * 3 )
+print ( 2 * 3 == 6 )
+print "fuga"
 print ( 2 * 3 * 4 )
+print "piyo"
 print ( succ 4 )
 print ( 3 * succ 4 )
 print ( 4 * 3 + 2 )
@@ -23,8 +25,9 @@ print ( foo ( foo 4 ) )
 let f = Function g z -> g ( g z )
 print ( f foo 4 )
 print "Hello, world!"
-# let g = Function x -> if x > 0 then x * ( g ( x - 1 ) ) else 1
-# print ( g 4 == 24 )
+let g = Function x -> if x > 0 then x * ( g ( x - 1 ) ) else 1
+print ( g 4 + 1 == 25 )
+
 print ( f succ 4 )
 print ( succ ( succ 4 ) )
 # let a = 4

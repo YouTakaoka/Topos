@@ -2,9 +2,13 @@ module Function where
 import Parser
 import Debug.Trace
 
+type BinaryOp = Wrd -> Wrd -> Wrd
+type UnaryOp = Wrd -> Wrd
+data Op = BinOp BinaryOp | UnOp UnaryOp
+type StrOp = (String, Op)
 type Fun = (Exp, Exp) -- 仮引数文字列のリストと式
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | Op Op
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func a) (Func b) = a == b
@@ -42,14 +46,14 @@ toExp str = _toExp '"' str False []
 _fromExp :: Exp -> [String]
 _fromExp expr = map show expr
 
-_subst :: [Wrd] -> Wrd -> Wrd -> [Wrd]
+_subst :: Exp -> Wrd -> Exp -> Exp
 _subst ws target sbst =
     case divListBy target ws of
         Nothing -> ws
-        Just (_, ws1, ws2) -> _subst (ws1 ++ [sbst] ++ ws2) target sbst
+        Just (_, ws1, ws2) -> _subst (ws1 ++ sbst ++ ws2) target sbst
 
-_mulSubst :: [Wrd] -> [Bind] -> [Wrd]
-_mulSubst ws ((target, (sbst : _)) : sbsts) =
+_mulSubst :: Exp -> [Bind] -> Exp
+_mulSubst ws ((target, sbst) : sbsts) =
     _mulSubst (_subst ws target sbst) sbsts
 _mulSubst ws [] = ws
 
