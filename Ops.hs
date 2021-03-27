@@ -45,11 +45,17 @@ _sub = _binary _subBin
 _succ :: Op
 _succ xs (Num y : ys) = xs ++ [Num (y + 1.0)] ++ ys
 
+_eqBin :: Wrd -> Wrd -> Wrd
+_eqBin a b = Bool (a == b)
+
 _eq :: Op
-_eq a b = [Bool (a == b)]
+_eq = _binary _eqBin
+
+_neqBin :: Wrd -> Wrd -> Wrd
+_neqBin a b = Bool (not (a == b))
 
 _neq :: Op
-_neq a b = [Bool (not (a == b))]
+_neq = _binary _eqBin
 
 _gtBin :: Wrd -> Wrd -> Wrd
 _gtBin (Num a) (Num b) = Bool (a > b)

@@ -46,6 +46,10 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
+isFunc :: Wrd -> Bool
+isFunc (Func _) = True
+isFunc _ = False
+
 myReadNum :: Either String Wrd -> Either String Wrd
 myReadNum (Right u) = Right u
 myReadNum (Left s) =
@@ -93,12 +97,19 @@ _eval binds ws =
         Left s -> Left s
     Error s -> Left s
     NotFound -> -- 括弧見つからなかった
-        case ws of -- 最初が関数かどうかを見る
-        (Func fun : expr) ->
-            let res = concat $ map _evalWrd expr
-            in _eval binds $ (_macroGen fun) res
-        _ ->
+        case divList isFunc ws of -- 関数探し
+        Just (Func f, expr1, expr2) ->
+            let l = length $ fst f
+                args = take l expr2
+                rest = drop l expr2
+            in _eval binds $ expr1 ++ ((_macroGen f) args) ++ rest
+        Nothing ->
             case _iterOps _opls ws of -- オペレータ探し
+            Just ((op, f), (ws1, ws2)) -> -- オペレータが見つかった
+                case (_eval binds ws1, _eval binds ws2) of
+                (Right (res1, _), Right (res2, _)) -> Right ((f res1 res2), binds)
+                (Left s, _) -> Left s
+                (_, Left s) -> Left s
             Nothing -> -- オペレーターが見つからなかった
                 if _isReplaceable binds ws
                 then _eval binds $ _mulSubst ws binds 
@@ -107,11 +118,6 @@ _eval binds ws =
                     (w: []) -> Right (_evalWrd w, binds)
                     --_ -> Left ("Parse failed: " ++ show ws)
                     _ -> Right (ws, binds)
-            Just ((op, f), (ws1, ws2)) -> -- オペレータが見つかった
-                case (_eval binds ws1, _eval binds ws2) of
-                (Right (res1, _), Right (res2, _)) -> Right ((f res1 res2), binds)
-                (Left s, _) -> Left s
-                (_, Left s) -> Left s
 
 eval :: String -> String
 eval str =
