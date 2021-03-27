@@ -54,10 +54,18 @@ _not = UnOp (\ (Bool b) -> Bool (not b))
 _head :: Op
 _head = UnOp (\ (List ls) -> head ls)
 
+_fst :: Op
+_fst = UnOp (\ (Tuple (w1, w2)) -> w1)
+
+_snd :: Op
+_snd = UnOp (\ (Tuple (w1, w2)) -> w2)
+
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
             ("print", _print),
             ("head", _head),
+            ("fst", _fst),
+            ("snd", _snd),
             ("||", _or),
             ("&&", _and),
             ("!", _not),
