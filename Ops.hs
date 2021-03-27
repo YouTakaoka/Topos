@@ -51,9 +51,13 @@ _or = BinOp (\ (Bool a) (Bool b) ->  Bool (a || b))
 _not :: Op
 _not = UnOp (\ (Bool b) -> Bool (not b))
 
+_head :: Op
+_head = UnOp (\ (List ls) -> head ls)
+
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
             ("print", _print),
+            ("head", _head),
             ("||", _or),
             ("&&", _and),
             ("!", _not),
