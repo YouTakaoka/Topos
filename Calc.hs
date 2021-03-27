@@ -104,7 +104,7 @@ _eval binds expr =
                 let l = length $ fst f
                     args = take l expr2
                     rest = drop l expr2
-                in _eval binds $ expr1 ++ ((_macroGen f) args) ++ rest
+                in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen f) args) ++ [Tobe ")"] ++ rest
             Nothing ->
                 case _iterOps _opls_dec ws of -- オペレータ探し
                 Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
