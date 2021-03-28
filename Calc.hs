@@ -45,9 +45,13 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
-isFunc :: Wrd -> Bool
-isFunc (Func _) = True
-isFunc _ = False
+_isFunction :: Wrd -> Bool
+_isFunction (Func (Function _)) = True
+_isFunction _ = False
+
+_isOperator :: Wrd -> Bool
+_isOperator (Func (Operator _)) = True
+_isOperator _ = False
 
 myReadNum :: Either String Wrd -> Either String Wrd
 myReadNum (Right u) = Right u
@@ -160,28 +164,30 @@ _eval binds expr =
                         _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
                     Error s -> Left s
                     NotFound ->
-                        case divList isFunc ws of -- 関数探し
-                        Just (Func (Function f), expr1, expr2) -> -- 関数(関数)見つかった
+                        case divList _isFunction ws of -- 関数探し
+                        Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
                             let l = length $ fst f
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
-                        Just (Func (Operator ("", op)), ws1, (y : rest2)) -> -- 関数(無名オペレータ)見つかった
-                            _eval binds $ _applyOp op ws1 y rest2
-                        Just (Func (Operator (opName, op)), _, _) ->
-                            case _iterOps _opls_dec ws of -- オペレータ探し
-                            Just strop -> -- オペレータが見つかった
-                                let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
-                                in _eval binds $ _applyOp op ws1 y rest2
-                            Nothing ->
-                                Left $ "Error: Operator not found: " ++ opName
                         Nothing ->
-                            case ws of
-                                [] -> Right ([], binds)
-                                (ToEval expr: rest) -> -- 「後でevaる」を処理
-                                    case _eval binds expr of
-                                    Left s -> Left s
-                                    Right (rslt, binds2) ->
-                                        _eval binds2 $ rslt ++ rest
-                                (w: []) -> Right ([_evalWrd w], binds)
-                                _ -> Left ("Parse failed: " ++ show ws)
+                            case divList _isOperator ws of -- オペレータ探し
+                            Just (Func (Operator ("", op)), ws1, (y : rest2)) -> -- 無名オペレータ見つかった
+                                _eval binds $ _applyOp op ws1 y rest2
+                            Just (Func (Operator (opName, op)), _, _) ->
+                                case _iterOps _opls_dec ws of 
+                                Just strop -> -- オペレータが見つかった
+                                    let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
+                                    in _eval binds $ _applyOp op ws1 y rest2
+                                Nothing ->
+                                    Left $ "Error: Operator not found: " ++ opName
+                            Nothing ->
+                                case ws of
+                                    [] -> Right ([], binds)
+                                    (ToEval expr: rest) -> -- 「後でevaる」を処理
+                                        case _eval binds expr of
+                                        Left s -> Left s
+                                        Right (rslt, binds2) ->
+                                            _eval binds2 $ rslt ++ rest
+                                    (w: []) -> Right ([_evalWrd w], binds)
+                                    _ -> Left ("Parse failed: " ++ show ws)

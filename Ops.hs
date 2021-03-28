@@ -17,7 +17,7 @@ _div :: Op
 _div = BinOp (\ x y -> Num ((_double x) / (_double y)))
 
 _add :: Op
-_add = BinOp (\ x y -> Num ((_double x) + (_double y)))
+_add = BinOp (\ x y -> trace ("HOGE: " ++ show y) $ Num ((_double x) + (_double y)))
 
 _sub :: Op
 _sub = BinOp (\ x y -> Num ((_double x) - (_double y)))
