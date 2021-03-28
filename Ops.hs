@@ -51,8 +51,29 @@ _or = BinOp (\ (Bool a) (Bool b) ->  Bool (a || b))
 _not :: Op
 _not = UnOp (\ (Bool b) -> Bool (not b))
 
+_head0 :: Wrd -> Wrd
+_head0 (List []) = Err "head: Empty list."
+_head0 (List (x : _)) = x
+
 _head :: Op
-_head = UnOp (\ (List ls) -> head ls)
+_head = UnOp _head0
+
+_tail0 :: Wrd -> Wrd
+_tail0 (List (_ : xs)) = List xs
+_tail0 (List []) = Err "tail: Empty list."
+
+_tail :: Op
+_tail = UnOp _tail0
+
+_pop0 :: Wrd -> Wrd
+_pop0 (List (x : xs)) = Pair (x, List xs)
+_pop0 (List []) = Err "pop: Empty list."
+
+_pop :: Op
+_pop = UnOp _pop0
+
+_isEmpty :: Op
+_isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)
@@ -64,6 +85,9 @@ _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
             ("print", _print),
             ("head", _head),
+            ("tail", _tail),
+            ("pop", _pop),
+            ("isEmpty", _isEmpty),
             ("fst", _fst),
             ("snd", _snd),
             ("||", _or),

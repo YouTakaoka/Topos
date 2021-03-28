@@ -38,3 +38,7 @@ print ( head [ 1 , 2 , 3 ] )
 let tpl = (( 4 , "hoge" ))
 print ( fst tpl )
 print ( snd tpl )
+let ls = [ 1 , 2 , 3 , 4 , 5 ]
+print ( pop ls )
+let sum = Function ls -> if isEmpty ls then 0 else ( head ls ) + sum ( tail ls )
+print ( sum ls )
