@@ -84,12 +84,6 @@ _snd = UnOp (\ (Pair (w1, w2)) -> w2)
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [
             ("print", _print),
-            ("head", _head),
-            ("tail", _tail),
-            ("pop", _pop),
-            ("isEmpty", _isEmpty),
-            ("fst", _fst),
-            ("snd", _snd),
             ("||", _or),
             ("&&", _and),
             ("!", _not),
@@ -103,7 +97,13 @@ _opls = [
             ("-", _sub),
             ("*", _mul),
             ("/", _div),
-            ("succ", _succ)
+            ("succ", _succ),
+            ("head", _head),
+            ("tail", _tail),
+            ("pop", _pop),
+            ("isEmpty", _isEmpty),
+            ("fst", _fst),
+            ("snd", _snd)
         ]
 
 _opls_dec = reverse _opls

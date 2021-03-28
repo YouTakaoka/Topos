@@ -40,5 +40,5 @@ print ( fst tpl )
 print ( snd tpl )
 let ls = [ 1 , 2 , 3 , 4 , 5 ]
 print ( pop ls )
-let sum = Function ls -> if isEmpty ls then 0 else ( head ls ) + sum ( tail ls )
+let sum = Function ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
 print ( sum ls )
