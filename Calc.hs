@@ -67,7 +67,7 @@ myReadBool (Left s) =
 _evalWrd :: Wrd -> Wrd
 _evalWrd (Tobe s) =
     case myReadBool $ myReadNum (Left s) of
-        Left s -> Print ("Failed to parse: " ++ s)
+        Left s -> Err ("Failed to parse: " ++ s)
         Right w -> w
 _evalWrd w = w
 
@@ -162,9 +162,14 @@ _eval binds expr =
                         Nothing ->
                             case _iterOps _opls_dec ws of -- オペレータ探し
                             Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
-                                _eval binds $ _applyOp op ws1 y rest2
+                                trace ("piyo: " ++ show y) $ _eval binds $ _applyOp op ws1 y rest2
                             Nothing -> -- オペレーターが見つからなかった
                                 case ws of
                                     [] -> Right ([], binds)
+                                    (ToEval expr: rest) -> -- 「後でevaる」を処理
+                                        case _eval binds expr of
+                                        Left s -> Left s
+                                        Right (rslt, binds2) ->
+                                            _eval binds2 $ rslt ++ rest
                                     (w: []) -> Right ([_evalWrd w], binds)
                                     _ -> Left ("Parse failed: " ++ show ws)

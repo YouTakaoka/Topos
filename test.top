@@ -43,3 +43,5 @@ print ( pop ls )
 let sum = Function ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
 print ( sum ls )
 print ( take 3 ls )
+# print ( map succ ls )
+print ( map foo ls )
