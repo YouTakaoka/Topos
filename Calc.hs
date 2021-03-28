@@ -33,12 +33,11 @@ _findParenthesis ws cnt b e = -- cnt は初期値 -1
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
 
-_iterOps :: [StrOp] -> Exp -> Maybe (StrOp, (Exp, Exp))
-_iterOps [] _ = Nothing
-_iterOps ((op, f) : ops) ws =
-    case divListBy (Tobe op) ws of
-        Nothing -> _iterOps ops ws
-        Just (_, ws1, ws2) -> Just ((op, f), (ws1, ws2))
+_iterOps :: [StrOp] -> Exp -> Maybe StrOp
+_iterOps strops expr =
+    case dropWhile (\ sop -> divListBy (Func (Operator sop)) expr == Nothing) strops of
+        [] -> Nothing
+        (sop: _) -> Just sop
 
 _numIn :: Wrd -> Exp -> Integer
 _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
@@ -70,6 +69,16 @@ _evalWrd (Tobe s) =
         Left s -> Err ("Failed to parse: " ++ s)
         Right w -> w
 _evalWrd w = w
+
+_subOp :: StrOp -> Exp -> Exp
+_subOp (str, op) expr =
+    case divListBy (Tobe str) expr of
+        Nothing -> expr
+        Just (_, ws1, ws2) -> _subOp (str, op) $ ws1 ++ [Func (Operator (str, op))] ++ ws2
+
+_mulSubOp :: [StrOp] -> Exp -> Exp
+_mulSubOp (strop: []) expr = _subOp strop expr
+_mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
 
 _toList :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
 _toList binds expr =
@@ -128,7 +137,7 @@ _eval binds (Tobe "if" : rest) =
             if truth then _eval binds2 thn else _eval binds2 els
         _ -> Left "Entered a non-boolean value into `if` statement."
 _eval binds expr =
-    let ws = _mulSubst expr binds
+    let ws = _mulSubOp _opls_dec $ _mulSubst expr binds
     in
         case divListBy (Tobe "#") ws of --コメント探し
         Just (_, expr1, expr2) ->
@@ -157,19 +166,22 @@ _eval binds expr =
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
-                        Just (Func (Operator op), ws1, (y : rest2)) -> -- 関数(オペレータ)見つかった
+                        Just (Func (Operator ("", op)), ws1, (y : rest2)) -> -- 関数(無名オペレータ)見つかった
                             _eval binds $ _applyOp op ws1 y rest2
-                        Nothing ->
+                        Just (Func (Operator (opName, op)), _, _) ->
                             case _iterOps _opls_dec ws of -- オペレータ探し
-                            Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
-                                trace ("piyo: " ++ show y) $ _eval binds $ _applyOp op ws1 y rest2
-                            Nothing -> -- オペレーターが見つからなかった
-                                case ws of
-                                    [] -> Right ([], binds)
-                                    (ToEval expr: rest) -> -- 「後でevaる」を処理
-                                        case _eval binds expr of
-                                        Left s -> Left s
-                                        Right (rslt, binds2) ->
-                                            _eval binds2 $ rslt ++ rest
-                                    (w: []) -> Right ([_evalWrd w], binds)
-                                    _ -> Left ("Parse failed: " ++ show ws)
+                            Just strop -> -- オペレータが見つかった
+                                let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
+                                in _eval binds $ _applyOp op ws1 y rest2
+                            Nothing ->
+                                Left $ "Error: Operator not found: " ++ opName
+                        Nothing ->
+                            case ws of
+                                [] -> Right ([], binds)
+                                (ToEval expr: rest) -> -- 「後でevaる」を処理
+                                    case _eval binds expr of
+                                    Left s -> Left s
+                                    Right (rslt, binds2) ->
+                                        _eval binds2 $ rslt ++ rest
+                                (w: []) -> Right ([_evalWrd w], binds)
+                                _ -> Left ("Parse failed: " ++ show ws)

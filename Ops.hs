@@ -77,10 +77,10 @@ _isEmpty :: Op
 _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
 _take :: Op
-_take = UnOp (\ (Num n) -> Func $ Operator $ UnOp (\ (List ls) -> List (take (truncate n) ls)))
+_take = UnOp (\ (Num n) -> Func $ Operator ("", UnOp ( \ (List ls) -> List (take (truncate n) ls))))
 
 _map :: Op
-_map = UnOp (\ (Func f) -> trace "fuga" $ Func $ Operator $ UnOp (\ (List ls) -> List $ map (\ w -> ToEval [Func f, w]) ls))
+_map = UnOp (\ (Func f) -> trace "fuga" $ Func $ Operator ("", UnOp ( \ (List ls) -> List $ map (\ w -> ToEval [Func f, w]) ls)))
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)

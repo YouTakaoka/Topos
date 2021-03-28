@@ -6,11 +6,12 @@ type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 data Op = BinOp BinaryOp | UnOp UnaryOp
 type StrOp = (String, Op)
-data Fun = Function (Exp, Exp) | Operator Op -- 仮引数文字列のリストと式
+data Fun = Function (Exp, Exp) | Operator StrOp
 type Bind = (Wrd, Exp)
 data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd)
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
+    (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
     (==) (Func (Function a)) (Func (Function b)) = a == b
     (==) (Bnd a) (Bnd b) = a == b
     (==) (Tobe a) (Tobe b) = a == b
@@ -19,6 +20,7 @@ instance Eq Wrd where
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
+    show (Func (Operator (s, _))) = s
     show (Func (Function f)) = show f
     show (Bnd (w, ex)) = show (show w, map show ex)
     show (Print p) = p
