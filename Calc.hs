@@ -103,7 +103,7 @@ _toPair binds expr =
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
-        Just (_, ex1, ex2) -> Right ([(Func (ex1, ex2))], binds)
+        Just (_, ex1, ex2) -> Right ([(Func (Function (ex1, ex2)))], binds)
         Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
 _eval binds (Tobe "let" : rest) =
     let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
@@ -142,11 +142,11 @@ _eval binds expr =
                     Error s -> Left s
                     NotFound ->
                         case divList isFunc ws of -- 関数探し
-                        Just (Func f, expr1, expr2) -> -- 関数見つかった
+                        Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
                             let l = length $ fst f
                                 args = take l expr2
                                 rest = drop l expr2
-                            in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen f) args) ++ [Tobe ")"] ++ rest
+                            in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
                         Nothing ->
                             case _iterOps _opls_dec ws of -- オペレータ探し
                             Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった

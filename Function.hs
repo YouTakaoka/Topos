@@ -6,12 +6,12 @@ type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 data Op = BinOp BinaryOp | UnOp UnaryOp
 type StrOp = (String, Op)
-type Fun = (Exp, Exp) -- 仮引数文字列のリストと式
+data Fun = Function (Exp, Exp) | Operator Op -- 仮引数文字列のリストと式
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | Op Op | List Exp | Err String | Pair (Wrd, Wrd)
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | Err String | Pair (Wrd, Wrd)
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
-    (==) (Func a) (Func b) = a == b
+    (==) (Func (Function a)) (Func (Function b)) = a == b
     (==) (Bnd a) (Bnd b) = a == b
     (==) (Tobe a) (Tobe b) = a == b
     (==) (Num a) (Num b) = a == b
@@ -19,7 +19,7 @@ instance Eq Wrd where
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
-    show (Func f) = show f
+    show (Func (Function f)) = show f
     show (Bnd (w, ex)) = show (show w, map show ex)
     show (Print p) = p
     show (Tobe s) = s
@@ -61,7 +61,7 @@ _mulSubst ws ((target, sbst) : sbsts) =
 _mulSubst ws [] = ws
 
 _macroGen :: Fun -> (Exp -> Exp)
-_macroGen (ws, expr) =
+_macroGen (Function (ws, expr)) =
     \ args -> 
         let argsl = map (\ a -> [a]) args
         in _mulSubst expr (zip ws argsl)
