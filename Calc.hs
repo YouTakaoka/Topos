@@ -100,6 +100,16 @@ _toPair binds expr =
             Pair (w1, w2)
         _ -> Err "_toPair: Parse error"
 
+_applyOp :: Op -> Exp -> Wrd -> Exp -> Exp
+_applyOp op ws1 y rest2 =
+    case op of
+    BinOp binop -> 
+        let x = last ws1
+            rest1 = init ws1
+            in rest1 ++ [binop (_evalWrd x) (_evalWrd y)] ++ rest2
+    UnOp unop ->
+        ws1 ++ [unop (_evalWrd y)] ++ rest2
+
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
@@ -142,25 +152,19 @@ _eval binds expr =
                     Error s -> Left s
                     NotFound ->
                         case divList isFunc ws of -- 関数探し
-                        Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
+                        Just (Func (Function f), expr1, expr2) -> -- 関数(関数)見つかった
                             let l = length $ fst f
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
+                        Just (Func (Operator op), ws1, (y : rest2)) -> -- 関数(オペレータ)見つかった
+                            _eval binds $ _applyOp op ws1 y rest2
                         Nothing ->
                             case _iterOps _opls_dec ws of -- オペレータ探し
                             Just ((opName, op), (ws1, (y : rest2))) -> -- オペレータが見つかった
-                                case op of
-                                BinOp binop -> 
-                                    let x = last ws1
-                                        rest1 = init ws1
-                                        ret = rest1 ++ [binop (_evalWrd x) (_evalWrd y)] ++ rest2
-                                    in _eval binds ret
-                                UnOp unop ->
-                                    let ret = ws1 ++ [unop (_evalWrd y)] ++ rest2
-                                    in _eval binds ret
+                                _eval binds $ _applyOp op ws1 y rest2
                             Nothing -> -- オペレーターが見つからなかった
-                                case ws of -- 最終的にここに行き着く！！
+                                case ws of
                                     [] -> Right ([], binds)
                                     (w: []) -> Right ([_evalWrd w], binds)
                                     _ -> Left ("Parse failed: " ++ show ws)

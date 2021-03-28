@@ -1,6 +1,7 @@
 module Ops where
 import Parser
 import Function
+import Data.List
 import Debug.Trace
 
 _double :: Wrd -> Double
@@ -75,6 +76,9 @@ _pop = UnOp _pop0
 _isEmpty :: Op
 _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
+_take :: Op
+_take = UnOp (\ (Num n) -> Func $ Operator $ UnOp (\ (List ls) -> List (take (truncate n) ls)))
+
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)
 
@@ -102,6 +106,7 @@ _opls = [
             ("tail", _tail),
             ("pop", _pop),
             ("isEmpty", _isEmpty),
+            ("take", _take),
             ("fst", _fst),
             ("snd", _snd)
         ]
