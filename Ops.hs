@@ -9,9 +9,11 @@ _print = UnOp (\ w -> Print (show w))
 
 _mul0 :: Wrd -> Wrd -> Wrd
 _mul0 (Num x) (Num y) = Num (x * y)
+_mul0 x y = Err $ "_mul0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div0 :: Wrd -> Wrd -> Wrd
 _div0 (Num x) (Num y) = Num (x / y)
+_div0 x y = Err $ "_div0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _add0 :: Wrd -> Wrd -> Wrd
 _add0 (Num x) (Num y) = Num (x + y)
@@ -19,6 +21,7 @@ _add0 x y = Err $ "_add0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (sho
 
 _sub0 :: Wrd -> Wrd -> Wrd
 _sub0 (Num x) (Num y) = Num (x - y)
+_sub0 x y = Err $ "_sub0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _mul :: Op
 _mul = BinOp _mul0
@@ -92,8 +95,12 @@ _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 _take :: Op
 _take = UnOp (\ (Num n) -> Func $ FuncOp $ UnOp (\ (List ls) -> List (take (truncate n) ls)))
 
+_map0 :: Wrd -> Wrd
+_map0 (Func f) = Func $ FuncOp $ UnOp (\ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls)
+_map0 w = Err $ "_map0: Illegal input value: " ++ (show w)
+
 _map :: Op
-_map = UnOp (\ (Func f) -> Func $ FuncOp $ UnOp (\ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls))
+_map = UnOp _map0
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)

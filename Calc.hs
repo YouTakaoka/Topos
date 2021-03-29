@@ -173,23 +173,19 @@ _eval binds expr =
                     Error s -> Left s
                     NotFound ->
                         case divList _isFunction ws of -- 関数探し
-                        Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
+                        Just (Func (Function f), expr1, expr2) -> -- 関数
                             let l = length $ fst f
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
-                        Just (Func (FuncOp op), ws1, (y: rest2)) ->
+                        Just (Func (FuncOp op), ws1, (y: rest2)) -> -- 関数オペレータ
                             _eval binds $ _applyOp op ws1 y rest2
                         Nothing ->
-                            case divList _isOp ws of -- オペレータ探し
-                            Just (Func (Operator (opName, op)), _, _) ->
-                                case _iterOps _opls_dec ws of 
-                                Just strop -> -- オペレータが見つかった
-                                    let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
-                                    in _eval binds $ _applyOp op ws1 y rest2
-                                Nothing ->
-                                    Left $ "Error: Operator not found: " ++ opName
-                            Nothing ->
+                            case _iterOps _opls_dec ws of -- オペレータ探し
+                            Just strop -> -- オペレータが見つかった
+                                let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
+                                in _eval binds $ _applyOp op ws1 y rest2
+                            Nothing -> -- オペレータ見つからなかった
                                 case ws of
                                     [] -> Right ([], binds)
                                     (ToEval expr: rest) -> -- 「後でevaる」を処理
