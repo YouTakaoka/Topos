@@ -4,26 +4,39 @@ import Function
 import Data.List
 import Debug.Trace
 
-_double :: Wrd -> Double
-_double (Num x) = x
-
 _print :: Op
 _print = UnOp (\ w -> Print (show w))
 
+_mul0 :: Wrd -> Wrd -> Wrd
+_mul0 (Num x) (Num y) = Num (x * y)
+
+_div0 :: Wrd -> Wrd -> Wrd
+_div0 (Num x) (Num y) = Num (x / y)
+
+_add0 :: Wrd -> Wrd -> Wrd
+_add0 (Num x) (Num y) = Num (x + y)
+_add0 x y = Err $ "_add0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
+
+_sub0 :: Wrd -> Wrd -> Wrd
+_sub0 (Num x) (Num y) = Num (x - y)
+
 _mul :: Op
-_mul = BinOp (\ x y -> Num ((_double x) * (_double y)))
+_mul = BinOp _mul0
 
 _div :: Op
-_div = BinOp (\ x y -> Num ((_double x) / (_double y)))
+_div = BinOp _div0
 
 _add :: Op
-_add = BinOp (\ x y -> Num ((_double x) + (_double y)))
+_add = BinOp _add0
 
 _sub :: Op
-_sub = BinOp (\ x y -> Num ((_double x) - (_double y)))
+_sub = BinOp _sub0
+
+_succ0 :: Wrd -> Wrd
+_succ0 (Num x) = Num (x + 1)
 
 _succ :: Op
-_succ = UnOp (\ x -> Num ((_double x) + 1.0))
+_succ = UnOp _succ0
 
 _eq :: Op
 _eq = BinOp (\ a b -> Bool (a == b))
