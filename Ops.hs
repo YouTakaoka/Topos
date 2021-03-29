@@ -93,7 +93,7 @@ _take :: Op
 _take = UnOp (\ (Num n) -> Func $ FuncOp $ UnOp (\ (List ls) -> List (take (truncate n) ls)))
 
 _map :: Op
-_map = UnOp (\ (Func f) -> trace "HOGE" $ Func $ FuncOp $ UnOp (\ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls))
+_map = UnOp (\ (Func f) -> Func $ FuncOp $ UnOp (\ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls))
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)

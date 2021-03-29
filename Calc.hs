@@ -45,9 +45,10 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
-_isFunc :: Wrd -> Bool
-_isFunc (Func _) = True
-_isFunc _ = False
+_isFunction :: Wrd -> Bool
+_isFunction (Func (Function _)) = True
+_isFunction (Func (FuncOp _)) = True
+_isFunction _ = False
 
 _isOp :: Wrd -> Bool
 _isOp (Func (Operator _)) = True
@@ -171,7 +172,7 @@ _eval binds expr =
                         _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
                     Error s -> Left s
                     NotFound ->
-                        case divList _isFunc ws of -- 関数探し
+                        case divList _isFunction ws of -- 関数探し
                         Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
                             let l = length $ fst f
                                 args = take l expr2
@@ -179,7 +180,7 @@ _eval binds expr =
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
                         Just (Func (FuncOp op), ws1, (y: rest2)) ->
                             _eval binds $ _applyOp op ws1 y rest2
-                        _ ->
+                        Nothing ->
                             case divList _isOp ws of -- オペレータ探し
                             Just (Func (Operator (opName, op)), _, _) ->
                                 case _iterOps _opls_dec ws of 
