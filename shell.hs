@@ -13,6 +13,8 @@ shell binds = do
         Right ((res: []), binds2) -> do
             print res
             shell binds2
+        Right ((Err e: []), _) -> do
+            putStrLn $ "Error: " ++ e
         Right ([], binds2) -> do
             shell binds2
         Right (expr, _) -> do

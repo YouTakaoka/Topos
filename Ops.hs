@@ -4,24 +4,28 @@ import Function
 import Data.List
 import Debug.Trace
 
+_print0 :: Wrd -> Wrd
+_print0 (Err e) = Err e
+_print0 w = Print (show w)
+
 _print :: Op
-_print = UnOp (\ w -> Print (show w))
+_print = UnOp _print0
 
 _mul0 :: Wrd -> Wrd -> Wrd
-_mul0 (Num x) (Num y) = Num (x * y)
-_mul0 x y = Err $ "_mul0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
+_mul0 (Double x) (Double y) = Double (x * y)
+_mul0 x y = Err $ "_mul0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div0 :: Wrd -> Wrd -> Wrd
-_div0 (Num x) (Num y) = Num (x / y)
-_div0 x y = Err $ "_div0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
+_div0 (Double x) (Double y) = Double (x / y)
+_div0 x y = Err $ "_div0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _add0 :: Wrd -> Wrd -> Wrd
-_add0 (Num x) (Num y) = Num (x + y)
-_add0 x y = Err $ "_add0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
+_add0 (Double x) (Double y) = Double (x + y)
+_add0 x y = Err $ "_add0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub0 :: Wrd -> Wrd -> Wrd
-_sub0 (Num x) (Num y) = Num (x - y)
-_sub0 x y = Err $ "_sub0: Illegal value input: x=" ++ (show x) ++ ", y=" ++ (show y)
+_sub0 (Double x) (Double y) = Double (x - y)
+_sub0 x y = Err $ "_sub0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _mul :: Op
 _mul = BinOp _mul0
@@ -36,7 +40,7 @@ _sub :: Op
 _sub = BinOp _sub0
 
 _succ0 :: Wrd -> Wrd
-_succ0 (Num x) = Num (x + 1)
+_succ0 (Double x) = Double (x + 1)
 
 _succ :: Op
 _succ = UnOp _succ0
@@ -48,16 +52,16 @@ _neq :: Op
 _neq = BinOp (\ a b -> Bool (not (a == b)))
 
 _gt :: Op
-_gt = BinOp (\ (Num a) (Num b) -> Bool (a > b))
+_gt = BinOp (\ (Double a) (Double b) -> Bool (a > b))
 
 _geq :: Op
-_geq = BinOp (\ (Num a) (Num b) -> Bool (a >= b))
+_geq = BinOp (\ (Double a) (Double b) -> Bool (a >= b))
 
 _lt :: Op
-_lt = BinOp (\ (Num a) (Num b) -> Bool (a < b))
+_lt = BinOp (\ (Double a) (Double b) -> Bool (a < b))
 
 _leq :: Op
-_leq = BinOp (\ (Num a) (Num b) -> Bool (a <= b))
+_leq = BinOp (\ (Double a) (Double b) -> Bool (a <= b))
 
 _and :: Op
 _and = BinOp (\ (Bool a) (Bool b) ->  Bool (a && b))
@@ -93,7 +97,7 @@ _isEmpty :: Op
 _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
 _take0 :: Exp -> Wrd
-_take0 (Num n : (List ls : [])) = List $ take (truncate n) ls
+_take0 (Int n : (List ls : [])) = List $ take n ls
 _take0 ex = Err $ "_take0: Illegal input value: " ++ (show ex)
 
 _take :: Op

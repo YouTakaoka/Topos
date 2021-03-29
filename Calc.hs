@@ -54,12 +54,12 @@ _isOp :: Wrd -> Bool
 _isOp (Func (Operator _)) = True
 _isOp _ = False
 
-myReadNum :: Either String Wrd -> Either String Wrd
-myReadNum (Right u) = Right u
-myReadNum (Left s) =
+myReadDouble :: Either String Wrd -> Either String Wrd
+myReadDouble (Right u) = Right u
+myReadDouble (Left s) =
     case readMaybe s :: Maybe Double of
         Nothing -> Left s
-        Just u -> Right (Num u)
+        Just u -> Right (Double u)
 
 myReadBool :: Either String Wrd -> Either String Wrd
 myReadBool (Right w) = Right w
@@ -68,9 +68,16 @@ myReadBool (Left s) =
         Nothing -> Left s
         Just w -> Right (Bool w)
 
+myReadInt :: Either String Wrd -> Either String Wrd
+myReadInt (Right u) = Right u
+myReadInt (Left s) =
+    case readMaybe s :: Maybe Int of
+        Nothing -> Left s
+        Just u -> Right (Int u)
+
 _evalWrd :: Wrd -> Wrd
 _evalWrd (Tobe s) =
-    case myReadBool $ myReadNum (Left s) of
+    case myReadBool $ myReadDouble $ myReadInt (Left s) of
         Left s -> Err ("Failed to parse: " ++ s)
         Right w -> w
 _evalWrd w = w

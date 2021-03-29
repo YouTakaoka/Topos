@@ -9,14 +9,14 @@ data Op = BinOp BinaryOp | UnOp UnaryOp | FuncOp FunctionOp
 type StrOp = (String, Op)
 data Fun = Function (Exp, Exp)| Operator StrOp
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp]
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp]
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
     (==) (Func (Function a)) (Func (Function b)) = a == b
     (==) (Bnd a) (Bnd b) = a == b
     (==) (Tobe a) (Tobe b) = a == b
-    (==) (Num a) (Num b) = a == b
+    (==) (Double a) (Double b) = a == b
     (==) (Bool a) (Bool b) = a == b
     (==) _ _ = False
 instance Show Wrd where
@@ -27,7 +27,8 @@ instance Show Wrd where
     show (Bnd (w, ex)) = show (show w, map show ex)
     show (Print p) = p
     show (Tobe s) = s
-    show (Num n) = show n
+    show (Double n) = show n
+    show (Int n) = show n
     show (Bool b) = show b
     show Null = ""
     show (Err s) = s

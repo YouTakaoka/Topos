@@ -9,6 +9,8 @@ interpret (str: rest) binds =
         Right ((Print res: []), binds2) -> do
             putStrLn res
             interpret rest binds2
+        Right ((Err e: []), _) -> do
+            putStrLn $ "Error: " ++ e
         Right ((_: []), binds2) -> do
             interpret rest binds2
         Right ([], binds2) -> do
