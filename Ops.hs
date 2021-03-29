@@ -141,6 +141,13 @@ _take0 ex = Err $ "_take0: Illegal input value: " ++ (show ex)
 _take :: Op
 _take = FuncOp (2, _take0)
 
+_seq0 :: Exp -> Wrd
+_seq0 (Int n : (Int m : [])) = List $ map (\ x -> Int x) [n .. m]
+_seq0 ex = Err $ "_seq0: Illegal input value: " ++ (show ex)
+
+_seq :: Op
+_seq = FuncOp (2, _seq0)
+
 _map0 :: Exp -> Wrd
 _map0 (Func f : (List ls : [])) = PreList $ map (\ w -> [Func f, w]) ls
 _map0 ex = Err $ "_map0: Illegal input value: " ++ (show ex)
@@ -176,6 +183,7 @@ _opls = [
             ("pop", _pop),
             ("isEmpty", _isEmpty),
             ("take", _take),
+            ("seq", _seq),
             ("map", _map),
             ("fst", _fst),
             ("snd", _snd)
