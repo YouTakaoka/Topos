@@ -35,7 +35,7 @@ findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
 
 _iterOps :: [StrOp] -> Exp -> Maybe StrOp
 _iterOps strops expr =
-    case dropWhile (\ sop -> divListBy (Func (Operator sop)) expr == Nothing) strops of
+    case dropWhile (\ sop -> divListBy (Func $ Operator sop) expr == Nothing) strops of
         [] -> Nothing
         (sop: _) -> Just sop
 
@@ -45,13 +45,13 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
-_isFunction :: Wrd -> Bool
-_isFunction (Func (Function _)) = True
-_isFunction _ = False
+_isFunc :: Wrd -> Bool
+_isFunc (Func _) = True
+_isFunc _ = False
 
-_isOperator :: Wrd -> Bool
-_isOperator (Func (Operator _)) = True
-_isOperator _ = False
+_isOp :: Wrd -> Bool
+_isOp (Func (Operator _)) = True
+_isOp _ = False
 
 myReadNum :: Either String Wrd -> Either String Wrd
 myReadNum (Right u) = Right u
@@ -171,16 +171,16 @@ _eval binds expr =
                         _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
                     Error s -> Left s
                     NotFound ->
-                        case divList _isFunction ws of -- 関数探し
+                        case divList _isFunc ws of -- 関数探し
                         Just (Func (Function f), expr1, expr2) -> -- 関数見つかった
                             let l = length $ fst f
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
-                        Nothing ->
-                            case divList _isOperator ws of -- オペレータ探し
-                            Just (Func (Operator ("", op)), ws1, (y : rest2)) -> -- 無名オペレータ見つかった
-                                _eval binds $ _applyOp op ws1 y rest2
+                        Just (Func (FuncOp op), ws1, (y: rest2)) ->
+                            _eval binds $ _applyOp op ws1 y rest2
+                        _ ->
+                            case divList _isOp ws of -- オペレータ探し
                             Just (Func (Operator (opName, op)), _, _) ->
                                 case _iterOps _opls_dec ws of 
                                 Just strop -> -- オペレータが見つかった

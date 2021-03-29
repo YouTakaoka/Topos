@@ -6,7 +6,7 @@ type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 data Op = BinOp BinaryOp | UnOp UnaryOp
 type StrOp = (String, Op)
-data Fun = Function (Exp, Exp) | Operator StrOp
+data Fun = Function (Exp, Exp) | FuncOp Op | Operator StrOp
 type Bind = (Wrd, Exp)
 data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp]
 instance Eq Wrd where
@@ -20,7 +20,7 @@ instance Eq Wrd where
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
-    show (Func (Operator (s, _))) = s
+    show (Func (Operator (s, _))) = "[Operator:" ++ s ++ "]"
     show (Func (Function f)) = show f
     show (Bnd (w, ex)) = show (show w, map show ex)
     show (Print p) = p
