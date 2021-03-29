@@ -8,7 +8,7 @@ data Op = BinOp BinaryOp | UnOp UnaryOp
 type StrOp = (String, Op)
 data Fun = Function (Exp, Exp) | Operator StrOp
 type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd)
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Num Double | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp]
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
@@ -31,6 +31,7 @@ instance Show Wrd where
     show (Err s) = s
     show (List l) = show l
     show (Pair t) = show t
+    show (ToEval _) = "[ToEval]"
 
 type Exp = [Wrd]
 

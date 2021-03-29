@@ -74,6 +74,13 @@ _evalWrd (Tobe s) =
         Right w -> w
 _evalWrd w = w
 
+_evalToWrd :: [Bind] -> Exp -> Wrd
+_evalToWrd binds expr =
+    case _eval binds expr of
+        Left s -> Err s
+        Right ((w:[]), _) -> w
+        Right (ws, _) -> Err ("_evalToWrd: Result became to more than one words: " ++ show ws)
+
 _subOp :: StrOp -> Exp -> Exp
 _subOp (str, op) expr =
     case divListBy (Tobe str) expr of
@@ -189,5 +196,8 @@ _eval binds expr =
                                         Left s -> Left s
                                         Right (rslt, binds2) ->
                                             _eval binds2 $ rslt ++ rest
+                                    ((PreList pls) : rest) ->
+                                        let ls = map (_evalToWrd binds) pls
+                                        in _eval binds (List ls : rest)
                                     (w: []) -> Right ([_evalWrd w], binds)
                                     _ -> Left ("Parse failed: " ++ show ws)

@@ -17,13 +17,13 @@ _div :: Op
 _div = BinOp (\ x y -> Num ((_double x) / (_double y)))
 
 _add :: Op
-_add = BinOp (\ x y -> trace ("HOGE: " ++ show y) $ Num ((_double x) + (_double y)))
+_add = BinOp (\ x y -> Num ((_double x) + (_double y)))
 
 _sub :: Op
 _sub = BinOp (\ x y -> Num ((_double x) - (_double y)))
 
 _succ :: Op
-_succ = UnOp (\ x -> trace ("hoge:" ++ show x) $ Num ((_double x) + 1.0))
+_succ = UnOp (\ x -> Num ((_double x) + 1.0))
 
 _eq :: Op
 _eq = BinOp (\ a b -> Bool (a == b))
@@ -80,7 +80,7 @@ _take :: Op
 _take = UnOp (\ (Num n) -> Func $ Operator ("", UnOp ( \ (List ls) -> List (take (truncate n) ls))))
 
 _map :: Op
-_map = UnOp (\ (Func f) -> trace "fuga" $ Func $ Operator ("", UnOp ( \ (List ls) -> List $ map (\ w -> ToEval [Func f, w]) ls)))
+_map = UnOp (\ (Func f) -> Func $ Operator ("", UnOp ( \ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls)))
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)
