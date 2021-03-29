@@ -179,7 +179,7 @@ _eval binds expr =
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
                         Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
-                            let args = take l ws2
+                            let args = map _evalWrd $ take l ws2
                                 rest = drop l ws2
                             in _eval binds $ ws1 ++ [op args] ++ rest
                         Nothing ->
