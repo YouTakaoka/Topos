@@ -17,6 +17,7 @@ instance Eq Wrd where
     (==) (Bnd a) (Bnd b) = a == b
     (==) (Tobe a) (Tobe b) = a == b
     (==) (Double a) (Double b) = a == b
+    (==) (Int a) (Int b) = a == b
     (==) (Bool a) (Bool b) = a == b
     (==) _ _ = False
 instance Show Wrd where

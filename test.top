@@ -1,31 +1,26 @@
 print ( 2 * 3 == 6 )
-print "fuga"
-print ( 2 * 3 * 4 )
-print "piyo"
-print ( succ 4 )
-print ( 3 * succ 4 )
-print ( 4 * 3 + 2 )
-print ( 2 + 4 * 3 )
-print ( 5 / 2 - 1 )
-print ( 3 / 2 * 5 )
-print ( 1 - 2  + 3 )
-print ( 4 * ( 2 + 3 ) )
-print ( 4 / ( ( 3 + 5 ) * 2 ) )
-print ( ( Function x -> x * x ) 3 )
-print ( ( Function x y -> ( x + y ) / 2 ) 3 5 )
+print ( 2 * 3 * 4 == 24 )
+print ( succ 4 == 5 )
+print ( 3 * succ 4 == 15 )
+print ( 4 * 3 + 2 == 14 )
+print ( 2 + 4 * 3 == 14 )
+print ( 5 / 2 - 1 == 1.5 )
+print ( 3 / 2 * 5 == 7.5 )
+print ( 1 - 2  + 3 == 2 )
+print ( 4 * ( 2 + 3 ) == 20 )
+print ( 4 / ( ( 3 + 5 ) * 2 ) == 0.25 )
+print ( ( Function x -> x * x ) 3 == 9 )
+print ( ( Function x y -> ( x + y ) / 2 ) 3 5 == 4.0 )
 let x = 4
 let y = 5
-print ( x * y )
+print ( x * y == 20 )
 let foo = Function x -> x * x
-
-print "hoge"
-
-print ( foo 4 )
+print ( foo 4 == 16 )
 let bar = Function x y -> ( x + y ) / 2
-print ( bar 3 5 )
-print ( foo ( foo 4 ) )
+print ( bar 3 5 == 4.0 )
+print ( foo ( foo 4 ) == 256 )
 let f = Function g z -> g ( g z )
-print ( f foo 4 )
+print ( f foo 4 == 256 )
 
 print "Hello, world!"
 

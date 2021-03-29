@@ -13,18 +13,30 @@ _print = UnOp _print0
 
 _mul0 :: Wrd -> Wrd -> Wrd
 _mul0 (Double x) (Double y) = Double (x * y)
+_mul0 (Int x) (Int y) = Int (x * y)
+_mul0 (Int x) (Double y) = Double ((fromIntegral x) * y)
+_mul0 (Double x) (Int y) = Double (x * (fromIntegral y))
 _mul0 x y = Err $ "_mul0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div0 :: Wrd -> Wrd -> Wrd
 _div0 (Double x) (Double y) = Double (x / y)
+_div0 (Int x) (Int y) = Double ((fromIntegral x) / (fromIntegral y))
+_div0 (Int x) (Double y) = Double ((fromIntegral x) / y)
+_div0 (Double x) (Int y) = Double (x / (fromIntegral y))
 _div0 x y = Err $ "_div0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _add0 :: Wrd -> Wrd -> Wrd
 _add0 (Double x) (Double y) = Double (x + y)
+_add0 (Int x) (Int y) = Int (x + y)
+_add0 (Int x) (Double y) = Double ((fromIntegral x) + y)
+_add0 (Double x) (Int y) = Double (x + (fromIntegral y))
 _add0 x y = Err $ "_add0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub0 :: Wrd -> Wrd -> Wrd
 _sub0 (Double x) (Double y) = Double (x - y)
+_sub0 (Int x) (Int y) = Int (x - y)
+_sub0 (Int x) (Double y) = Double ((fromIntegral x) - y)
+_sub0 (Double x) (Int y) = Double (x - (fromIntegral y))
 _sub0 x y = Err $ "_sub0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _mul :: Op
@@ -40,7 +52,9 @@ _sub :: Op
 _sub = BinOp _sub0
 
 _succ0 :: Wrd -> Wrd
+_succ0 (Int x) = Int (x + 1)
 _succ0 (Double x) = Double (x + 1)
+_succ0 x = Err $ "_succ0: Illegal input value: " ++ (show x)
 
 _succ :: Op
 _succ = UnOp _succ0
@@ -51,17 +65,41 @@ _eq = BinOp (\ a b -> Bool (a == b))
 _neq :: Op
 _neq = BinOp (\ a b -> Bool (not (a == b)))
 
+_gt0 :: Wrd -> Wrd -> Wrd
+_gt0 (Double x) (Double y) = Bool (x > y)
+_gt0 (Int x) (Int y) = Bool (x > y)
+_gt0 (Int x) (Double y) = Bool ((fromIntegral x) > y)
+_gt0 (Double x) (Int y) = Bool (x > (fromIntegral y))
+
 _gt :: Op
-_gt = BinOp (\ (Double a) (Double b) -> Bool (a > b))
+_gt = BinOp _gt0
+
+_geq0 :: Wrd -> Wrd -> Wrd
+_geq0 (Double x) (Double y) = Bool (x >= y)
+_geq0 (Int x) (Int y) = Bool (x >= y)
+_geq0 (Int x) (Double y) = Bool ((fromIntegral x) >= y)
+_geq0 (Double x) (Int y) = Bool (x >= (fromIntegral y))
 
 _geq :: Op
-_geq = BinOp (\ (Double a) (Double b) -> Bool (a >= b))
+_geq = BinOp _geq0
+
+_lt0 :: Wrd -> Wrd -> Wrd
+_lt0 (Double x) (Double y) = Bool (x < y)
+_lt0 (Int x) (Int y) = Bool (x < y)
+_lt0 (Int x) (Double y) = Bool ((fromIntegral x) < y)
+_lt0 (Double x) (Int y) = Bool (x < (fromIntegral y))
 
 _lt :: Op
-_lt = BinOp (\ (Double a) (Double b) -> Bool (a < b))
+_lt = BinOp _lt0
+
+_leq0 :: Wrd -> Wrd -> Wrd
+_leq0 (Double x) (Double y) = Bool (x <= y)
+_leq0 (Int x) (Int y) = Bool (x <= y)
+_leq0 (Int x) (Double y) = Bool ((fromIntegral x) <= y)
+_leq0 (Double x) (Int y) = Bool (x <= (fromIntegral y))
 
 _leq :: Op
-_leq = BinOp (\ (Double a) (Double b) -> Bool (a <= b))
+_leq = BinOp _leq0
 
 _and :: Op
 _and = BinOp (\ (Bool a) (Bool b) ->  Bool (a && b))
