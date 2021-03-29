@@ -47,7 +47,7 @@ _isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
 
 _isFunction :: Wrd -> Bool
 _isFunction (Func (Function _)) = True
-_isFunction (Func (FuncOp _)) = True
+_isFunction (Func (Operator (_, FuncOp _))) = True
 _isFunction _ = False
 
 _isOp :: Wrd -> Bool
@@ -178,8 +178,10 @@ _eval binds expr =
                                 args = take l expr2
                                 rest = drop l expr2
                             in _eval binds $ expr1 ++ [Tobe "("] ++ ((_macroGen (Function f)) args) ++ [Tobe ")"] ++ rest
-                        Just (Func (FuncOp op), ws1, (y: rest2)) -> -- 関数オペレータ
-                            _eval binds $ _applyOp op ws1 y rest2
+                        Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
+                            let args = take l ws2
+                                rest = drop l ws2
+                            in _eval binds $ ws1 ++ [op args] ++ rest
                         Nothing ->
                             case _iterOps _opls_dec ws of -- オペレータ探し
                             Just strop -> -- オペレータが見つかった

@@ -92,15 +92,19 @@ _pop = UnOp _pop0
 _isEmpty :: Op
 _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
-_take :: Op
-_take = UnOp (\ (Num n) -> Func $ FuncOp $ UnOp (\ (List ls) -> List (take (truncate n) ls)))
+_take0 :: Exp -> Wrd
+_take0 (Num n : (List ls : [])) = List $ take (truncate n) ls
+_take0 ex = Err $ "_take0: Illegal input value: " ++ (show ex)
 
-_map0 :: Wrd -> Wrd
-_map0 (Func f) = Func $ FuncOp $ UnOp (\ (List ls) -> PreList $ map (\ w -> [Func f, w]) ls)
-_map0 w = Err $ "_map0: Illegal input value: " ++ (show w)
+_take :: Op
+_take = FuncOp (2, _take0)
+
+_map0 :: Exp -> Wrd
+_map0 (Func f : (List ls : [])) = PreList $ map (\ w -> [Func f, w]) ls
+_map0 ex = Err $ "_map0: Illegal input value: " ++ (show ex)
 
 _map :: Op
-_map = UnOp _map0
+_map = FuncOp (2, _map0)
 
 _fst :: Op
 _fst = UnOp (\ (Pair (w1, w2)) -> w1)
