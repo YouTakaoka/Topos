@@ -149,6 +149,16 @@ _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
         Just (_, ex1, ex2) -> Right ([(Func (Function (ex1, ex2)))], binds)
         Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
+_eval binds (Tobe "String" : rest) =
+    case divListBy (Tobe "=") rest of
+        Nothing ->
+            Left "Syntax error: missing `=`"
+        Just (_, (w: []), expr) ->
+            case _eval binds expr of
+                Left s -> Left s
+                Right ((Str s: []), _) -> Right ([Str s], ((w, [Str s]) : binds))
+                _ -> Left "Type error: Non-String value is attempted to bind to String-type variable."
+        _ -> Left "Syntax error: You should specify only one symbol to bind value."
 _eval binds (Tobe "let" : rest) =
     let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
         Right (ex2, binds2) = _eval binds ex

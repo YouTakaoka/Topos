@@ -9,7 +9,9 @@ shell binds = do
     prompt
     str <- getLine
     case _eval binds (toExp str) of
-        Left s -> do putStrLn s
+        Left s -> do
+            putStrLn s
+            shell binds
         Right ((Err e: []), _) -> do
             putStrLn $ "Error: " ++ e
             shell binds
