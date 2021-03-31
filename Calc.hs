@@ -144,25 +144,45 @@ _applyOp op ws1 y rest2 =
     UnOp unop ->
         ws1 ++ [unop (_evalWrd y)] ++ rest2
 
+_typeCheck :: String -> Wrd -> Bool
+_typeCheck "String" (Str _) = True
+_typeCheck "Int" (Int _) = True
+_typeCheck "Double" (Double _) = True
+_typeCheck "Bool" (Bool _) = True
+_typeCheck _ _ = False
+
+_bindType :: [Bind] -> Exp -> String -> Either String (Exp, [Bind])
+_bindType binds rest t =
+ case divListBy (Tobe "=") rest of
+        Nothing ->
+            Left "_bindType: Syntax error: missing `=`"
+        Just (_, (w: []), expr) ->
+            case _eval binds expr of
+                Left s -> Left s
+                Right ((rhs: []), _) ->
+                    case _typeCheck t rhs of
+                        True -> Right ([rhs], ((w, [rhs]) : binds))
+                        False -> Left $ "_bindType: Type error. The RHS must have type `" ++ t ++ "`."
+                _ -> Left "_bindType: Evaluation error."
+        _ -> Left "_bindType: Syntax error: You should specify only one symbol to bind value."
+
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
         Just (_, ex1, ex2) -> Right ([(Func (Function (ex1, ex2)))], binds)
         Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
-_eval binds (Tobe "String" : rest) =
-    case divListBy (Tobe "=") rest of
-        Nothing ->
-            Left "Syntax error: missing `=`"
-        Just (_, (w: []), expr) ->
-            case _eval binds expr of
-                Left s -> Left s
-                Right ((Str s: []), _) -> Right ([Str s], ((w, [Str s]) : binds))
-                _ -> Left "Type error: Non-String value is attempted to bind to String-type variable."
-        _ -> Left "Syntax error: You should specify only one symbol to bind value."
+_eval binds (Tobe "String" : rest) = _bindType binds rest "String"
+_eval binds (Tobe "Int" : rest) = _bindType binds rest "Int"
+_eval binds (Tobe "Double" : rest) = _bindType binds rest "Double"
+_eval binds (Tobe "Bool" : rest) = _bindType binds rest "Bool"
 _eval binds (Tobe "let" : rest) =
-    let Just (_, (w:_), ex) = divListBy (Tobe "=") rest
-        Right (ex2, binds2) = _eval binds ex
-    in Right (ex2, [(w, ex2)] ++ binds2)
+    case rest of
+        (Tobe t : rest2) ->
+            case _bindType binds rest2 t of
+                Left s -> Left s
+                Right (_, binds2) -> Right ([], binds2)
+        _ -> Left "let: Parse error."
+   
 _eval binds (Tobe "if" : rest) =
     let Just (_, cond, rest2) = divListBy (Tobe "then") rest
         Just (_, thn, els) = divListBy (Tobe "else") rest2
