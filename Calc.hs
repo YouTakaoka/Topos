@@ -99,6 +99,12 @@ _mulSubOp :: [StrOp] -> Exp -> Exp
 _mulSubOp (strop: []) expr = _subOp strop expr
 _mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
 
+_evalOldBinds :: [Bind] -> [Bind] -> Exp -> Either String (Exp, [Bind])
+_evalOldBinds binds binds2 expr =
+    case _eval binds2 expr of
+        Left s -> Left s
+        Right (res, _) -> Right (res, binds)
+
 _toList :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
 _toList binds expr =
     case divListBy (Tobe ",") expr of
@@ -153,7 +159,7 @@ _eval binds (Tobe "if" : rest) =
     in case _eval binds cond of
         Left s -> Left s
         Right ((Bool truth : _), binds2) ->
-            if truth then _eval binds2 thn else _eval binds2 els
+            if truth then _evalOldBinds binds binds2 thn else _evalOldBinds binds binds2 els
         _ -> Left "Entered a non-boolean value into `if` statement."
 _eval binds expr =
     let ws = _mulSubOp _opls_dec $ _mulSubst expr binds
