@@ -11,20 +11,20 @@ print ( 4 * ( 2 + 3 ) == 20 )
 print ( 4 / ( ( 3 + 5 ) * 2 ) == 0.25 )
 print ( ( & x -> x * x ) 3 == 9 )
 print ( ( & x y -> ( x + y ) / 2 ) 3 5 == 4.0 )
-Int x = 4
-Int y = 5
+let x = 4
+let y = 5
 print ( x * y == 20 )
-Func foo = & x -> x * x
+let foo = & x -> x * x
 print ( foo 4 == 16 )
-Func bar = & x y -> ( x + y ) / 2
+let bar = & x y -> ( x + y ) / 2
 print ( bar 3 5 == 4.0 )
 print ( foo ( foo 4 ) == 256 )
-Func f = & g z -> g ( g z )
+let f = & g z -> g ( g z )
 print ( f foo 4 == 256 )
 
 print "Hello, world!"
 
-Func fact = & x -> if x > 0 then x * ( fact ( x - 1 ) ) else 1
+let fact = & x -> if x > 0 then x * ( fact ( x - 1 ) ) else 1
 print ( fact 4 + 1 == 25 )
 print ( 1 + fact 4 == 25 )
 print ( f succ 4 == 6 )
