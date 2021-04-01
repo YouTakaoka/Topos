@@ -1,5 +1,6 @@
 import Calc
 import Function
+import Shell
 import System.Environment (getArgs)
 
 interpret :: [String] -> [Bind] -> IO ()
@@ -21,7 +22,11 @@ interpret (str: rest) binds =
 interpret [] _ = return ()
 
 main = do
-    (file_name : _) <- getArgs
-    cs <- readFile file_name
-    let ls = lines cs
-    interpret ls []
+    args <- getArgs
+    case args of
+        [] -> do
+            shell []
+        (file_name : _) -> do
+            cs <- readFile file_name
+            let ls = lines cs
+            interpret ls []

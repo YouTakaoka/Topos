@@ -1,3 +1,4 @@
+module Shell where
 import Calc
 import Function
 import System.IO
@@ -24,5 +25,3 @@ shell binds = do
             putStrLn $ "Parse error: " ++ (show expr)
             shell binds
 
-main = do
-    shell []
