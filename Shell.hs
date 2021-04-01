@@ -10,18 +10,12 @@ shell binds = do
     prompt
     str <- getLine
     case _eval binds (toExp str) of
-        Left s -> do
-            putStrLn s
+        (Err e, binds) -> do
+            putStrLn e
             shell binds
-        Right ((Err e: []), _) -> do
-            putStrLn $ "Error: " ++ e
-            shell binds
-        Right ((res: []), binds2) -> do
+        (Null, binds2) -> do
+            shell binds2
+        (res, binds2) -> do
             print res
             shell binds2
-        Right ([], binds2) -> do
-            shell binds2
-        Right (expr, _) -> do
-            putStrLn $ "Parse error: " ++ (show expr)
-            shell binds
-
+        

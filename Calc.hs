@@ -81,14 +81,7 @@ _evalWrd (Tobe s) =
         Left _ -> Tobe s
         Right w -> w
 _evalWrd w = w
-
-_evalToWrd :: [Bind] -> Exp -> Wrd
-_evalToWrd binds expr =
-    case _eval binds expr of
-        Left s -> Err s
-        Right ((w:[]), _) -> w
-        Right (ws, _) -> Err ("Result became to more than one words: " ++ show ws)
-
+    
 _subOp :: StrOp -> Exp -> Exp
 _subOp (str, op) expr =
     case divListBy (Tobe str) expr of
@@ -99,27 +92,10 @@ _mulSubOp :: [StrOp] -> Exp -> Exp
 _mulSubOp (strop: []) expr = _subOp strop expr
 _mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
 
-_evalOldBinds :: [Bind] -> [Bind] -> Exp -> Either String (Exp, [Bind])
-_evalOldBinds binds binds2 expr =
-    case _eval binds2 expr of
-        Left s -> Left s
-        Right (res, _) -> Right (res, binds)
-
 _toList :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
 _toList binds expr =
-    case divListBy (Tobe ",") expr of
-    Nothing ->
-        case _eval binds expr of
-        Left s -> Err s
-        Right ((w: []), _) -> List [w]
-        Right (expr2, _) -> Err ("Parse error: " ++ (show expr2))
-    Just (_, a, rest) ->
-        case _eval binds a of
-        Left s -> Err s
-        Right ((w: []), _) ->
-            let (List ws) = _toList binds rest
-            in List (w : ws)
-        Right (expr2, _) -> Err ("Parse error: " ++ (show expr2))
+    let ls = divListInto (Tobe ",") expr
+    in List $ map (\ ex -> fst $ _eval binds ex) ls
 
 _toPair :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
 _toPair binds expr =
@@ -127,12 +103,9 @@ _toPair binds expr =
     Nothing ->
         Err ("',' not found: " ++ (show expr))
     Just (_, expr1, expr2) ->
-        case (_eval binds expr1, _eval binds expr2) of
-        (Left s, _) -> Err s
-        (_, Left s) -> Err s
-        (Right ((w1: []), _), Right ((w2: []), _)) ->
-            Pair (w1, w2)
-        _ -> Err "Parse error"
+        let (w1, _) = _eval binds expr1
+            (w2, _) = _eval binds expr2
+        in Pair (w1, w2)
 
 _applyOp :: Op -> Exp -> Wrd -> Exp -> Exp
 _applyOp op ws1 y rest2 =
@@ -144,52 +117,44 @@ _applyOp op ws1 y rest2 =
     UnOp unop ->
         ws1 ++ [unop (_evalWrd y)] ++ rest2
 
-_bind :: [Bind] -> Exp -> Either String (Exp, [Bind])
+_bind :: [Bind] -> Exp -> (Wrd, [Bind])
 _bind binds rest =
  case divListBy (Tobe "=") rest of
         Nothing ->
-            Left "Syntax error: missing `=`"
+            (Err "Syntax error: missing `=`", binds)
         Just (_, (Tobe w: []), expr) ->
-            case _eval binds expr of
-                Left s -> Left s
-                Right ((rhs: []), _) ->
-                    Right ([rhs], (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
-                _ -> Left "`=`: Evaluation error."
-        _ -> Left "Syntax error: You should specify only one symbol to bind value."
+            let (rhs, _) = _eval binds expr
+            in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
+        _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
 
-_eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
+_eval :: [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe ":") rest of
-    Nothing -> Left "Function: Syntax error, missing `:`"
+    Nothing -> (Err "Function: Syntax error, missing `:`", binds)
     Just (_, types, rest2) ->
         case divListBy (Tobe "->") types of
-        Nothing -> Left "Function: Syntax error, missing `->`"
+        Nothing -> (Err "Function: Syntax error, missing `->`", binds)
         Just (_, as_t, (Tobe ret_t : [])) ->
             case divListBy (Tobe "->") rest2 of
-            Nothing -> Left "Function: Syntax error, missing `->`"
+            Nothing -> (Err "Function: Syntax error, missing `->`", binds)
             Just (_, as, expr)
-                | length as_t /= length as -> Left "Function: Mismatch numbers of types and arguments."
+                | length as_t /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
                 | otherwise ->
                     let ass = map (\ (Tobe a) -> a) as
                         ts = map (\ (Tobe t) -> toType t) as_t
                         rt = toType ret_t
-                    in Right ([Func $ Fun (Function { args = zip ts ass, ret_t = rt, ret = expr })], binds)
-_eval binds (Tobe "let" : rest) =
-    case _bind binds rest of
-        Left s -> Left s
-        Right (expr, binds2) -> Right (expr, binds2)
+                    in (Func $ Fun (Function { args = zip ts ass, ret_t = rt, ret = expr }), binds)
+_eval binds (Tobe "let" : rest) = _bind binds rest
 _eval binds (Tobe "letn" : rest) =
-    case _bind binds rest of
-        Left s -> Left s
-        Right (_, binds2) -> Right ([], binds2)
+    let (_, binds2) = _bind binds rest
+    in (Null, binds2)
 _eval binds (Tobe "if" : rest) =
     let Just (_, cond, rest2) = divListBy (Tobe "then") rest
         Just (_, thn, els) = divListBy (Tobe "else") rest2
     in case _eval binds cond of
-        Left s -> Left s
-        Right ((Bool truth : _), binds2) ->
-            if truth then _evalOldBinds binds binds2 thn else _evalOldBinds binds binds2 els
-        _ -> Left "Entered a non-boolean value into `if` statement."
+        (Bool truth, binds2) ->
+            if truth then (fst $ _eval binds2 thn, binds) else (fst $ _eval binds2 els, binds)
+        _ -> (Err "Entered a non-boolean value into `if` statement.", binds)
 _eval binds expr =
     let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
     in
@@ -199,29 +164,27 @@ _eval binds expr =
         Nothing ->
             case findParenthesis ws "(" ")" of -- 括弧探し
             Found (ws1, ws2, ws3) -> -- 括弧見つかった
-                case _eval binds ws2 of
-                Right (res, binds2) -> _eval binds2 $ ws1 ++ res ++ ws3
-                Left s -> Left s
-            Error s -> Left s
+                let (rslt, _) = _eval binds ws2
+                in _eval binds $ ws1 ++ [rslt] ++ ws3
+            Error s -> (Err s, binds)
             NotFound -> -- 括弧見つからなかった
                 case findParenthesis ws "[" "]" of -- リスト探し
                 Found (ws1, ws2, ws3) ->
                     _eval binds $ ws1 ++ [_toList binds ws2] ++ ws3
-                Error s -> Left s
+                Error s -> (Err s, binds)
                 NotFound ->
                     case findParenthesis ws "((" "))" of -- タプル探し
                     Found (ws1, ws2, ws3) ->
                         _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
-                    Error s -> Left s
+                    Error s -> (Err s, binds)
                     NotFound ->
                         case divList _isFunction ws of -- 関数探し
                         Just (Func (Fun f), expr1, expr2) -> -- 関数
                             let l = length $ args f
                                 as = take l expr2
                                 rest = drop l expr2
-                            in  case _eval binds $ (_macroGen f) as of
-                                    Right (rslt, _) -> _eval binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
-                                    Left s -> Left s
+                                (rslt, _) = _eval binds $ (_macroGen f) as
+                            in _eval binds $ expr1 ++ [rslt] ++ rest
                         Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
                             let args = map _evalWrd $ take l ws2
                                 rest = drop l ws2
@@ -233,15 +196,10 @@ _eval binds expr =
                                 in _eval binds $ _applyOp op ws1 y rest2
                             Nothing -> -- オペレータ見つからなかった
                                 case ws of
-                                    [] -> Right ([], binds)
-                                    (ToEval expr: rest) -> -- 「後でevaる」を処理
-                                        case _eval binds expr of
-                                        Left s -> Left s
-                                        Right (rslt, binds2) ->
-                                            _eval binds2 $ rslt ++ rest
+                                    [] -> (Null, binds)
                                     ((PreList pls) : rest) ->
-                                        let ls = map (_evalToWrd binds) pls
+                                        let ls = map (\ expr -> fst $ _eval binds expr) pls
                                         in _eval binds (List ls : rest)
-                                    (Tobe s: []) -> Left $ "Unknown keyword: " ++ s
-                                    (w : []) -> Right ([w], binds)
-                                    _ -> Left ("Parse failed: " ++ show ws)
+                                    (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
+                                    (w : []) -> (w, binds)
+                                    _ -> (Err $ "Parse failed: " ++ show ws, binds)
