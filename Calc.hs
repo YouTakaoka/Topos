@@ -242,5 +242,6 @@ _eval binds expr =
                                     ((PreList pls) : rest) ->
                                         let ls = map (_evalToWrd binds) pls
                                         in _eval binds (List ls : rest)
-                                    (w: []) -> Right ([_evalWrd w], binds)
+                                    (Tobe s: []) -> Left $ "Unknown keyword: " ++ s
+                                    (w : []) -> Right ([w], binds)
                                     _ -> Left ("Parse failed: " ++ show ws)
