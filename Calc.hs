@@ -46,7 +46,7 @@ _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
 
 _isFunction :: Wrd -> Bool
-_isFunction (Func (Function _)) = True
+_isFunction (Func (Fun _)) = True
 _isFunction (Func (Operator (_, FuncOp _))) = True
 _isFunction _ = False
 
@@ -78,7 +78,7 @@ myReadInt (Left s) =
 _evalWrd :: Wrd -> Wrd
 _evalWrd (Tobe s) =
     case myReadBool $ myReadDouble $ myReadInt (Left s) of
-        Left s -> Err ("Failed to parse: " ++ s)
+        Left _ -> Tobe s
         Right w -> w
 _evalWrd w = w
 
@@ -144,14 +144,6 @@ _applyOp op ws1 y rest2 =
     UnOp unop ->
         ws1 ++ [unop (_evalWrd y)] ++ rest2
 
-_typeCheck :: String -> Wrd -> Bool
-_typeCheck "String" (Str _) = True
-_typeCheck "Int" (Int _) = True
-_typeCheck "Double" (Double _) = True
-_typeCheck "Bool" (Bool _) = True
-_typeCheck "Func" (Func _) = True
-_typeCheck _ _ = False
-
 _bind :: [Bind] -> Exp -> Either String (Exp, [Bind])
 _bind binds rest =
  case divListBy (Tobe "=") rest of
@@ -161,15 +153,27 @@ _bind binds rest =
             case _eval binds expr of
                 Left s -> Left s
                 Right ((rhs: []), _) ->
-                    Right ([rhs], (Bind { identifier = w, value = rhs } : binds))
+                    Right ([rhs], (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
                 _ -> Left "`=`: Evaluation error."
         _ -> Left "Syntax error: You should specify only one symbol to bind value."
 
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
-    case divListBy (Tobe "->") rest of
-        Just (_, args, expr) -> Right ([(Func (Function (args, expr)))], binds)
-        Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
+    case divListBy (Tobe ":") rest of
+    Nothing -> Left "Function: Syntax error, missing `:`"
+    Just (_, types, rest2) ->
+        case divListBy (Tobe "->") types of
+        Nothing -> Left "Function: Syntax error, missing `->`"
+        Just (_, as_t, (Tobe ret_t : [])) ->
+            case divListBy (Tobe "->") rest2 of
+            Nothing -> Left "Function: Syntax error, missing `->`"
+            Just (_, as, expr)
+                | length as_t /= length as -> Left "Function: Mismatch numbers of types and arguments."
+                | otherwise ->
+                    let ass = map (\ (Tobe a) -> a) as
+                        ts = map (\ (Tobe t) -> toType t) as_t
+                        rt = toType ret_t
+                    in Right ([Func $ Fun (Function { args = zip ts ass, ret_t = rt, ret = expr })], binds)
 _eval binds (Tobe "let" : rest) =
     case _bind binds rest of
         Left s -> Left s
@@ -187,7 +191,7 @@ _eval binds (Tobe "if" : rest) =
             if truth then _evalOldBinds binds binds2 thn else _evalOldBinds binds binds2 els
         _ -> Left "Entered a non-boolean value into `if` statement."
 _eval binds expr =
-    let ws = _mulSubOp _opls_dec $ _mulSubst expr binds
+    let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
     in
         case divListBy (Tobe "#") ws of --コメント探し
         Just (_, expr1, expr2) ->
@@ -211,11 +215,11 @@ _eval binds expr =
                     Error s -> Left s
                     NotFound ->
                         case divList _isFunction ws of -- 関数探し
-                        Just (Func (Function f), expr1, expr2) -> -- 関数
-                            let l = length $ fst f
-                                args = take l expr2
+                        Just (Func (Fun f), expr1, expr2) -> -- 関数
+                            let l = length $ args f
+                                as = take l expr2
                                 rest = drop l expr2
-                            in  case _eval binds $ (_macroGen (Function f)) args of
+                            in  case _eval binds $ (_macroGen f) as of
                                     Right (rslt, _) -> _eval binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
                                     Left s -> Left s
                         Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ

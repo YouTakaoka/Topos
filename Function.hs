@@ -2,19 +2,24 @@ module Function where
 import Parser
 import Debug.Trace
 
-data Type = T_Int | T_Double | T_Bool | T_String
+data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown deriving (Eq, Show)
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 type FunctionOp = (Int, Exp -> Wrd)
 data Op = BinOp BinaryOp | UnOp UnaryOp | FuncOp FunctionOp
+instance Show Op where
+    show (BinOp _) = "[BinOp]"
+    show (UnOp _) = "[UnOp]"
+    show (FuncOp _) = "[FuncOp]"
+
 type StrOp = (String, Op)
-data Fun = Function (Exp, Exp)| Operator StrOp
-data Bind = Bind { identifier :: String, value :: Wrd} deriving (Eq, Show)
+data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp } deriving (Show, Eq)
+data Fun = Fun Function | Operator StrOp deriving Show
+data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
 data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
-    (==) (Func (Function a)) (Func (Function b)) = a == b
     (==) (Bnd bind1) (Bnd bind2) = bind1 == bind2
     (==) (Tobe a) (Tobe b) = a == b
     (==) (Double a) (Double b) = a == b
@@ -24,8 +29,7 @@ instance Eq Wrd where
 instance Show Wrd where
     show (Str s) = s
     show (Func (Operator (s, _))) = "[Operator:" ++ s ++ "]"
-    show (Func (Function f)) = show f
-    show (Func (Operator (s, FuncOp _))) = "[FuncOp:" ++ s ++ "]"
+    show (Func (Fun f)) = show f 
     show (Bnd bind) = show bind
     show (Print p) = p
     show (Tobe s) = s
@@ -68,7 +72,32 @@ _mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
     _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
-_macroGen :: Fun -> (Exp -> Exp)
-_macroGen (Function (ws, expr)) =
-    \ args -> 
-        _mulSubst expr $ map (\ (Tobe a, val) -> Bind { identifier = a, value = val }) (zip ws args)
+toType :: String -> Type
+toType "String" = T_String
+toType "Int" = T_Int
+toType "Double" = T_Double
+toType "Bool" = T_Bool
+
+_getType :: Wrd -> Type
+_getType (Str _) = T_String
+_getType (Int _) = T_Int
+_getType (Double _) = T_Double
+_getType (Bool _) = T_Bool
+_getType (Tobe _) = T_Unknown
+_getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
+    let ast = map (\ (t, a) -> t) as
+    in T_Function { args_t = ast, return_t = rt }
+
+_typeCheck :: [Bind] -> Maybe String -- NothingならOK，Justはエラー
+_typeCheck [] = Nothing
+_typeCheck (b: binds)
+    | (_getType $ value b) == vtype b = _typeCheck binds
+    | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show $ _getType $ value b) ++ "`."
+
+_macroGen :: Function -> (Exp -> Exp)
+_macroGen (Function { args = as, ret_t = ret_t, ret = expr }) =
+    \ arguments -> 
+        let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
+        in case _typeCheck binds of
+            Nothing -> _mulSubst expr binds
+            Just s -> [Err s]
