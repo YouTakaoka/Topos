@@ -87,7 +87,7 @@ _evalToWrd binds expr =
     case _eval binds expr of
         Left s -> Err s
         Right ((w:[]), _) -> w
-        Right (ws, _) -> Err ("_evalToWrd: Result became to more than one words: " ++ show ws)
+        Right (ws, _) -> Err ("Result became to more than one words: " ++ show ws)
 
 _subOp :: StrOp -> Exp -> Exp
 _subOp (str, op) expr =
@@ -112,27 +112,27 @@ _toList binds expr =
         case _eval binds expr of
         Left s -> Err s
         Right ((w: []), _) -> List [w]
-        Right (expr2, _) -> Err ("_toList: Parse error: " ++ (show expr2))
+        Right (expr2, _) -> Err ("Parse error: " ++ (show expr2))
     Just (_, a, rest) ->
         case _eval binds a of
         Left s -> Err s
         Right ((w: []), _) ->
             let (List ws) = _toList binds rest
             in List (w : ws)
-        Right (expr2, _) -> Err ("_toList: Parse error: " ++ (show expr2))
+        Right (expr2, _) -> Err ("Parse error: " ++ (show expr2))
 
 _toPair :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
 _toPair binds expr =
     case divListBy (Tobe ",") expr of
     Nothing ->
-        Err ("_toPair: ',' not found: " ++ (show expr))
+        Err ("',' not found: " ++ (show expr))
     Just (_, expr1, expr2) ->
         case (_eval binds expr1, _eval binds expr2) of
         (Left s, _) -> Err s
         (_, Left s) -> Err s
         (Right ((w1: []), _), Right ((w2: []), _)) ->
             Pair (w1, w2)
-        _ -> Err "_toPair: Parse error"
+        _ -> Err "Parse error"
 
 _applyOp :: Op -> Exp -> Wrd -> Exp -> Exp
 _applyOp op ws1 y rest2 =
@@ -156,16 +156,29 @@ _bindType :: [Bind] -> Exp -> String -> Either String (Exp, [Bind])
 _bindType binds rest t =
  case divListBy (Tobe "=") rest of
         Nothing ->
-            Left "_bindType: Syntax error: missing `=`"
+            Left "Syntax error: missing `=`"
         Just (_, (w: []), expr) ->
             case _eval binds expr of
                 Left s -> Left s
                 Right ((rhs: []), _) ->
                     case _typeCheck t rhs of
                         True -> Right ([rhs], ((w, [rhs]) : binds))
-                        False -> Left $ "_bindType: Type error. The RHS must have type `" ++ t ++ "`."
-                _ -> Left "_bindType: Evaluation error."
-        _ -> Left "_bindType: Syntax error: You should specify only one symbol to bind value."
+                        False -> Left $ "Type error. The RHS must have type `" ++ t ++ "`."
+                _ -> Left "Evaluation error."
+        _ -> Left "Syntax error: You should specify only one symbol to bind value."
+
+_bind :: [Bind] -> Exp -> Either String (Exp, [Bind])
+_bindType binds rest =
+ case divListBy (Tobe "=") rest of
+        Nothing ->
+            Left "Syntax error: missing `=`"
+        Just (_, (w: []), expr) ->
+            case _eval binds expr of
+                Left s -> Left s
+                Right ((rhs: []), _) ->
+                    True -> Right ([rhs], ((w, [rhs]) : binds))
+                _ -> Left "`=`: Evaluation error."
+        _ -> Left "Syntax error: You should specify only one symbol to bind value."
 
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "&" : rest) =

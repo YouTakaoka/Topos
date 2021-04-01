@@ -16,28 +16,28 @@ _mul0 (Double x) (Double y) = Double (x * y)
 _mul0 (Int x) (Int y) = Int (x * y)
 _mul0 (Int x) (Double y) = Double ((fromIntegral x) * y)
 _mul0 (Double x) (Int y) = Double (x * (fromIntegral y))
-_mul0 x y = Err $ "_mul0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+_mul0 x y = Err $ "`*`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div0 :: Wrd -> Wrd -> Wrd
 _div0 (Double x) (Double y) = Double (x / y)
 _div0 (Int x) (Int y) = Double ((fromIntegral x) / (fromIntegral y))
 _div0 (Int x) (Double y) = Double ((fromIntegral x) / y)
 _div0 (Double x) (Int y) = Double (x / (fromIntegral y))
-_div0 x y = Err $ "_div0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+_div0 x y = Err $ "`/`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _add0 :: Wrd -> Wrd -> Wrd
 _add0 (Double x) (Double y) = Double (x + y)
 _add0 (Int x) (Int y) = Int (x + y)
 _add0 (Int x) (Double y) = Double ((fromIntegral x) + y)
 _add0 (Double x) (Int y) = Double (x + (fromIntegral y))
-_add0 x y = Err $ "_add0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+_add0 x y = Err $ "`+`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub0 :: Wrd -> Wrd -> Wrd
 _sub0 (Double x) (Double y) = Double (x - y)
 _sub0 (Int x) (Int y) = Int (x - y)
 _sub0 (Int x) (Double y) = Double ((fromIntegral x) - y)
 _sub0 (Double x) (Int y) = Double (x - (fromIntegral y))
-_sub0 x y = Err $ "_sub0: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+_sub0 x y = Err $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _mul :: Op
 _mul = BinOp _mul0
@@ -54,7 +54,7 @@ _sub = BinOp _sub0
 _succ0 :: Wrd -> Wrd
 _succ0 (Int x) = Int (x + 1)
 _succ0 (Double x) = Double (x + 1)
-_succ0 x = Err $ "_succ0: Illegal input value: " ++ (show x)
+_succ0 x = Err $ "succ: Illegal input value: " ++ (show x)
 
 _succ :: Op
 _succ = UnOp _succ0
@@ -136,21 +136,21 @@ _isEmpty = UnOp (\ (List ls) -> Bool (ls == []))
 
 _take0 :: Exp -> Wrd
 _take0 (Int n : (List ls : [])) = List $ take n ls
-_take0 ex = Err $ "_take0: Illegal input value: " ++ (show ex)
+_take0 ex = Err $ "take: Illegal input value: " ++ (show ex)
 
 _take :: Op
 _take = FuncOp (2, _take0)
 
 _seq0 :: Exp -> Wrd
 _seq0 (Int n : (Int m : [])) = List $ map (\ x -> Int x) [n .. m]
-_seq0 ex = Err $ "_seq0: Illegal input value: " ++ (show ex)
+_seq0 ex = Err $ "seq: Illegal input value: " ++ (show ex)
 
 _seq :: Op
 _seq = FuncOp (2, _seq0)
 
 _map0 :: Exp -> Wrd
 _map0 (Func f : (List ls : [])) = PreList $ map (\ w -> [Func f, w]) ls
-_map0 ex = Err $ "_map0: Illegal input value: " ++ (show ex)
+_map0 ex = Err $ "map: Illegal input value: " ++ (show ex)
 
 _map :: Op
 _map = FuncOp (2, _map0)
