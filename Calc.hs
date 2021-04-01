@@ -43,7 +43,7 @@ _numIn :: Wrd -> Exp -> Integer
 _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
 
 _isReplaceable :: [Bind] -> Exp -> Bool
-_isReplaceable binds ex = (<) 0 $ sum $ map (\ (w, _) -> _numIn w ex) binds
+_isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
 
 _isFunction :: Wrd -> Bool
 _isFunction (Func (Function _)) = True
@@ -152,39 +152,24 @@ _typeCheck "Bool" (Bool _) = True
 _typeCheck "Func" (Func _) = True
 _typeCheck _ _ = False
 
-_bindType :: [Bind] -> Exp -> String -> Either String (Exp, [Bind])
-_bindType binds rest t =
- case divListBy (Tobe "=") rest of
-        Nothing ->
-            Left "Syntax error: missing `=`"
-        Just (_, (w: []), expr) ->
-            case _eval binds expr of
-                Left s -> Left s
-                Right ((rhs: []), _) ->
-                    case _typeCheck t rhs of
-                        True -> Right ([rhs], ((w, [rhs]) : binds))
-                        False -> Left $ "Type error. The RHS must have type `" ++ t ++ "`."
-                _ -> Left "Evaluation error."
-        _ -> Left "Syntax error: You should specify only one symbol to bind value."
-
 _bind :: [Bind] -> Exp -> Either String (Exp, [Bind])
 _bind binds rest =
  case divListBy (Tobe "=") rest of
         Nothing ->
             Left "Syntax error: missing `=`"
-        Just (_, (w: []), expr) ->
+        Just (_, (Tobe w: []), expr) ->
             case _eval binds expr of
                 Left s -> Left s
                 Right ((rhs: []), _) ->
-                    Right ([rhs], ((w, [rhs]) : binds))
+                    Right ([rhs], (Bind { identifier = w, value = rhs } : binds))
                 _ -> Left "`=`: Evaluation error."
         _ -> Left "Syntax error: You should specify only one symbol to bind value."
 
 _eval :: [Bind] -> Exp -> Either String (Exp, [Bind]) -- 初期状態で第一引数は空リスト
-_eval binds (Tobe "&" : rest) =
+_eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe "->") rest of
-        Just (_, ex1, ex2) -> Right ([(Func (Function (ex1, ex2)))], binds)
-        Nothing -> Left ("`&` statement must be accompanied with `->` operator: " ++ (show rest))
+        Just (_, args, expr) -> Right ([(Func (Function (args, expr)))], binds)
+        Nothing -> Left ("`Function` statement must be accompanied with `->` operator: " ++ (show rest))
 _eval binds (Tobe "let" : rest) =
     case _bind binds rest of
         Left s -> Left s

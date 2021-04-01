@@ -2,19 +2,20 @@ module Function where
 import Parser
 import Debug.Trace
 
+data Type = T_Int | T_Double | T_Bool | T_String
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 type FunctionOp = (Int, Exp -> Wrd)
 data Op = BinOp BinaryOp | UnOp UnaryOp | FuncOp FunctionOp
 type StrOp = (String, Op)
 data Fun = Function (Exp, Exp)| Operator StrOp
-type Bind = (Wrd, Exp)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp]
+data Bind = Bind { identifier :: String, value :: Wrd} deriving (Eq, Show)
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
     (==) (Func (Function a)) (Func (Function b)) = a == b
-    (==) (Bnd a) (Bnd b) = a == b
+    (==) (Bnd bind1) (Bnd bind2) = bind1 == bind2
     (==) (Tobe a) (Tobe b) = a == b
     (==) (Double a) (Double b) = a == b
     (==) (Int a) (Int b) = a == b
@@ -25,7 +26,7 @@ instance Show Wrd where
     show (Func (Operator (s, _))) = "[Operator:" ++ s ++ "]"
     show (Func (Function f)) = show f
     show (Func (Operator (s, FuncOp _))) = "[FuncOp:" ++ s ++ "]"
-    show (Bnd (w, ex)) = show (show w, map show ex)
+    show (Bnd bind) = show bind
     show (Print p) = p
     show (Tobe s) = s
     show (Double n) = show n
@@ -56,19 +57,18 @@ toExp str = _toExp '"' str False []
 _fromExp :: Exp -> [String]
 _fromExp expr = map show expr
 
-_subst :: Exp -> Wrd -> Exp -> Exp
+_subst :: Exp -> Wrd -> Wrd -> Exp
 _subst ws target sbst =
     case divListBy target ws of
         Nothing -> ws
-        Just (_, ws1, ws2) -> _subst (ws1 ++ sbst ++ ws2) target sbst
+        Just (_, ws1, ws2) -> _subst (ws1 ++ [sbst] ++ ws2) target sbst
 
 _mulSubst :: Exp -> [Bind] -> Exp
-_mulSubst ws ((target, sbst) : sbsts) =
-    _mulSubst (_subst ws target sbst) sbsts
+_mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
+    _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
 _macroGen :: Fun -> (Exp -> Exp)
 _macroGen (Function (ws, expr)) =
     \ args -> 
-        let argsl = map (\ a -> [a]) args
-        in _mulSubst expr (zip ws argsl)
+        _mulSubst expr $ map (\ (Tobe a, val) -> Bind { identifier = a, value = val }) (zip ws args)

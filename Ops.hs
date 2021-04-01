@@ -16,6 +16,10 @@ _mul0 (Double x) (Double y) = Double (x * y)
 _mul0 (Int x) (Int y) = Int (x * y)
 _mul0 (Int x) (Double y) = Double ((fromIntegral x) * y)
 _mul0 (Double x) (Int y) = Double (x * (fromIntegral y))
+_mul0 (Type T_Double) (Type T_Double) = Type T_Double
+_mul0 (Type T_Int) (Type T_Int) = Type T_Int
+_mul0 (Type T_Int) (Type T_Double) = Type T_Double
+_mul0 (Type T_Double) (Type T_Int) = Type T_Double
 _mul0 x y = Err $ "`*`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div0 :: Wrd -> Wrd -> Wrd
