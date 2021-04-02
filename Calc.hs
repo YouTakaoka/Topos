@@ -127,15 +127,26 @@ _bind binds rest =
             in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
         _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
 
-_evalFunctionSignature :: Exp -> Either String Type
+data TypeOrTypeContents = TP Type | TContents [Type]
+
+_evalFunctionSignature :: Exp -> Either String TypeOrTypeContents
 _evalFunctionSignature expr = -- exprは<>の中身
     case divListBy (Tobe "Function") expr of
         Nothing ->
-            case divListBy (Tobe "->") expr of
-                Nothing -> Left "Syntax error: Missing `->`"
-                Just (_, expr1, t_r) ->
-                    let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
-                    in Right $ T_Function { args_t = as_t, return_t = toType t_r }
+            case findParenthesis expr "(" ")" of
+                Error s -> Left s
+                Found (expr2, expr3, expr4) ->
+                    case _evalFunctionSignature expr3 of
+                        Left s -> Left s
+                        Right (TContents ts) ->
+                            _evalFunctionSignature $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
+                NotFound ->
+                    case divListBy (Tobe "->") expr of
+                        Nothing ->
+                            Right $ TContents $ map (\ ex -> toType ex) $ divListInto (Tobe ",") expr
+                        Just (_, expr1, t_r) ->
+                            let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
+                            in Right $ TP $ T_Function { args_t = as_t, return_t = toType t_r }
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
                 Error s -> Left s
@@ -143,7 +154,8 @@ _evalFunctionSignature expr = -- exprは<>の中身
                 Found ([], expr3, expr4) ->
                     case _evalFunctionSignature expr3 of
                         Left s -> Left s
-                        Right t -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                        Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                        _ -> Left "Syntax error: missing `->`"
                 _ -> Left "Syntax error: `<` must follow just after `Function`"
 
 _eval :: [Bind] -> Exp -> (Wrd, [Bind])
@@ -157,7 +169,7 @@ _eval binds (Tobe "Function" : rest) =
         Found ([], expr1, []) ->
             case _evalFunctionSignature expr1 of
             Left s -> (Err s, binds)
-            Right (T_Function { args_t = ts , return_t = rt }) ->
+            Right (TP (T_Function { args_t = ts , return_t = rt })) ->
                 case divListBy (Tobe "->") rest2 of
                 Nothing -> (Err "Function: Syntax error, missing `->`", binds)
                 Just (_, as, expr2)

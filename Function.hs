@@ -2,7 +2,7 @@ module Function where
 import Parser
 import Debug.Trace
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_List Type | T_EmptyList | T_Pair Type Type | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown | T_Error deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_List Type | T_EmptyList | T_Tuple [Type] | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown | T_Error deriving (Eq, Show)
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 type FunctionOp = (Int, Exp -> Wrd)
@@ -98,6 +98,7 @@ _getType (Tobe _) = T_Unknown
 _getType (Err _) = T_Error
 _getType (List (w: _)) = T_List $ _getType w
 _getType (List []) = T_EmptyList
+_getType (Tuple tp) = T_Tuple $ map _getType tp
 _getType (Func (Operator (_, UnOp _))) = T_UnaryOp
 _getType (Func (Operator (_, BinOp _))) = T_BinaryOp
 _getType (Func (Operator (_, FuncOp _))) = T_FunctionOp

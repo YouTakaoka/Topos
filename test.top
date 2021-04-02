@@ -33,6 +33,8 @@ let tpl = ( 4 , ( "hoge" , 1.0 / 2.0 ) )
 print "------------- fuga ----------------------"
 print ( fst tpl == 4 )
 print ( snd tpl == ( "hoge" , 0.5 ) )
+let swap = Function < ( Int , String ) -> ( String , Int ) > : tpl -> ( snd tpl , fst tpl )
+print ( swap ( 4 , "takaoka" ) )
 let ls = seq 1 10
 print ( pop ls )
 print "-------------------------------"
