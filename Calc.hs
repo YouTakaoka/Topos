@@ -179,18 +179,18 @@ _eval binds (Tobe "if" : rest) =
             if truth then (fst $ _eval binds2 thn, binds) else (fst $ _eval binds2 els, binds)
         _ -> (Err "Entered a non-boolean value into `if` statement.", binds)
 _eval binds expr =
-    let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
-    in
-        case divListBy (Tobe "#") ws of --コメント探し
-        Just (_, expr1, expr2) ->
-            _eval binds expr1
-        Nothing ->
-            case findParenthesis ws "(" ")" of -- 括弧探し
-            Found (ws1, ws2, ws3) -> -- 括弧見つかった
-                let (rslt, _) = _eval binds ws2
-                in _eval binds $ ws1 ++ [rslt] ++ ws3
-            Error s -> (Err s, binds)
-            NotFound -> -- 括弧見つからなかった
+    case divListBy (Tobe "#") expr of --コメント探し
+    Just (_, expr1, expr2) ->
+        _eval binds expr1
+    Nothing ->
+        case findParenthesis expr "(" ")" of -- 括弧探し
+        Found (ws1, ws2, ws3) -> -- 括弧見つかった
+            let (rslt, _) = _eval binds ws2
+            in _eval binds $ ws1 ++ [rslt] ++ ws3
+        Error s -> (Err s, binds)
+        NotFound -> -- 括弧見つからなかった
+            let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
+            in
                 case findParenthesis ws "[" "]" of -- リスト探し
                 Found (ws1, ws2, ws3) ->
                     _eval binds $ ws1 ++ [_toList binds ws2] ++ ws3
