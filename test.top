@@ -9,9 +9,6 @@ print ( 3 / 2 * 5 == 7.5 )
 print ( 1 - 2  + 3 == 2 )
 print ( 4 * ( 2 + 3 ) == 20 )
 print ( 4 / ( ( 3 + 5 ) * 2 ) == 0.25 )
-
-print "hoge"
-
 print ( ( Function < Int -> Int > : x -> x * x ) 3 == 9 )
 print ( ( Function < Double , Double -> Double > : x y -> ( x + y ) / 2 ) 3.0 5.0 == 4.0 )
 let x = 4
@@ -22,15 +19,14 @@ print ( foo 4 == 16 )
 let bar = Function < Double , Double -> Double > : x y -> ( x + y ) / 2
 print ( bar 3.0 5.0 == 4.0 )
 print ( foo ( foo 4 ) == 256 )
-
-print "-------------------------------"
-
-let f = Function g z -> g ( g z )
+let f = Function < Function < Int -> Int > , Int -> Int > : g z -> g ( g z )
 print ( f foo 4 == 256 )
-let fact = Function x -> if x > 0 then x * ( fact ( x - 1 ) ) else 1
+let fact = Function < Int -> Int > : x -> if x > 0 then x * ( fact ( x - 1 ) ) else 1
 print ( fact 4 + 1 == 25 )
 print ( 1 + fact 4 == 25 )
-print ( f succ 4 == 6 )
+print "-------------------------------"
+let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )
+print ( g succ 4 == 6 )
 print ( succ ( succ 4 ) == 6 ) # piyopiyo
 print ( head [ 1 , 2 , 3 ] == 1 )
 let tpl = (( 4 , "hoge" ))

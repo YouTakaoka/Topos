@@ -77,6 +77,9 @@ toType (Tobe "String") = T_String
 toType (Tobe "Int") = T_Int
 toType (Tobe "Double") = T_Double
 toType (Tobe "Bool") = T_Bool
+toType (Tobe "UnaryOp") = T_UnaryOp
+toType (Tobe "BinaryOp") = T_BinaryOp
+toType (Tobe "FunctionOp") = T_FunctionOp
 toType (Type t) = t
 
 _getType :: Wrd -> Type
@@ -85,6 +88,9 @@ _getType (Int _) = T_Int
 _getType (Double _) = T_Double
 _getType (Bool _) = T_Bool
 _getType (Tobe _) = T_Unknown
+_getType (Func (Operator (_, UnOp _))) = T_UnaryOp
+_getType (Func (Operator (_, BinOp _))) = T_BinaryOp
+_getType (Func (Operator (_, FuncOp _))) = T_FunctionOp
 _getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
     let ast = map (\ (t, a) -> t) as
     in T_Function { args_t = ast, return_t = rt }
