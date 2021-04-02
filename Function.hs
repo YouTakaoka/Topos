@@ -72,11 +72,12 @@ _mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
     _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
-toType :: String -> Type
-toType "String" = T_String
-toType "Int" = T_Int
-toType "Double" = T_Double
-toType "Bool" = T_Bool
+toType :: Wrd -> Type
+toType (Tobe "String") = T_String
+toType (Tobe "Int") = T_Int
+toType (Tobe "Double") = T_Double
+toType (Tobe "Bool") = T_Bool
+toType (Type t) = t
 
 _getType :: Wrd -> Type
 _getType (Str _) = T_String

@@ -127,23 +127,46 @@ _bind binds rest =
             in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
         _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
 
+_evalFunctionSignature :: Exp -> Either String Type
+_evalFunctionSignature expr = -- exprは<>の中身
+    case divListBy (Tobe "Function") expr of
+        Nothing ->
+            case divListBy (Tobe "->") expr of
+                Nothing -> Left "Syntax error: Missing `->`"
+                Just (_, expr1, (t_r : [])) ->
+                    let as_t = map (\ (w: []) -> toType w) $ divListInto (Tobe ",") expr1
+                    in Right $ T_Function { args_t = as_t, return_t = toType t_r }
+                _ -> Left "Syntax error: RHS of `->` must be only one type identifier."
+        Just (_, expr1, expr2) ->
+            case findParenthesis expr2 "<" ">" of
+                Error s -> Left s
+                NotFound -> Left "Syntax error: `<` not found after `Function`"
+                Found ([], expr3, expr4) ->
+                    case _evalFunctionSignature expr3 of
+                        Left s -> Left s
+                        Right t -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                _ -> Left "Syntax error: `<` must follow just after `Function`"
+
 _eval :: [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe ":") rest of
     Nothing -> (Err "Function: Syntax error, missing `:`", binds)
-    Just (_, types, rest2) ->
-        case divListBy (Tobe "->") types of
-        Nothing -> (Err "Function: Syntax error, missing `->`", binds)
-        Just (_, as_t, (Tobe ret_t : [])) ->
-            case divListBy (Tobe "->") rest2 of
-            Nothing -> (Err "Function: Syntax error, missing `->`", binds)
-            Just (_, as, expr)
-                | length as_t /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
-                | otherwise ->
-                    let ass = map (\ (Tobe a) -> a) as
-                        ts = map (\ (Tobe t) -> toType t) as_t
-                        rt = toType ret_t
-                    in (Func $ Fun (Function { args = zip ts ass, ret_t = rt, ret = expr }), binds)
+    Just (_, rest1, rest2) ->
+        case findParenthesis rest1 "<" ">" of
+        Error s -> (Err s, binds)
+        NotFound -> (Err "Function: Syntax error, `<` must follow just after `Function`", binds)
+        Found ([], expr1, []) ->
+            case _evalFunctionSignature expr1 of
+            Left s -> (Err s, binds)
+            Right (T_Function { args_t = ts , return_t = rt }) ->
+                case divListBy (Tobe "->") rest2 of
+                Nothing -> (Err "Function: Syntax error, missing `->`", binds)
+                Just (_, as, expr2)
+                    | length ts /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
+                    | otherwise ->
+                        let ass = map (\ (Tobe a) -> a) as
+                        in (Func $ Fun (Function { args = zip ts ass, ret_t = rt, ret = expr2 }), binds)
+        _ -> (Err "Function: Syntax error.", binds)
 _eval binds (Tobe "let" : rest) = _bind binds rest
 _eval binds (Tobe "letn" : rest) =
     let (_, binds2) = _bind binds rest
