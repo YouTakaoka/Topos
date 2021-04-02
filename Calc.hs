@@ -206,8 +206,9 @@ _eval binds expr =
                             let l = length $ args f
                                 as = take l expr2
                                 rest = drop l expr2
-                                (rslt, _) = _eval binds $ (_macroGen f) as
-                            in _eval binds $ expr1 ++ [rslt] ++ rest
+                            in case (_macroGen f) as of
+                                Left s -> (Err s, binds)
+                                Right rslt -> _eval binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
                         Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
                             let args = map _evalWrd $ take l ws2
                                 rest = drop l ws2

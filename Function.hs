@@ -95,10 +95,13 @@ _typeCheck (b: binds)
     | (_getType $ value b) == vtype b = _typeCheck binds
     | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show $ _getType $ value b) ++ "`."
 
-_macroGen :: Function -> (Exp -> Exp)
+_macroGen :: Function -> (Exp -> Either String Exp)
 _macroGen (Function { args = as, ret_t = ret_t, ret = expr }) =
-    \ arguments -> 
-        let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
-        in case _typeCheck binds of
-            Nothing -> _mulSubst expr binds
-            Just s -> [Err s]
+    \ arguments ->
+        case length as == length arguments of
+            False -> Left "Number of arguments of function does not match."
+            True ->
+                let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
+                in case _typeCheck binds of
+                    Nothing -> Right $ _mulSubst expr binds
+                    Just s -> Left s
