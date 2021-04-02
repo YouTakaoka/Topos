@@ -9,6 +9,7 @@ print ( 3 / 2 * 5 == 7.5 )
 print ( 1 - 2  + 3 == 2 )
 print ( 4 * ( 2 + 3 ) == 20 )
 print ( 4 / ( ( 3 + 5 ) * 2 ) == 0.25 )
+print "----------------- hoge -----------------"
 print ( ( Function < Int -> Int > : x -> x * x ) 3 == 9 )
 print ( ( Function < Double , Double -> Double > : x y -> ( x + y ) / 2 ) 3.0 5.0 == 4.0 )
 let x = 4
@@ -26,18 +27,18 @@ print ( fact 4 + 1 == 25 )
 print ( 1 + fact 4 == 25 )
 let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )
 print ( g succ 4 == 6 )
-print ( succ ( succ 4 ) == 6 ) # piyopiyo
+print ( succ ( succ 4 ) == 6 ) # piyo
 print ( head [ 1 , 2 , 3 ] == 1 )
-let tpl = (( 4 , "hoge" ))
+let tpl = ( 4 , ( "hoge" , 1.0 / 2.0 ) )
+print "------------- fuga ----------------------"
 print ( fst tpl == 4 )
-print ( snd tpl == "hoge" )
+print ( snd tpl == ( "hoge" , 0.5 ) )
 let ls = seq 1 10
 print ( pop ls )
 print "-------------------------------"
-
 let sum = Function < List Int -> Int > : ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
 print ( sum ls == 55 )
-print ( take 3 ls )
+print ( take 3 ls == [ 1 , 2 , 3 ] )
 print ( map succ ls )
 print ( map foo ls )
 print ( map fact ls )

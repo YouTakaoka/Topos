@@ -160,10 +160,10 @@ _map :: Op
 _map = FuncOp (2, _map0)
 
 _fst :: Op
-_fst = UnOp (\ (Pair (w1, w2)) -> w1)
+_fst = UnOp (\ (Tuple (w1 : _)) -> w1)
 
 _snd :: Op
-_snd = UnOp (\ (Pair (w1, w2)) -> w2)
+_snd = UnOp (\ (Tuple (_ : (w2 : _))) -> w2)
 
 _opls :: [StrOp]  -- 優先順位の低い順に並べる
 _opls = [

@@ -28,7 +28,7 @@ _findParenthesis ws cnt b e = -- cnt は初期値 -1
         | otherwise ->
             case _findParenthesis ws2 (if d == b then cnt + 1 else cnt - 1) b e of
             Found (_, ex2, ex3) -> Found ([], ws1 ++ [d] ++ ex2, ex3)
-            NotFound -> Error "End of parenthesis not found."
+            NotFound -> Error "Mismatch of parenthesis."
 
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
@@ -146,7 +146,7 @@ _evalFunctionSignature expr = -- exprは<>の中身
                         Right t -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
                 _ -> Left "Syntax error: `<` must follow just after `Function`"
 
-_eval :: [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
+_eval :: [Bind] -> Exp -> (Wrd, [Bind])
 _eval binds (Tobe "Function" : rest) =
     case divListBy (Tobe ":") rest of
     Nothing -> (Err "Function: Syntax error, missing `:`", binds)
@@ -182,47 +182,54 @@ _eval binds expr =
     Just (_, expr1, expr2) ->
         _eval binds expr1
     Nothing ->
-        case findParenthesis expr "(" ")" of -- 括弧探し
-        Found (ws1, ws2, ws3) -> -- 括弧見つかった
-            let (rslt, _) = _eval binds ws2
-            in _eval binds $ ws1 ++ [rslt] ++ ws3
+        case findParenthesis expr "(" ")" of
         Error s -> (Err s, binds)
-        NotFound -> -- 括弧見つからなかった
-            let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
-            in
-                case findParenthesis ws "[" "]" of -- リスト探し
-                Found (ws1, ws2, ws3) ->
-                    _eval binds $ ws1 ++ [_toList binds ws2] ++ ws3
-                Error s -> (Err s, binds)
-                NotFound ->
-                    case findParenthesis ws "((" "))" of -- タプル探し
-                    Found (ws1, ws2, ws3) ->
-                        _eval binds $ ws1 ++ [_toPair binds ws2] ++ ws3
-                    Error s -> (Err s, binds)
-                    NotFound ->
-                        case divList _isFunction ws of -- 関数探し
-                        Just (Func (Fun f), expr1, expr2) -> -- 関数
-                            let l = length $ args f
-                                as = take l expr2
-                                rest = drop l expr2
-                            in case (_macroGen f) as of
-                                Left s -> (Err s, binds)
-                                Right rslt -> _eval binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
-                        Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
-                            let args = map _evalWrd $ take l ws2
-                                rest = drop l ws2
-                            in _eval binds $ ws1 ++ [op args] ++ rest
-                        Nothing ->
-                            case _iterOps _opls_dec ws of -- オペレータ探し
-                            Just strop -> -- オペレータが見つかった
-                                let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
-                                in _eval binds $ _applyOp op ws1 y rest2
-                            Nothing -> -- オペレータ見つからなかった
-                                case ws of
-                                    [] -> (Null, binds)
-                                    ((PreList pls) : rest) ->
-                                        let ls = map (\ expr -> fst $ _eval binds expr) pls
-                                        in _eval binds (List ls : rest)
-                                    (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
-                                    (w : []) -> (w, binds)
-                                    _ -> (Err $ "Parse failed: " ++ show ws, binds)
+        Found (expr1, expr2, expr3) ->
+            let res = case _eval binds expr2 of
+                        (Contents ls, _) -> Tuple ls
+                        (w, _) -> w
+            in _eval binds $ expr1 ++ [res] ++ expr3
+        NotFound ->
+            case findParenthesis expr "[" "]" of
+            Error s -> (Err s, binds)
+            Found (expr1, expr2, expr3) ->
+                let res = case _eval binds expr2 of
+                            (Contents ls, _) -> List ls
+                            (w, _) -> w
+                in _eval binds $ expr1 ++ [res] ++ expr3
+            NotFound ->
+                let ls = map (fst . _evalFunctions binds) $ divListInto (Tobe ",") expr
+                in case ls of
+                    (w : []) -> (w, binds)
+                    _ -> (Contents ls, binds)
+
+_evalFunctions :: [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
+_evalFunctions binds expr =
+    let ws = map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
+    in
+        case divList _isFunction ws of -- 関数探し
+        Just (Func (Fun f), expr1, expr2) -> -- 関数
+            let l = length $ args f
+                as = take l expr2
+                rest = drop l expr2
+            in case (_macroGen f) as of
+                Left s -> (Err s, binds)
+                Right rslt -> _eval binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
+        Just (Func (Operator (_, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
+            let args = map _evalWrd $ take l ws2
+                rest = drop l ws2
+            in _eval binds $ ws1 ++ [op args] ++ rest
+        Nothing ->
+            case _iterOps _opls_dec ws of -- オペレータ探し
+            Just strop -> -- オペレータが見つかった
+                let Just (Func (Operator (_, op)), ws1, (y: rest2)) = divListBy (Func (Operator strop)) ws
+                in _eval binds $ _applyOp op ws1 y rest2
+            Nothing -> -- オペレータ見つからなかった
+                case ws of
+                    [] -> (Null, binds)
+                    ((PreList pls) : rest) ->
+                        let ls = map (\ expr -> fst $ _eval binds expr) pls
+                        in _eval binds (List ls : rest)
+                    (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
+                    (w : []) -> (w, binds)
+                    _ -> (Err $ "Parse failed: " ++ show ws, binds)

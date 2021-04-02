@@ -16,7 +16,7 @@ type StrOp = (String, Op)
 data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp } deriving (Show, Eq)
 data Fun = Fun Function | Operator StrOp deriving Show
 data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type
+data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
@@ -25,6 +25,8 @@ instance Eq Wrd where
     (==) (Double a) (Double b) = a == b
     (==) (Int a) (Int b) = a == b
     (==) (Bool a) (Bool b) = a == b
+    (==) (Tuple a) (Tuple b) = a == b
+    (==) (List l1) (List l2) = l1 == l2
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
@@ -40,6 +42,7 @@ instance Show Wrd where
     show (Err s) = s
     show (List l) = show l
     show (Pair t) = show t
+    show (Tuple a) = show a
     show (ToEval _) = "[ToEval]"
 
 type Exp = [Wrd]
