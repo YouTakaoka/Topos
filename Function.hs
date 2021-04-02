@@ -2,7 +2,7 @@ module Function where
 import Parser
 import Debug.Trace
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_List Type | T_EmptyList | T_Pair Type Type | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown | T_Error deriving (Eq, Show)
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 type FunctionOp = (Int, Exp -> Wrd)
@@ -72,15 +72,19 @@ _mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
     _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
-toType :: Wrd -> Type
-toType (Tobe "String") = T_String
-toType (Tobe "Int") = T_Int
-toType (Tobe "Double") = T_Double
-toType (Tobe "Bool") = T_Bool
-toType (Tobe "UnaryOp") = T_UnaryOp
-toType (Tobe "BinaryOp") = T_BinaryOp
-toType (Tobe "FunctionOp") = T_FunctionOp
-toType (Type t) = t
+_toType :: Wrd -> Type
+_toType (Tobe "String") = T_String
+_toType (Tobe "Int") = T_Int
+_toType (Tobe "Double") = T_Double
+_toType (Tobe "Bool") = T_Bool
+_toType (Tobe "UnaryOp") = T_UnaryOp
+_toType (Tobe "BinaryOp") = T_BinaryOp
+_toType (Tobe "FunctionOp") = T_FunctionOp
+_toType (Type t) = t
+
+toType :: Exp -> Type
+toType (w: []) = _toType w
+toType (Tobe "List": (w: [])) = T_List $ _toType w
 
 _getType :: Wrd -> Type
 _getType (Str _) = T_String
@@ -88,6 +92,9 @@ _getType (Int _) = T_Int
 _getType (Double _) = T_Double
 _getType (Bool _) = T_Bool
 _getType (Tobe _) = T_Unknown
+_getType (Err _) = T_Error
+_getType (List (w: _)) = T_List $ _getType w
+_getType (List []) = T_EmptyList
 _getType (Func (Operator (_, UnOp _))) = T_UnaryOp
 _getType (Func (Operator (_, BinOp _))) = T_BinaryOp
 _getType (Func (Operator (_, FuncOp _))) = T_FunctionOp
@@ -95,9 +102,14 @@ _getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
     let ast = map (\ (t, a) -> t) as
     in T_Function { args_t = ast, return_t = rt }
 
+_isListType :: Type -> Bool
+_isListType (T_List _) = True 
+_isListType _ = False
+
 _typeCheck :: [Bind] -> Maybe String -- NothingならOK，Justはエラー
 _typeCheck [] = Nothing
 _typeCheck (b: binds)
+    | (_getType (value b) == T_EmptyList && _isListType (vtype b)) = _typeCheck binds
     | (_getType $ value b) == vtype b = _typeCheck binds
     | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show $ _getType $ value b) ++ "`."
 

@@ -133,10 +133,9 @@ _evalFunctionSignature expr = -- exprは<>の中身
         Nothing ->
             case divListBy (Tobe "->") expr of
                 Nothing -> Left "Syntax error: Missing `->`"
-                Just (_, expr1, (t_r : [])) ->
-                    let as_t = map (\ (w: []) -> toType w) $ divListInto (Tobe ",") expr1
+                Just (_, expr1, t_r) ->
+                    let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
                     in Right $ T_Function { args_t = as_t, return_t = toType t_r }
-                _ -> Left "Syntax error: RHS of `->` must be only one type identifier."
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
                 Error s -> Left s
