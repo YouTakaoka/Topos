@@ -112,20 +112,6 @@ _bind binds rest =
             in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
         _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
 
-_isConsistentType :: Exp -> Maybe Type
-_isConsistentType (w: []) = Just $ _getType w
-_isConsistentType (w: rest) =
-    case _isConsistentType rest of
-    Nothing -> Nothing
-    Just t -> if _getType w == t then Just t else Nothing
-
-isConsistentType :: Exp -> Bool
-isConsistentType expr = _isConsistentType expr /= Nothing
-
-toList :: Exp -> Wrd
-toList expr =
-    if isConsistentType expr then List expr else Err $ "List: Inconsistent type: " ++ (show expr)
-
 data TypeOrTypeContents = TP Type | TContents [Type]
 
 _evalFunctionSignature :: Exp -> Either String TypeOrTypeContents

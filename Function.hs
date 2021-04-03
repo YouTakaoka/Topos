@@ -144,6 +144,20 @@ _typeCheck (b: binds)
     | (_getType $ value b) == vtype b = _typeCheck binds
     | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show $ _getType $ value b) ++ "`."
 
+_isConsistentType :: Exp -> Maybe Type
+_isConsistentType (w: []) = Just $ _getType w
+_isConsistentType (w: rest) =
+    case _isConsistentType rest of
+    Nothing -> Nothing
+    Just t -> if _getType w == t then Just t else Nothing
+
+isConsistentType :: Exp -> Bool
+isConsistentType expr = _isConsistentType expr /= Nothing
+
+toList :: Exp -> Wrd
+toList expr =
+    if isConsistentType expr then List expr else Err $ "List: Inconsistent type: " ++ (show expr)
+
 _macroGen :: Function -> (Exp -> Either String Exp)
 _macroGen (Function { args = as, ret_t = ret_t, ret = expr }) =
     \ arguments ->

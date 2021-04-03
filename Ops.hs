@@ -35,6 +35,7 @@ _add0 (Int x) (Int y) = Int (x + y)
 _add0 (Int x) (Double y) = Double ((fromIntegral x) + y)
 _add0 (Double x) (Int y) = Double (x + (fromIntegral y))
 _add0 (Str s1) (Str s2) = Str (s1 ++ s2)
+_add0 (List l1) (List l2) = toList (l1 ++ l2)
 _add0 x y = Err $ "`+`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub0 :: Wrd -> Wrd -> Wrd
