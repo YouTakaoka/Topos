@@ -46,9 +46,36 @@ instance Show Wrd where
     show (ToEval _) = "[ToEval]"
 
 type Exp = [Wrd]
+smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "&&", "||", "!", "==", "+", "-", "*", "/", "=", "#", "|"]
+
+_isInitialSym :: String -> String -> Maybe String
+_isInitialSym str sym =
+    let l = length sym
+    in case take l str == sym of
+            True -> Just (drop l str)
+            False -> Nothing
+
+_initialSym :: String -> [String] -> Maybe (String, String)
+_initialSym str [] = Nothing
+_initialSym str (sym : syms) =
+    case _isInitialSym str sym of
+        Just rest -> Just (sym, rest)
+        Nothing -> _initialSym str syms
+
+_divStrBySyms :: [String] -> String -> String -> Exp
+_divStrBySyms syms wrk inp =  --wrkの初期値は空
+    case _initialSym inp syms of
+        Nothing ->
+            case inp of
+                [] -> []
+                (c : []) -> [Tobe (wrk ++ [c])]
+                (c : rest) -> _divStrBySyms syms (wrk ++ [c]) rest
+        Just (sym, rest) ->
+            (if wrk == "" then [] else [Tobe wrk])
+                ++ [Tobe sym] ++ _divStrBySyms syms [] rest
 
 _toExp0 :: String -> Exp
-_toExp0 str = map (\ w -> Tobe w) $ words str
+_toExp0 str = concat $ map (_divStrBySyms smbls []) $ words str
 
 _toExp :: Char -> String -> Bool -> Exp -> Exp
 _toExp q str inq expr =  -- inq: 引用符の中にいるかどうかのフラグ．初期状態でfalse

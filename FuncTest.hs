@@ -1,7 +1,13 @@
 import Function
 
 main = do
-    let f = (["x", "y"], words "( x + y ) / 2")
-    let f_op = _macroGen f
-    print $ f_op ["3", "5"]
-
+    let str1 = "2 * 4"
+        str2 = "2*4"
+        str3 = "2 *  4"
+        str4 = "2  * 4"
+        str5 = "2 * 4 * 6"
+    print $ _toExp0 str1
+    print $ _toExp0 str2
+    print $ _toExp0 str3
+    print $ _toExp0 str4
+    print $ _toExp0 str5
