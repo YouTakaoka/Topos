@@ -92,21 +92,6 @@ _mulSubOp :: [StrOp] -> Exp -> Exp
 _mulSubOp (strop: []) expr = _subOp strop expr
 _mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
 
-_toList :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
-_toList binds expr =
-    let ls = divListInto (Tobe ",") expr
-    in List $ map (\ ex -> fst $ _eval binds ex) ls
-
-_toPair :: [Bind] -> Exp -> Wrd -- 引数はカンマ区切りの式
-_toPair binds expr =
-    case divListBy (Tobe ",") expr of
-    Nothing ->
-        Err ("',' not found: " ++ (show expr))
-    Just (_, expr1, expr2) ->
-        let (w1, _) = _eval binds expr1
-            (w2, _) = _eval binds expr2
-        in Pair (w1, w2)
-
 _applyOp :: Op -> Exp -> Wrd -> Exp -> Exp
 _applyOp op ws1 y rest2 =
     case op of
@@ -126,6 +111,20 @@ _bind binds rest =
             let (rhs, _) = _eval binds expr
             in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
         _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
+
+_isConsistentType :: Exp -> Maybe Type
+_isConsistentType (w: []) = Just $ _getType w
+_isConsistentType (w: rest) =
+    case _isConsistentType rest of
+    Nothing -> Nothing
+    Just t -> if _getType w == t then Just t else Nothing
+
+isConsistentType :: Exp -> Bool
+isConsistentType expr = _isConsistentType expr /= Nothing
+
+toList :: Exp -> Wrd
+toList expr =
+    if isConsistentType expr then List expr else Err $ "List: Inconsistent type: " ++ (show expr)
 
 data TypeOrTypeContents = TP Type | TContents [Type]
 
@@ -206,7 +205,7 @@ _eval binds expr =
             Error s -> (Err s, binds)
             Found (expr1, expr2, expr3) ->
                 let res = case _eval binds expr2 of
-                            (Contents ls, _) -> List ls
+                            (Contents ls, _) -> toList ls
                             (w, _) -> w
                 in _eval binds $ expr1 ++ [res] ++ expr3
             NotFound ->
