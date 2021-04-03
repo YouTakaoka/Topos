@@ -2,7 +2,7 @@ module Function where
 import Parser
 import Debug.Trace
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_List Type | T_EmptyList | T_Tuple [Type] | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown | T_Error deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_Func | T_BinaryOp | T_UnaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Function { args_t :: [Type], return_t :: Type } | T_Unknown | T_Error deriving (Eq, Show)
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd
 type FunctionOp = (Int, Exp -> Wrd)
@@ -14,9 +14,9 @@ instance Show Op where
 
 type StrOp = (String, Op)
 data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp } deriving (Show, Eq)
-data Fun = Fun Function | Operator StrOp deriving Show
+data Func = Fun Function | Operator StrOp deriving Show
 data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
-data Wrd = Str String | Func Fun | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp
+data Wrd = Str String | Func Func | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
@@ -46,14 +46,13 @@ instance Show Wrd where
     show (ToEval _) = "[ToEval]"
 
 type Exp = [Wrd]
-smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "&&", "||", "!", "==", "+", "-", "*", "/", "=", "#", "|"]
+smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "==", "!=", "&&", "||", "!", "+", "-", "*", "/", "=", "#", "|"]
 
 _isInitialSym :: String -> String -> Maybe String
-_isInitialSym str sym =
-    let l = length sym
-    in case take l str == sym of
-            True -> Just (drop l str)
-            False -> Nothing
+_isInitialSym str sym
+    | (take l str) == sym = Just (drop l str)
+    | otherwise = Nothing
+    where l = length sym
 
 _initialSym :: String -> [String] -> Maybe (String, String)
 _initialSym str [] = Nothing
@@ -140,9 +139,11 @@ _isListType _ = False
 _typeCheck :: [Bind] -> Maybe String -- NothingならOK，Justはエラー
 _typeCheck [] = Nothing
 _typeCheck (b: binds)
-    | (_getType (value b) == T_EmptyList && _isListType (vtype b)) = _typeCheck binds
-    | (_getType $ value b) == vtype b = _typeCheck binds
-    | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show $ _getType $ value b) ++ "`."
+        | actype == T_EmptyList && (_isListType $ vtype b) = _typeCheck binds
+        | actype == vtype b = _typeCheck binds
+        | otherwise = Just $ "Type mismatch of variable `" ++ (identifier b) ++ "`. Expected type is `" ++ (show $ vtype b) ++ "` but input type is `" ++ (show actype) ++ "`."
+        where
+            actype = _getType $ value b
 
 _isConsistentType :: Exp -> Maybe Type
 _isConsistentType (w: []) = Just $ _getType w
