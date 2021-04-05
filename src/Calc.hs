@@ -261,12 +261,13 @@ _evalFunctions binds expr =
                     _ -> (Err $ "Parse failed: " ++ show ws, binds)
 
 functionTypeCheck :: [Bind] -> Function -> Wrd
-functionTypeCheck binds f = functionTypeEval binds $ _typeExprGen f
+functionTypeCheck binds f = fst $ _functionTypeEval binds $ _typeExprGen binds f
 
-_typeExprGen :: Function -> Exp
-_typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =
-    let binds = map (\ (t, id) -> Bind {identifier = id, value = Type t, vtype = T_Type }) as
-    in _mulSubst expr binds
+_typeExprGen :: [Bind] -> Function -> TExp
+_typeExprGen binds (Function { args = as, ret_t = rt, ret = expr }) =
+    let expr2 = map convToType $ map _evalWrd $ _mulSubOp _opls_dec $ _mulSubst expr binds
+        binds2 = map (\ (t, id) -> Bind {identifier = id, value = Type t, vtype = T_Type }) as
+    in _mulSubst_T expr2 binds2
 
 functionTypeEval :: [Bind] -> Exp -> Wrd
 functionTypeEval binds expr = 

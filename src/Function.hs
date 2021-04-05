@@ -60,10 +60,12 @@ instance Show Wrd where
     show (ToEval _) = "[ToEval]"
 
 type Exp = [Wrd]
-data TWrd = TWrd Type | TFunc Func | TErr String | TPreList [TExp] deriving Show
+data TWrd = TWrd Type | TFunc Func | TErr String | TPreList [TExp] | TTobe String deriving Show
 instance Eq TWrd where
     (==) (TWrd a) (TWrd b) = a == b
+    (==) (TTobe a) (TTobe b) = a == b
     (==) (TFunc (Operator (a, _))) (TFunc (Operator (b, _))) = a == b
+    (==) _ _ = False
 
 type TExp = [TWrd]
 data EvalMode = Normal | TypeCheck
@@ -123,6 +125,17 @@ _mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
     _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
+_subst_T :: TExp -> TWrd -> TWrd -> TExp
+_subst_T ws target sbst =
+    case divListBy target ws of
+        Nothing -> ws
+        Just (_, ws1, ws2) -> _subst_T (ws1 ++ [sbst] ++ ws2) target sbst
+
+_mulSubst_T :: TExp -> [Bind] -> TExp
+_mulSubst_T ws (Bind { identifier = target, value = Type sbst } : sbsts) =
+    _mulSubst_T (_subst_T ws (TTobe target) (TWrd sbst)) sbsts
+_mulSubst_T ws [] = ws
+
 _toType :: Wrd -> Type
 _toType (Tobe "String") = T_String
 _toType (Tobe "Int") = T_Int
@@ -153,9 +166,11 @@ _getType (Func (Operator (_, FuncOp _))) = T_FunctionOp
 _getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
     let ast = map (\ (t, a) -> t) as
     in T_Function { args_t = ast, return_t = rt }
+_getType (Type _) = T_Type
 
 convToType :: Wrd -> TWrd
 convToType (Func f) = TFunc f
+convToType (Tobe s) = TTobe s
 convToType w = TWrd $ _getType w
 
 _isListType :: Type -> Bool

@@ -5,11 +5,11 @@
 /home/takaoka/programming/haskell/Topos/.stack-work/dist/x86_64-linux/Cabal-3.2.1.0/build/autogen/Paths_Topos.hs:
   hash: 5c637090fe162c250f85d3e148dab1ed2713e047f9440ac0815cd0a0dee8c6c9
 /home/takaoka/programming/haskell/Topos/src/Calc.hs:
-  hash: fcb9d241bde4302d045895cdd5a09d7e571aeead5c1c8d64e8b5cefb0147591f
+  hash: cce73d80c27062fa9d7b4bc8df4d5e80d0bf0f7045d7a2154c0615714d232816
 /home/takaoka/programming/haskell/Topos/package.yaml:
   hash: 8554d8e83ef9e2c0aef14e29b2e945be4803af7a74fb58c4517c21d4c7defdcd
 /home/takaoka/programming/haskell/Topos/src/Function.hs:
-  hash: d64fcadd92911d7df6e9421dd54a9d8bd5179493c43bf189490f58bbb453932c
+  hash: 96d9c8eabac5c82314a7bdf130c4dec7d0a0ef5ad42263379674d5e995da5576
 /home/takaoka/programming/haskell/Topos/src/Parser.hs:
   hash: 3a595e77e4718953814b52444bc39d9f7c18fc9bbbe197ae8cbdf06d302c90a6
 /home/takaoka/programming/haskell/Topos/src/Ops.hs:
