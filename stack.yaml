@@ -9,15 +9,16 @@
 # to be used for project dependencies. For example:
 #
 # resolver: lts-3.5
-# resolver: nightly-2015-09-21
-# resolver: ghc-7.10.2
+#resolver: nightly-2021-04-02
+resolver: ghc-8.10.4
 #
 # The location of a snapshot can be provided as a file or url. Stack assumes
 # a snapshot provided as a file might change, whereas a url resource does not.
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-17.7
+#resolver:
+#  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/8.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -28,7 +29,8 @@ resolver: lts-17.7
 #   subdirs:
 #   - auto-update
 #   - wai
-packages: []
+packages:
+- .
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -38,9 +40,7 @@ packages: []
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-extra-deps: [
-  "Hoed-0.5.1@sha256:15a63868da749666bafda4588753d749484b6eb26d63dc0de54146f4c6c036eb,4891",
-  "regex-tdfa-text-1.0.0.3@sha256:fb72123627eadf43dd5ca74a2896940d50aac291e61f62177960f0563f7d5c03,1180"]
+# extra-deps: []
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
@@ -53,7 +53,7 @@ extra-deps: [
 #
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
-# require-stack-version: ">=2.3"
+# require-stack-version: ">=2.5"
 #
 # Override the architecture used by stack, especially useful on Windows
 # arch: i386
