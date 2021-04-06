@@ -1,0 +1,283 @@
+module Eval where
+import Parser
+import Ops
+import Utils
+import Text.Read
+import Debug.Trace
+
+data Parenthesis = Found (Exp, Exp, Exp) | NotFound | Error String
+
+_traceShow :: Show a => a -> a
+_traceShow x = trace (show x) x
+
+_traceIf :: Show a => Bool -> String -> a -> a
+_traceIf b s x = if b then trace s x else x
+
+_findParenthesis :: Exp -> Integer -> Wrd -> Wrd -> Parenthesis
+_findParenthesis ws cnt b e = -- cnt は初期値 -1
+    case divList (\ w -> w == b || w == e) ws of
+    Nothing -> NotFound
+    Just (d, ws1, ws2)
+        | (d, cnt) == (b, -1) ->
+            case _findParenthesis ws2 1 b e of
+            Found (_, ex2, ex3) -> Found (ws1, ex2, ex3)
+            Error s -> Error s
+            NotFound -> Error ("End of parenthesis not found:" ++ show ws2)
+        | (d, cnt) == (e, 1) ->
+            Found ([], ws1, ws2)
+        | otherwise ->
+            case _findParenthesis ws2 (if d == b then cnt + 1 else cnt - 1) b e of
+            Found (_, ex2, ex3) -> Found ([], ws1 ++ [d] ++ ex2, ex3)
+            NotFound -> Error "Mismatch of parenthesis."
+
+findParenthesis :: Exp -> String -> String -> Parenthesis
+findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
+
+_iterOps :: [StrOp] -> Exp -> Maybe StrOp
+_iterOps strops expr =
+    case dropWhile (\ sop -> divListBy (Func $ Operator sop) expr == Nothing) strops of
+        [] -> Nothing
+        (sop: _) -> Just sop
+
+_iterOps_T :: [StrOp] -> Exp -> Maybe StrOp
+_iterOps_T strops texpr =
+    case dropWhile (\ sop -> divListBy (Func $ Operator sop) texpr == Nothing) strops of
+        [] -> Nothing
+        (sop: _) -> Just sop
+
+_numIn :: Wrd -> Exp -> Integer
+_numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
+
+_isReplaceable :: [Bind] -> Exp -> Bool
+_isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
+
+_isFunction :: Wrd -> Bool
+_isFunction (Func (Fun _)) = True
+_isFunction (Func (Operator (_, FuncOp _))) = True
+_isFunction _ = False
+
+_isFunction_T :: Wrd -> Bool
+_isFunction_T (Func (Fun _)) = True
+_isFunction_T (Func (Operator (_, FuncOp _))) = True
+_isFunction_T _ = False
+
+_isOp :: Wrd -> Bool
+_isOp (Func (Operator _)) = True
+_isOp _ = False
+
+myReadDouble :: Either String Wrd -> Either String Wrd
+myReadDouble (Right u) = Right u
+myReadDouble (Left s) =
+    case readMaybe s :: Maybe Double of
+        Nothing -> Left s
+        Just u -> Right (Double u)
+
+myReadBool :: Either String Wrd -> Either String Wrd
+myReadBool (Right w) = Right w
+myReadBool (Left s) =
+    case readMaybe s :: Maybe Bool of
+        Nothing -> Left s
+        Just w -> Right (Bool w)
+
+myReadInt :: Either String Wrd -> Either String Wrd
+myReadInt (Right u) = Right u
+myReadInt (Left s) =
+    case readMaybe s :: Maybe Int of
+        Nothing -> Left s
+        Just u -> Right (Int u)
+
+_evalWrd :: EvalMode -> Wrd -> Wrd
+_evalWrd mode (Tobe s) =
+    case myReadBool $ myReadDouble $ myReadInt (Left s) of
+        Left _ -> Tobe s
+        Right w ->
+            case mode of
+                M_Normal -> w
+                M_TypeCheck -> TypeCheck $ _getType w
+_evalWrd mode w = w
+    
+_subOp :: StrOp -> Exp -> Exp
+_subOp (str, op) expr =
+    case divListBy (Tobe str) expr of
+        Nothing -> expr
+        Just (_, ws1, ws2) -> _subOp (str, op) $ ws1 ++ [Func (Operator (str, op))] ++ ws2
+
+_mulSubOp :: [StrOp] -> Exp -> Exp
+_mulSubOp (strop: []) expr = _subOp strop expr
+_mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
+
+_applyOp :: EvalMode -> StrOp -> Exp -> Exp -> Exp
+_applyOp mode (opName, op) ws1 (y : rest2) =
+    case op of
+    BinOp binop -> 
+        let x = last ws1
+            rest1 = init ws1
+        in case mode of
+            M_Normal -> rest1 ++ [binop x y] ++ rest2
+            M_TypeCheck ->
+                let BinOp op_t = _typeFunction opName
+                in rest1 ++ [op_t x y] ++ rest2
+    UnOp unop ->
+        case mode of
+            M_Normal -> ws1 ++ [unop y] ++ rest2
+            M_TypeCheck ->
+                let UnOp op_t = _typeFunction opName
+                in ws1 ++ [op_t y] ++ rest2
+
+_bind :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind])
+_bind mode binds rest =
+ case divListBy (Tobe "=") rest of
+        Nothing ->
+            (Err "Syntax error: missing `=`", binds)
+        Just (_, (Tobe w: []), expr) ->
+            let (rhs, _) = _eval mode binds expr
+            in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
+        _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
+
+data TypeOrTypeContents = TP Type | TContents [Type]
+
+_evalFunctionSignature :: Exp -> Either String TypeOrTypeContents
+_evalFunctionSignature expr = -- exprは<>の中身
+    case divListBy (Tobe "Function") expr of
+        Nothing ->
+            case findParenthesis expr "(" ")" of
+                Error s -> Left s
+                Found (expr2, expr3, expr4) ->
+                    case _evalFunctionSignature expr3 of
+                        Left s -> Left s
+                        Right (TContents ts) ->
+                            _evalFunctionSignature $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
+                NotFound ->
+                    case divListBy (Tobe "->") expr of
+                        Nothing ->
+                            Right $ TContents $ map (\ ex -> toType ex) $ divListInto (Tobe ",") expr
+                        Just (_, expr1, t_r) ->
+                            let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
+                            in Right $ TP $ T_Function { args_t = as_t, return_t = toType t_r }
+        Just (_, expr1, expr2) ->
+            case findParenthesis expr2 "<" ">" of
+                Error s -> Left s
+                NotFound -> Left "Syntax error: `<` not found after `Function`"
+                Found ([], expr3, expr4) ->
+                    case _evalFunctionSignature expr3 of
+                        Left s -> Left s
+                        Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                        _ -> Left "Syntax error: missing `->`"
+                _ -> Left "Syntax error: `<` must follow just after `Function`"
+
+_eval :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind])
+_eval mode binds (Tobe "Function" : rest) =
+    case divListBy (Tobe ":") rest of
+    Nothing -> (Err "Function: Syntax error, missing `:`", binds)
+    Just (_, rest1, rest2) ->
+        case findParenthesis rest1 "<" ">" of
+        Error s -> (Err s, binds)
+        NotFound -> (Err "Function: Syntax error, `<` must follow just after `Function`", binds)
+        Found ([], expr1, []) ->
+            case _evalFunctionSignature expr1 of
+            Left s -> (Err s, binds)
+            Right (TP (T_Function { args_t = ts , return_t = rt })) ->
+                case divListBy (Tobe "->") rest2 of
+                Nothing -> (Err "Function: Syntax error, missing `->`", binds)
+                Just (_, as, expr2)
+                    | length ts /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
+                    | otherwise ->
+                        let ass = map (\ (Tobe a) -> a) as
+                            f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
+                        in case mode of
+                            M_TypeCheck -> (Func $ Fun f, binds)
+                            M_Normal ->
+                                case functionTypeCheck binds f of
+                                Err s -> (Err s, binds)
+                                _ -> (Func $ Fun f, binds)
+        _ -> (Err "Function: Syntax error.", binds)
+_eval mode binds (Tobe "let" : rest) = _bind mode binds rest
+_eval mode binds (Tobe "letn" : rest) =
+    let (_, binds2) = _bind mode binds rest
+    in (Null, binds2)
+_eval mode binds (Tobe "if" : rest) =
+    let Just (_, cond, rest2) = divListBy (Tobe "then") rest
+        Just (_, thn, els) = divListBy (Tobe "else") rest2
+    in case _eval mode binds cond of
+        (Bool truth, binds2) ->
+            if truth then (fst $ _eval mode binds2 thn, binds) else (fst $ _eval mode binds2 els, binds)
+        _ -> (Err "Entered a non-boolean value into `if` statement.", binds)
+_eval mode binds expr =
+    case divListBy (Tobe "#") expr of --コメント探し
+    Just (_, expr1, expr2) ->
+        _eval mode binds expr1
+    Nothing ->
+        case findParenthesis expr "(" ")" of
+        Error s -> (Err s, binds)
+        Found (expr1, expr2, expr3) ->
+            let res = case _eval mode binds expr2 of
+                        (Contents ls, _) -> Tuple ls
+                        (w, _) -> w
+            in _eval mode binds $ expr1 ++ [res] ++ expr3
+        NotFound ->
+            case findParenthesis expr "[" "]" of
+            Error s -> (Err s, binds)
+            Found (expr1, expr2, expr3) ->
+                let res = case _eval mode binds expr2 of
+                            (Contents ls, _) -> toList ls
+                            (w, _) -> w
+                in _eval mode binds $ expr1 ++ [res] ++ expr3
+            NotFound ->
+                let ls = map (fst . _evalFunctions mode binds) $ divListInto (Tobe ",") expr
+                in case ls of
+                    (w : []) -> (w, binds)
+                    _ -> (Contents ls, binds)
+
+_evalFunctions :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
+_evalFunctions mode binds expr =
+    let ws = map (_evalWrd mode) $ _mulSubOp _opls_dec $ _mulSubst expr binds
+    in
+        case divList _isFunction ws of -- 関数探し
+        Just (Func (Fun f), expr1, expr2) -> -- 関数
+            let l = length $ args f
+                as = take l expr2
+                rest = drop l expr2
+            in 
+                case mode of
+                M_Normal ->
+                    case (_macroGen f) as of
+                    Left s -> (Err s, binds)
+                    Right rslt -> _eval M_Normal binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
+                M_TypeCheck ->
+                    let Function { args = as_t, ret_t = rt } = f
+                        binds_tc = map (\ ((t, id), a) -> Bind { identifier = id, value = a, vtype = t }) $ zip as_t as
+                    in case _typeCheck_TC binds_tc of
+                        Just s -> (Err s, binds)
+                        Nothing -> _eval M_TypeCheck binds $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
+        Just (Func (Operator (opName, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
+            let args = map (_evalWrd mode) $ take l ws2
+                rest = drop l ws2
+            in 
+                case mode of
+                    M_Normal -> _eval M_Normal binds $ ws1 ++ [op args] ++ rest
+                    M_TypeCheck ->
+                        let FuncOp (_, op_t) = _typeFunction opName
+                        in _eval M_TypeCheck binds $ ws1 ++ [op_t args] ++ rest
+        Nothing ->
+            case _iterOps _opls_dec ws of -- オペレータ探し
+            Just strop -> -- オペレータが見つかった
+                let Just (Func (Operator op), ws1, ws2) = divListBy (Func (Operator strop)) ws
+                in _eval M_Normal binds $ _applyOp mode op ws1 ws2
+            Nothing -> -- オペレータ見つからなかった
+                case ws of
+                    [] -> (Null, binds)
+                    (PreList pls : []) ->
+                        let ls = map (\ expr -> fst $ _eval M_Normal binds expr) pls
+                        in (List ls, binds)
+                    (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
+                    (w : []) -> (w, binds)
+                    _ -> (Err $ "Parse failed: " ++ show ws, binds)
+
+functionTypeCheck :: [Bind] -> Function -> Wrd
+functionTypeCheck binds f = fst $ _eval M_TypeCheck binds $ _typeExprGen f
+
+_typeExprGen :: Function -> Exp
+_typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =
+    let 
+        binds = map (\ (t, id) -> Bind {identifier = id, value = TypeCheck t, vtype = T_TypeCheck }) as
+    in _mulSubst expr binds

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a90c9a84eed3879b4e89d19aa78784bd95a35c6d8ff327d542a635347dab075c
+-- hash: f409fa695e10991a1eddf8a436e72f3fc3b3680bdcb4d7bd137baf284916fd86
 
 name:           Topos
 version:        0.1.0.0
@@ -26,11 +26,11 @@ source-repository head
 
 library
   exposed-modules:
-      Calc
-      Function
+      Eval
       Ops
       Parser
       Shell
+      Utils
   other-modules:
       Paths_Topos
   hs-source-dirs:

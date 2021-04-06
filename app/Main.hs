@@ -1,11 +1,11 @@
-import Calc
-import Function
+import Eval
+import Utils
 import Shell
 import System.Environment (getArgs)
 
 interpret :: [String] -> [Bind] -> IO ()
 interpret (str: rest) binds =
-    case _eval Normal binds (toExp str) of
+    case _eval M_Normal binds (toExp str) of
         (Err s, _) -> do
             putStrLn s
         (Print res, binds2) -> do

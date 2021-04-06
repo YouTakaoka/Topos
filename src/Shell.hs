@@ -1,6 +1,6 @@
 module Shell where
-import Calc
-import Function
+import Eval
+import Utils
 import System.IO
 prompt :: IO ()
 prompt = putStr "Topos> " >> hFlush stdout
@@ -9,7 +9,7 @@ shell :: [Bind] -> IO ()
 shell binds = do
     prompt
     str <- getLine
-    case _eval Normal binds (toExp str) of
+    case _eval M_Normal binds (toExp str) of
         (Err e, binds) -> do
             putStrLn e
             shell binds
