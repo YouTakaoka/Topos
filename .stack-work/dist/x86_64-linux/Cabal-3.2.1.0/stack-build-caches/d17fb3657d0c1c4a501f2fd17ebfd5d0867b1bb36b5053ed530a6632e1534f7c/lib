@@ -1,16 +1,18 @@
+/home/takaoka/programming/haskell/Topos/src/Types.hs:
+  hash: 9f54c855d15023f54c5584b58231d2d2e67a8693b68c8f1d168eefcdc7422ec3
 /home/takaoka/programming/haskell/Topos/src/Utils.hs:
-  hash: 0e747b1d38295edbbe48d0eb7149b7b51bdbbcfdcfd78a5ab37159e79beca560
+  hash: 4550b728e63e5a90520635aef7fae5478f571fb087ceaf4dc89c4e2c6eec5931
 /home/takaoka/programming/haskell/Topos/Topos.cabal:
-  hash: e3f922aed7276c0f0cfcf023a9d09fa1c7d58d4fe66459f4d4aa40bde0a3fcf4
+  hash: 9da83cf49d64308c2aafa3d478f2b278f591e8d1ec6c6f9abf781f66c4ade692
 /home/takaoka/programming/haskell/Topos/src/Shell.hs:
-  hash: 42e73df63a925190244571f460636e58b30fbefd88a8213547959fdf0792618d
+  hash: d6b3868358276007c3483c4fee882e641f16c9ef614c6de44b510bc96f0418a1
 /home/takaoka/programming/haskell/Topos/.stack-work/dist/x86_64-linux/Cabal-3.2.1.0/build/autogen/Paths_Topos.hs:
   hash: 5c637090fe162c250f85d3e148dab1ed2713e047f9440ac0815cd0a0dee8c6c9
 /home/takaoka/programming/haskell/Topos/src/Eval.hs:
-  hash: 76575b9300d4e46043e7b50e3a1b9758fcbd3bdbf9f7698abc5cbee45a22d85b
+  hash: 6e93717eda1596f2a0aa8e7b4b69302d90cc9710f00aed09899c721d3546d582
 /home/takaoka/programming/haskell/Topos/package.yaml:
   hash: 8554d8e83ef9e2c0aef14e29b2e945be4803af7a74fb58c4517c21d4c7defdcd
 /home/takaoka/programming/haskell/Topos/src/Parser.hs:
   hash: 3a595e77e4718953814b52444bc39d9f7c18fc9bbbe197ae8cbdf06d302c90a6
 /home/takaoka/programming/haskell/Topos/src/Ops.hs:
-  hash: 9c4288709c2bcde4b7e5b017a392b9e39d069ee29c53d521c1cd63212bd09ff7
+  hash: 6aed00194eecbfcdd753011f87c3d553a01f84af868a28c6a71d56724f9dfee0

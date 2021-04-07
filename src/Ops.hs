@@ -1,6 +1,6 @@
 module Ops where
 import Parser
-import Utils
+import Types
 import Data.List
 import Debug.Trace
 
@@ -322,7 +322,7 @@ _seq :: Op
 _seq = FuncOp (2, _seq0)
 
 _map_t :: Exp -> Wrd
-_map_t (TypeCheck T_Func : (TypeCheck (T_List t) : [])) = TypeCheck T_PreList
+_map_t (TypeCheck (T_Func {}) : (TypeCheck (T_List t) : [])) = TypeCheck T_PreList
 _map_t expr = Err $ "seq: Illegal input type: " ++ (show expr)
 
 _map0 :: Exp -> Wrd
@@ -346,3 +346,32 @@ _snd_t w = Err $ "snd: Illegal input type: " ++ (show w)
 _snd :: Op
 _snd = UnOp (\ (Tuple (_ : (w2 : _))) -> w2)
 
+_getType :: Wrd -> Type
+_getType (Str _) = T_String
+_getType (Int _) = T_Int
+_getType (Double _) = T_Double
+_getType (Bool _) = T_Bool
+_getType (Tobe _) = T_Unknown
+_getType (Err _) = T_Error
+_getType (List (w: _)) = T_List $ _getType w
+_getType (List []) = T_EmptyList
+_getType (Tuple tp) = T_Tuple $ map _getType tp
+_getType (Func (Operator (opName, _))) = T_Func (T_Operator (opName, _typeFunction opName))
+_getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
+    let ast = map (\ (t, a) -> t) as
+    in T_Func (T_Function { args_t = ast, return_t = rt })
+_getType (Type _) = T_Type
+
+_isConsistentType :: Exp -> Maybe Type
+_isConsistentType (w: []) = Just $ _getType w
+_isConsistentType (w: rest) =
+    case _isConsistentType rest of
+    Nothing -> Nothing
+    Just t -> if _getType w == t then Just t else Nothing
+
+isConsistentType :: Exp -> Bool
+isConsistentType expr = _isConsistentType expr /= Nothing
+
+toList :: Exp -> Wrd
+toList expr =
+    if isConsistentType expr then List expr else Err $ "List: Inconsistent type: " ++ (show expr)

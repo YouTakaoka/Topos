@@ -29,12 +29,12 @@ version :: Version
 version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/bin"
-libdir     = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/lib/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0-9R3hhW5H4DbLwaThbcskWZ"
-dynlibdir  = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/lib/x86_64-linux-ghc-8.10.4"
-datadir    = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/share/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0"
-libexecdir = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/libexec/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0"
-sysconfdir = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/d17fb3657d0c1c4a501f2fd17ebfd5d0867b1bb36b5053ed530a6632e1534f7c/8.10.4/etc"
+bindir     = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/bin"
+libdir     = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/lib/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0-JT2dQ4QCGQ99keCcCDtPHH"
+dynlibdir  = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/lib/x86_64-linux-ghc-8.10.4"
+datadir    = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/share/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0"
+libexecdir = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/libexec/x86_64-linux-ghc-8.10.4/Topos-0.1.0.0"
+sysconfdir = "/home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux/7c833de56bed308bed183c32ce7a38637d33c5ffb4f9fe8c72b298c78f5a8d8e/8.10.4/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "Topos_bindir") (\_ -> return bindir)

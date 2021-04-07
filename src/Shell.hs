@@ -1,4 +1,5 @@
 module Shell where
+import Types
 import Eval
 import Utils
 import System.IO

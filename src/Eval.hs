@@ -1,5 +1,6 @@
 module Eval where
 import Parser
+import Types
 import Ops
 import Utils
 import Text.Read
@@ -33,17 +34,17 @@ _findParenthesis ws cnt b e = -- cnt は初期値 -1
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
 
-_iterOps :: [StrOp] -> Exp -> Maybe StrOp
-_iterOps strops expr =
-    case dropWhile (\ sop -> divListBy (Func $ Operator sop) expr == Nothing) strops of
-        [] -> Nothing
-        (sop: _) -> Just sop
-
-_iterOps_T :: [StrOp] -> Exp -> Maybe StrOp
-_iterOps_T strops texpr =
-    case dropWhile (\ sop -> divListBy (Func $ Operator sop) texpr == Nothing) strops of
-        [] -> Nothing
-        (sop: _) -> Just sop
+_iterOps :: EvalMode -> [StrOp] -> Exp -> Maybe StrOp
+_iterOps mode strops expr =
+    case mode of
+        M_Normal ->
+            case dropWhile (\ sop -> divListBy (Func $ Operator sop) expr == Nothing) strops of
+                [] -> Nothing
+                (sop: _) -> Just sop
+        M_TypeCheck ->
+            case dropWhile (\ sop -> divListBy (TypeCheck $ T_Func $ T_Operator sop) expr == Nothing) strops of
+                [] -> Nothing
+                (sop: _) -> Just sop
 
 _numIn :: Wrd -> Exp -> Integer
 _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
@@ -51,15 +52,10 @@ _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex
 _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
 
-_isFunction :: Wrd -> Bool
-_isFunction (Func (Fun _)) = True
-_isFunction (Func (Operator (_, FuncOp _))) = True
-_isFunction _ = False
-
-_isFunction_T :: Wrd -> Bool
-_isFunction_T (Func (Fun _)) = True
-_isFunction_T (Func (Operator (_, FuncOp _))) = True
-_isFunction_T _ = False
+_isFunction :: EvalMode -> Wrd -> Bool
+_isFunction M_Normal (Func _) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func {})) = True
+_isFunction _ _ = False
 
 _isOp :: Wrd -> Bool
 _isOp (Func (Operator _)) = True
@@ -106,23 +102,40 @@ _mulSubOp :: [StrOp] -> Exp -> Exp
 _mulSubOp (strop: []) expr = _subOp strop expr
 _mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
 
-_applyOp :: EvalMode -> StrOp -> Exp -> Exp -> Exp
-_applyOp mode (opName, op) ws1 (y : rest2) =
+_applyOp :: StrOp -> Exp -> Exp -> Exp
+_applyOp (opName, op) ws1 (y : rest2) =
     case op of
     BinOp binop -> 
         let x = last ws1
             rest1 = init ws1
-        in case mode of
-            M_Normal -> rest1 ++ [binop x y] ++ rest2
-            M_TypeCheck ->
-                let BinOp op_t = _typeFunction opName
-                in rest1 ++ [op_t x y] ++ rest2
+        in rest1 ++ [binop x y] ++ rest2
     UnOp unop ->
-        case mode of
-            M_Normal -> ws1 ++ [unop y] ++ rest2
-            M_TypeCheck ->
-                let UnOp op_t = _typeFunction opName
-                in ws1 ++ [op_t y] ++ rest2
+        ws1 ++ [unop y] ++ rest2
+    FuncOp (nargs, fnop) ->
+        let args = take nargs (y : rest2)
+            rest = drop nargs (y : rest2)
+        in ws1 ++ [fnop args] ++ rest
+
+_applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either String Exp
+_applyFunction mode f_w expr1 expr2 =
+    case mode of
+        M_Normal ->
+            let (Func (Fun f)) = f_w
+                l = length $ args f
+                as = take l expr2
+                rest = drop l expr2
+            in case (_macroGen f) as of
+                Left s -> Left s
+                Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
+        M_TypeCheck ->
+            let TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })) = f_w
+                l = length as_t
+                as = take l expr2
+                rest = drop l expr2
+                binds_tc = map (\ (t, a) -> Bind { identifier = "", value = a, vtype = t }) $ zip as_t as
+            in case _typeCheck mode binds_tc of
+                    Just s -> Left s
+                    Nothing -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
 
 _bind :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind])
 _bind mode binds rest =
@@ -153,7 +166,7 @@ _evalFunctionSignature expr = -- exprは<>の中身
                             Right $ TContents $ map (\ ex -> toType ex) $ divListInto (Tobe ",") expr
                         Just (_, expr1, t_r) ->
                             let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
-                            in Right $ TP $ T_Function { args_t = as_t, return_t = toType t_r }
+                            in Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = toType t_r }
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
                 Error s -> Left s
@@ -176,20 +189,22 @@ _eval mode binds (Tobe "Function" : rest) =
         Found ([], expr1, []) ->
             case _evalFunctionSignature expr1 of
             Left s -> (Err s, binds)
-            Right (TP (T_Function { args_t = ts , return_t = rt })) ->
-                case divListBy (Tobe "->") rest2 of
-                Nothing -> (Err "Function: Syntax error, missing `->`", binds)
-                Just (_, as, expr2)
-                    | length ts /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
-                    | otherwise ->
-                        let ass = map (\ (Tobe a) -> a) as
-                            f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
-                        in case mode of
-                            M_TypeCheck -> (Func $ Fun f, binds)
-                            M_Normal ->
-                                case functionTypeCheck binds f of
-                                Err s -> (Err s, binds)
-                                _ -> (Func $ Fun f, binds)
+            Right (TP (T_Func f_t)) ->
+                let ts = args_t f_t
+                    rt = return_t f_t
+                in case divListBy (Tobe "->") rest2 of
+                    Nothing -> (Err "Function: Syntax error, missing `->`", binds)
+                    Just (_, as, expr2)
+                        | length ts /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
+                        | otherwise ->
+                            let ass = map (\ (Tobe a) -> a) as
+                                f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
+                            in case mode of
+                                M_TypeCheck -> (TypeCheck (T_Func f_t), binds)
+                                M_Normal ->
+                                    case functionTypeCheck binds f of
+                                    Err s -> (Err s, binds)
+                                    _ -> (Func $ Fun f, binds)
         _ -> (Err "Function: Syntax error.", binds)
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
@@ -232,42 +247,30 @@ _evalFunctions :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で�
 _evalFunctions mode binds expr =
     let ws = map (_evalWrd mode) $ _mulSubOp _opls_dec $ _mulSubst expr binds
     in
-        case divList _isFunction ws of -- 関数探し
+        case divList (_isFunction mode) ws of -- 関数探し
         Just (Func (Fun f), expr1, expr2) -> -- 関数
-            let l = length $ args f
-                as = take l expr2
-                rest = drop l expr2
-            in 
-                case mode of
-                M_Normal ->
-                    case (_macroGen f) as of
-                    Left s -> (Err s, binds)
-                    Right rslt -> _eval M_Normal binds $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
-                M_TypeCheck ->
-                    let Function { args = as_t, ret_t = rt } = f
-                        binds_tc = map (\ ((t, id), a) -> Bind { identifier = id, value = a, vtype = t }) $ zip as_t as
-                    in case _typeCheck_TC binds_tc of
-                        Just s -> (Err s, binds)
-                        Nothing -> _eval M_TypeCheck binds $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
-        Just (Func (Operator (opName, FuncOp (l, op))), ws1, ws2) -> -- 関数オペレータ
-            let args = map (_evalWrd mode) $ take l ws2
-                rest = drop l ws2
-            in 
-                case mode of
-                    M_Normal -> _eval M_Normal binds $ ws1 ++ [op args] ++ rest
-                    M_TypeCheck ->
-                        let FuncOp (_, op_t) = _typeFunction opName
-                        in _eval M_TypeCheck binds $ ws1 ++ [op_t args] ++ rest
-        Nothing ->
-            case _iterOps _opls_dec ws of -- オペレータ探し
+            case _applyFunction mode (Func (Fun f)) expr1 expr2 of
+                Right rslt -> _eval mode binds rslt
+                Left s -> (Err s, binds)
+        Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
+            case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
+                Right rslt -> _eval mode binds rslt
+                Left s -> (Err s, binds)
+        Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
+            _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+        Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
+            _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+        _ ->
+            case _iterOps mode _opls_dec ws of -- オペレータ探し
             Just strop -> -- オペレータが見つかった
-                let Just (Func (Operator op), ws1, ws2) = divListBy (Func (Operator strop)) ws
-                in _eval M_Normal binds $ _applyOp mode op ws1 ws2
+                case divListBy (Func (Operator strop)) ws of
+                Just (Func (Operator sop), ws1, ws2) -> _eval mode binds $ _applyOp sop ws1 ws2
+                Just (TypeCheck(T_Func (T_Operator sop)), ws1, ws2) -> _eval mode binds $ _applyOp sop ws1 ws2
             Nothing -> -- オペレータ見つからなかった
                 case ws of
                     [] -> (Null, binds)
                     (PreList pls : []) ->
-                        let ls = map (\ expr -> fst $ _eval M_Normal binds expr) pls
+                        let ls = map (\ expr -> fst $ _eval mode binds expr) pls
                         in (List ls, binds)
                     (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
                     (w : []) -> (w, binds)

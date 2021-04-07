@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f409fa695e10991a1eddf8a436e72f3fc3b3680bdcb4d7bd137baf284916fd86
+-- hash: 7ac26b2a37f34eeee182470903288891be0e086855ce679099dee31a009f3b91
 
 name:           Topos
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       Ops
       Parser
       Shell
+      Types
       Utils
   other-modules:
       Paths_Topos
@@ -49,12 +50,14 @@ executable Topos
   build-depends:
       Topos
     , base >=4.7 && <5
+    , hspec
   default-language: Haskell2010
 
 test-suite Topos-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      EvalSpec
       Paths_Topos
   hs-source-dirs:
       test
@@ -62,4 +65,5 @@ test-suite Topos-test
   build-depends:
       Topos
     , base >=4.7 && <5
+    , hspec
   default-language: Haskell2010

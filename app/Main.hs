@@ -1,4 +1,5 @@
 import Eval
+import Types
 import Utils
 import Shell
 import System.Environment (getArgs)

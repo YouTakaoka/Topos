@@ -33,6 +33,17 @@
   (major1) == 4 && (major2) == 14 && (minor) <= 1)
 #endif /* MIN_VERSION_base */
 
+/* package hspec-2.7.9 */
+#ifndef VERSION_hspec
+#define VERSION_hspec "2.7.9"
+#endif /* VERSION_hspec */
+#ifndef MIN_VERSION_hspec
+#define MIN_VERSION_hspec(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  7 || \
+  (major1) == 2 && (major2) == 7 && (minor) <= 9)
+#endif /* MIN_VERSION_hspec */
+
 /* tool gcc-7 */
 #ifndef TOOL_VERSION_gcc
 #define TOOL_VERSION_gcc "7"
@@ -133,7 +144,7 @@
 #endif /* MIN_TOOL_VERSION_strip */
 
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "Topos-0.1.0.0-DG9XOrskSTg9tiu4WANCXa-Topos-test"
+#define CURRENT_COMPONENT_ID "Topos-0.1.0.0-4810hYau9IX2OIgMrAMQBn-Topos-test"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"
