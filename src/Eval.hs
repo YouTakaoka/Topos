@@ -34,17 +34,16 @@ _findParenthesis ws cnt b e = -- cnt は初期値 -1
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
 
-_iterOps :: EvalMode -> [StrOp] -> Exp -> Maybe StrOp
+_iterOps :: EvalMode -> [StrOp] -> Exp -> Maybe (StrOp, Exp, Exp)
 _iterOps mode strops expr =
-    case mode of
-        M_Normal ->
-            case dropWhile (\ sop -> divListBy (Func $ Operator sop) expr == Nothing) strops of
-                [] -> Nothing
-                (sop: _) -> Just sop
-        M_TypeCheck ->
-            case dropWhile (\ sop -> divListBy (TypeCheck $ T_Func $ T_Operator sop) expr == Nothing) strops of
-                [] -> Nothing
-                (sop: _) -> Just sop
+    let f = case mode of
+                M_Normal -> Func . Operator
+                M_TypeCheck -> TypeCheck . T_Func . T_Operator
+    in case dropWhile (\ sop -> divListBy (f sop) expr == Nothing) strops of
+        [] -> Nothing
+        (sop: _) -> 
+            let Just (_, ws1, ws2) = divListBy (f sop) expr
+            in Just (sop, ws1, ws2)
 
 _numIn :: Wrd -> Exp -> Integer
 _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
@@ -92,15 +91,20 @@ _evalWrd mode (Tobe s) =
                 M_TypeCheck -> TypeCheck $ _getType w
 _evalWrd mode w = w
     
-_subOp :: StrOp -> Exp -> Exp
-_subOp (str, op) expr =
-    case divListBy (Tobe str) expr of
+_subOp :: EvalMode -> StrOp -> Exp -> Exp
+_subOp mode (opName, op) expr =
+    case divListBy (Tobe opName) expr of
         Nothing -> expr
-        Just (_, ws1, ws2) -> _subOp (str, op) $ ws1 ++ [Func (Operator (str, op))] ++ ws2
+        Just (_, ws1, ws2) ->
+            case mode of
+                M_Normal -> _subOp mode (opName, op) $ ws1 ++ [Func (Operator (opName, op))] ++ ws2
+                M_TypeCheck ->
+                    let op_t = _typeFunction opName 
+                    in _subOp mode (opName, op) $ ws1 ++ [TypeCheck $ T_Func (T_Operator (opName, op_t))] ++ ws2
 
-_mulSubOp :: [StrOp] -> Exp -> Exp
-_mulSubOp (strop: []) expr = _subOp strop expr
-_mulSubOp (strop: strops) expr = _mulSubOp strops $ _subOp strop expr
+_mulSubOp :: EvalMode -> [StrOp] -> Exp -> Exp
+_mulSubOp mode (strop: []) expr = _subOp mode strop expr
+_mulSubOp mode (strop: strops) expr = _mulSubOp mode strops $ _subOp mode strop expr
 
 _applyOp :: StrOp -> Exp -> Exp -> Exp
 _applyOp (opName, op) ws1 (y : rest2) =
@@ -245,7 +249,7 @@ _eval mode binds expr =
 
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
-    let ws = map (_evalWrd mode) $ _mulSubOp _opls_dec $ _mulSubst expr binds
+    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
     in
         case divList (_isFunction mode) ws of -- 関数探し
         Just (Func (Fun f), expr1, expr2) -> -- 関数
@@ -262,10 +266,8 @@ _evalFunctions mode binds expr =
             _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
         _ ->
             case _iterOps mode _opls_dec ws of -- オペレータ探し
-            Just strop -> -- オペレータが見つかった
-                case divListBy (Func (Operator strop)) ws of
-                Just (Func (Operator sop), ws1, ws2) -> _eval mode binds $ _applyOp sop ws1 ws2
-                Just (TypeCheck(T_Func (T_Operator sop)), ws1, ws2) -> _eval mode binds $ _applyOp sop ws1 ws2
+            Just (sop, ws1, ws2) -> -- オペレータが見つかった
+                _eval mode binds $ _applyOp sop ws1 ws2
             Nothing -> -- オペレータ見つからなかった
                 case ws of
                     [] -> (Null, binds)

@@ -35,6 +35,7 @@ instance Eq Wrd where
     (==) (Bool a) (Bool b) = a == b
     (==) (Tuple a) (Tuple b) = a == b
     (==) (List l1) (List l2) = l1 == l2
+    (==) (TypeCheck t1) (TypeCheck t2) = t1 == t2
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
