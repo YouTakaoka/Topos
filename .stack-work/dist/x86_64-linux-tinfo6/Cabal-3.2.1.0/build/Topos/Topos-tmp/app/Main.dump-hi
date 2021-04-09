@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2021-04-09 02:24:48.131901 UTC
+2021-04-09 04:58:15.8326344 UTC
 
 interface main:Main 8104
-  interface hash: c42a6e1002d20ea828313763b9e18200
-  ABI hash: 9ec93583a4de408e2e0b62755d2b5dde
+  interface hash: b9e091924c7ab08102d6c08b9ee32a25
+  ABI hash: 9b7453548beaf7d54c0bd2572612be48
   export-list hash: 14ca07e2f2ab6b30d495cfdf15f12783
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 0d395e809e83ef0b4a31f80fab959e97
@@ -25,10 +25,10 @@ family instance modules: base-4.14.1.0:Control.Applicative
                          base-4.14.1.0:Data.Functor.Identity base-4.14.1.0:Data.Monoid
                          base-4.14.1.0:Data.Semigroup.Internal base-4.14.1.0:GHC.Generics
                          base-4.14.1.0:GHC.IO.Exception
-import  -/  Topos-0.1.0.0:Eval af8a5070c61e4dbe900a3c7070ef46f2
-import  -/  Topos-0.1.0.0:Shell e06b98c22aba2c2e3726f54df4970c39
-import  -/  Topos-0.1.0.0:Types b9822497053d2122dc73d0cfdd1b339f
-import  -/  Topos-0.1.0.0:Utils 73ff7515a7321f0c1e8cafe3e04576e7
+import  -/  Topos-0.1.0.0:Eval 4e4c9691647e3ff40573745f4fbf148e
+import  -/  Topos-0.1.0.0:Shell db31f975c718818722aabcd83c34af99
+import  -/  Topos-0.1.0.0:Types 2870f235e2eecb0b3d25891749dd9b60
+import  -/  Topos-0.1.0.0:Utils d92d30900a25e92c20923717ad185bc6
 import  -/  base-4.14.1.0:Data.OldList c37dbde9482331012ec5a725b3613a2f
 import  -/  base-4.14.1.0:GHC.Base ede51775731a544ddfcb02b5a427fd38
 import  -/  base-4.14.1.0:Prelude 5c84dfddbb8583fc340ecd15bead164a
@@ -53,12 +53,12 @@ dc3b3c3acf230a2fb5aa5cf03bb553a4
 a7ce5aa9e56d48b6a85b212e1a4b4b5a
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("main"#) -}
-6dfa388608003f86435c7ccddfca7624
+48725e4e178bcd7862eea4d22aa161f6
   main :: GHC.Types.IO ()
   {- Arity: 1, Strictness: <L,U>,
      Unfolding: InlineRule (0, True, True)
                 Main.main1 `cast` (Sym (GHC.Types.N:IO[0] <()>_R)) -}
-342b1a9248f453a488c8214891d0fdc5
+e16fa75cab9bf0d7cd4cab8e778f2543
   main1 ::
     GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
@@ -90,14 +90,14 @@ a7ce5aa9e56d48b6a85b212e1a4b4b5a
                         (Data.OldList.lines ipv5)
                         (GHC.Types.[] @ Types.Bind)
                         ipv4 } } } }) -}
-e5fa7e2414510ad8f3fbd7d39e56b01d
+74caf9897d7a250a19f56fc2df745fbd
   main2 ::
     [GHC.Base.String]
     -> [Types.Bind]
     -> GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
   {- Arity: 3, Strictness: <S,1*U><L,U><L,U> -}
-4d80b412c18aec18555b50a0b70ef993
+59d60b1b8b90ee1343358304c1261073
   main3 ::
     GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)

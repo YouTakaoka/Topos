@@ -220,12 +220,27 @@ _eval mode binds (Tobe "letn" : rest) =
     let (_, binds2) = _bind mode binds rest
     in (Null, binds2)
 _eval mode binds (Tobe "if" : rest) =
-    let Just (_, cond, rest2) = divListBy (Tobe "then") rest
-        Just (_, thn, els) = divListBy (Tobe "else") rest2
-    in case _eval mode binds cond of
-        (Bool truth, binds2) ->
-            if truth then (fst $ _eval mode binds2 thn, binds) else (fst $ _eval mode binds2 els, binds)
-        (w, _) -> (Err $ "Entered a non-boolean value into `if` statement: " ++ (show w), binds)
+    case divListBy (Tobe "then") rest of
+    Nothing -> (Err "Syntax error: Missing `then` keyword in `if` statement.", binds)
+    Just (_, cond, rest2) ->
+        case divListBy (Tobe "else") rest2 of
+        Nothing -> (Err "Syntax error: Missing `else` keyword in `if` statement.", binds)
+        Just (_, thn, els) ->
+            case mode of
+            M_Normal ->
+                case _eval mode binds cond of
+                (Bool truth, binds2) ->
+                    if truth then (fst $ _eval mode binds2 thn, binds) else (fst $ _eval mode binds2 els, binds)
+                (w, _) -> (Err $ "Entered a non-boolean value into `if` statement: " ++ (show w), binds)
+            M_TypeCheck ->
+                case _eval mode binds thn of
+                    (Err s, _) -> (Err s, binds)
+                    (TypeCheck t1, binds1) ->
+                        case _eval mode binds1 els of
+                            (Err s, _) -> (Err s, binds)
+                            (TypeCheck t2, binds2)
+                                | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds2) else (TypeCheck t1, binds2)
+                                | otherwise -> (Err $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`" , binds)
 _eval mode binds expr =
     case divListBy (Tobe "#") expr of --コメント探し
     Just (_, expr1, expr2) ->

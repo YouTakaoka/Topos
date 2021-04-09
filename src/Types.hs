@@ -1,10 +1,17 @@
 module Types where
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Any | T_Type | T_Error | T_TypeCheck deriving (Eq, Show)
+
+typeEq :: Type -> Type -> Bool
+typeEq T_Unknown _ = False
+typeEq _ T_Unknown = False
+typeEq T_Any _ = True
+typeEq _ T_Any = True
+typeEq t1 t2 = t1 == t2
 
 instance Ord Type where
     (<=) T_EmptyList (T_List _) = True
-    (<=) t1 t2 = t1 == t2
+    (<=) t1 t2 = typeEq t1 t2
 
 type BinaryOp = Wrd -> Wrd -> Wrd
 type UnaryOp = Wrd -> Wrd

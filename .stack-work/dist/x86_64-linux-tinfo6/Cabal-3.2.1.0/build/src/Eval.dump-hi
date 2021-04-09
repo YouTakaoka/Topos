@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2021-04-09 03:05:55.1379054 UTC
+2021-04-09 05:06:16.0939319 UTC
 
 interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Eval 8104
-  interface hash: 8e7e20b1c580f8f3b4286287965001b5
-  ABI hash: af8a5070c61e4dbe900a3c7070ef46f2
+  interface hash: 1944b6eaac711d40d41ea0b755c97fff
+  ABI hash: 4e4c9691647e3ff40573745f4fbf148e
   export-list hash: fae837bd0269baac588762786705c785
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 358a18e1043fc7ac1b015a88503b1325
@@ -49,67 +49,69 @@ family instance modules: base-4.14.1.0:Control.Applicative
                          base-4.14.1.0:Data.Functor.Identity base-4.14.1.0:Data.Monoid
                          base-4.14.1.0:Data.Semigroup.Internal base-4.14.1.0:GHC.Generics
                          base-4.14.1.0:GHC.IO.Exception
-import  -/  Ops d150b60c27dc32f3b81e8e6b8ed7e7e9
+import  -/  Ops 9ccd6b0b2d6b998e873165db1714d518
   exports: 24531ef125d46d1c52ba79243a43b497
-  _getType 90ff28e62a99dc82d7325615ac131599
-  _opls_dec 6bf4d5616317ad4dbb246754cab7efc9
-  _typeFunction 8d7df2a6b5d3b9bca57a9d4a834dd5f9
-  toList 3387bddbaface069531d5485507a58dc
+  _getType 61ce3e584263fb0db0af18116e87db36
+  _opls_dec 4fdae104e3cb477fac4af3f60e9882f1
+  _typeFunction ee95a08bf525ca090c305cc8c1f3aeb0
+  toList 27a51ba87381b8245ff7c9b364acdd1f
 import  -/  Parser 3443f1228a5fa43ab36605baa220d75c
   exports: 4e79c2f1fd013aabc39c8f81cd5374c7
   divList 5b67dd131f974ed42cde15b86592ddf7
   divListBy fb299016722c4bbaadf79441fb5b885a
   divListInto 11665a6afda1cb6f9b8180e31f195576
-import  -/  Types b9822497053d2122dc73d0cfdd1b339f
-  exports: 39b07b7f7957277f50c7c4dd7689ef5f
-  BinOp d26ca552c0a6cb13c3d3e231f243d460
-  Bind 01c53ace98412a9103c967ff13344fb0
-  Bind 607e5ce3f9595614a9cb77b2c4210b74
-  Bool b70cd53ad7a85dab48bcef177c38636b
-  Contents bfd8b6d89520df3f04fc0736bc657607
-  Double b891f973d45771521238fab46a6ae819
-  Err 49657f448604d6729aba97b2988953b9
+import  -/  Types 2870f235e2eecb0b3d25891749dd9b60
+  exports: fb3343c70ce167cabb463f2e586dc9ec
+  BinOp 248347d51f0d70dee7324f48b9d0a2d1
+  Bind 7815ac138b80fbf2b2de57eb1e30ff32
+  Bind 41e7a32a3a97b64b95a9c2dd25716e8f
+  Bool 1241c9fc4fc65d256e8c45a8fcd8d7ba
+  Contents fa4819666f5e830574317c5431de464a
+  Double e9e581551e257a870b35d7e222321699
+  Err 5729e6192c4942b542d650e149e72f10
   EvalMode 033e148ab2ed3368fa8a91bde533879d
-  Exp 607e5ce3f9595614a9cb77b2c4210b74
-  Fun 6815ac0e2ecfff4e0c829eba93adbd8b
-  Func c1251ac84fede6c4ca7d3c4f0601d771
-  FuncOp 97bc2911206d2b50aa94a433bccfe820
-  Function 267e8a4d83f0f1e1729f2be1e5904e81
-  Function 607e5ce3f9595614a9cb77b2c4210b74
-  Int 1626c1e059773b609f52829c5bb3fa74
-  List bf4e22584c08f0cbc93d4ad500ad7f0d
+  Exp 41e7a32a3a97b64b95a9c2dd25716e8f
+  Fun 42a0d5cd29c2177dcdfaca7cd63323dc
+  Func 5d1e31720c6814351c1d5fe881a7a5eb
+  FuncOp 8397c94a2f2349a2dd9e300a2647eb27
+  Function 9a9eb8e4986ec4d109057707af53cf06
+  Function 41e7a32a3a97b64b95a9c2dd25716e8f
+  Int 006171945d67657ef6faae9f16159d2e
+  List f0bad1f4683a6ff5d4c475bfda9c9085
   M_Normal 3a8c8dc348274cb5cc27d78334ca6775
   M_TypeCheck 56a174d0c5bad7ac68dc38880bde511e
-  Null 9967ba516bf5fc50c2a36c732419df94
-  Operator 89cca03e93ee20a41b3c3642d9fd3bba
-  PreList 2cd63c03f6681ef78c8cf47e3c7f2b35
-  StrOp 607e5ce3f9595614a9cb77b2c4210b74
-  T_Func cd5569cdd28f55b0418b44742170970e
-  T_Function 8cc668be17da098d88dc5ce953523aaa
-  T_Operator 2b724b9e8f3f49af40f551abcf01d31a
-  T_Tuple e233fd3595057c845dc31260603df806
-  T_TypeCheck 978af787a74b5640fa6a266387e5f47e
-  Tobe 114668cd72acff1452b72cb75dca7503
-  Tuple 24eb98ce397df75e853fb8c92b81a145
-  Type bd4ecaf43435ec6d916df969f32b0e1c
-  Type 607e5ce3f9595614a9cb77b2c4210b74
-  TypeCheck 7a98c1d9491014e3cc63bc169a5dd418
-  UnOp 8c7eed723ee8887a5e082490f6ddf7d6
-  Wrd 607e5ce3f9595614a9cb77b2c4210b74
-  args 607e5ce3f9595614a9cb77b2c4210b74
-  args_t 607e5ce3f9595614a9cb77b2c4210b74
-  identifier 607e5ce3f9595614a9cb77b2c4210b74
-  ret 607e5ce3f9595614a9cb77b2c4210b74
-  ret_t 607e5ce3f9595614a9cb77b2c4210b74
-  return_t 607e5ce3f9595614a9cb77b2c4210b74
-  value 607e5ce3f9595614a9cb77b2c4210b74
-  vtype 607e5ce3f9595614a9cb77b2c4210b74
-import  -/  Utils 73ff7515a7321f0c1e8cafe3e04576e7
+  Null 04b71613b842f7a04f5bc3ed46abb1b3
+  Operator 6909136eade762426066db644700f71f
+  PreList a5b96693bc60e76099302e7495352709
+  StrOp 41e7a32a3a97b64b95a9c2dd25716e8f
+  T_Any ebca11f0674a4eec23948a43c7ba4df1
+  T_Func cd50891eac1225bdba2c21c3e89ab64b
+  T_Function af0bd724946c4e4e99d0a5e688bd8bec
+  T_Operator 4e8715ebb2c8a3afa27ac366a90ea4dd
+  T_Tuple b991f1bb08adca19e3581f5caaa8ae73
+  T_TypeCheck b2619f3ff28d8d4e8d01bdee740a65e6
+  Tobe 3e1c049fbf40275e2d316fdeb88ae7b7
+  Tuple 787aea3d9ecc843af9c34b94030802d6
+  Type 2cf69a7355f245a5f0d937b4915d0db8
+  Type 41e7a32a3a97b64b95a9c2dd25716e8f
+  TypeCheck 743327823be34d4f772a0b2575b49c47
+  UnOp 4de264f457e8ae24d30e2ee9293e99a7
+  Wrd 41e7a32a3a97b64b95a9c2dd25716e8f
+  args 41e7a32a3a97b64b95a9c2dd25716e8f
+  args_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  identifier 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  return_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  typeEq 18f0eaa319b737788e6e4d55a60bd643
+  value 41e7a32a3a97b64b95a9c2dd25716e8f
+  vtype 41e7a32a3a97b64b95a9c2dd25716e8f
+import  -/  Utils d92d30900a25e92c20923717ad185bc6
   exports: 6b58bb7b7116017e16bec3393566cc01
-  _macroGen c68703f328b82cb17e637ef5cdcfd377
-  _mulSubst 65f687418a1441a309153e687fb91d05
-  _typeCheck 23d3b0dc7a5c7bb8220fc690190c004e
-  toType b80df28be83fde40a14a4159969b1479
+  _macroGen e4d7368d969df7fb3ed6c7b5ee8874ee
+  _mulSubst d91fd77e0cc5273b6ec49db560259d74
+  _typeCheck 7ceacfd3b7af9dc25ef466d6bf3ed1c6
+  toType bd09ffb4537576cfd2569a1d3d7bf812
 import  -/  base-4.14.1.0:Data.Either 261c1c71635999cbd73ed5ff84e95050
 import  -/  base-4.14.1.0:Data.Foldable 4c6f334a0c8a83bff823b6d582dec41d
 import  -/  base-4.14.1.0:Data.Tuple f7decaa9c10bbc586b56da3667e5fd19
@@ -275,7 +277,7 @@ b41cea65493456c7feb0079bba0caa11
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
-b4f8b65774def281537897bc24e91b6c
+4b5a1d8fd3e9cb06d961dc9ad6a680c8
   $w_applyOp :: Types.Op -> Types.Exp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <S,1*U><S,1*U><S,1*U>, Inline: [2],
      Unfolding: (\ (ww :: Types.Op)
@@ -319,17 +321,17 @@ b4f8b65774def281537897bc24e91b6c
                                  case GHC.Prim.<=# x18 0# of lwild {
                                    DEFAULT -> Eval.$wunsafeDrop @ Types.Wrd x18 wild
                                    1# -> wild } })) } } }) -}
-7bcf73c8554236a4b69cb8c6c7102750
+c0cc9b0411a1c0023a6bb3f605fe9a7b
   $w_eval ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (# Types.Wrd, [Types.Bind] #)
   {- Arity: 3, Strictness: <L,U><L,U><S,U>, Inline: [2] -}
-87cfeab4dcc3db2ba9969bf84d241a7d
+9d9a5bf414180fe72f49ee43d0032260
   $w_evalFunctions ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (# Types.Wrd, [Types.Bind] #)
   {- Arity: 3, Strictness: <L,U><S,U><S,U>, Inline: [2] -}
-7c7aab5fb15115ef5a14f2ad28ba0862
+11869cd7de8cedf201a0173a49d8e8fd
   $w_subOp ::
     Types.EvalMode
     -> GHC.Base.String -> Types.Op -> Types.Exp -> Types.Exp
@@ -338,16 +340,16 @@ b4f8b65774def281537897bc24e91b6c
   $wunsafeDrop :: GHC.Prim.Int# -> [a1] -> [a1]
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><S,1*U>,
      Inline: [2] -}
-ab22a9371c2f89641896f5e2764da43d
+bf4b19671208914762c7345625bea170
   type Parenthesis :: *
   data Parenthesis
     = Found (Types.Exp, Types.Exp, Types.Exp)
     | NotFound
     | Error GHC.Base.String
-f6b0270aa17aafaa557ad66ac4666afd
+9e3aba1a7b4bfa0606e7113aee751796
   type TypeOrTypeContents :: *
   data TypeOrTypeContents = TP Types.Type | TContents [Types.Type]
-3400e87666748a88e5794584384d5abf
+4599a5b5ca8b335e09d521644cc78f98
   _applyFunction ::
     Types.EvalMode
     -> Types.Wrd
@@ -355,20 +357,20 @@ f6b0270aa17aafaa557ad66ac4666afd
     -> Types.Exp
     -> Data.Either.Either GHC.Base.String Types.Exp
   {- Arity: 4, Strictness: <S,1*U><S,1*U><L,1*U><L,U> -}
-b02cfaf583828c9c603fc98eda0d8bc2
+ecabdff4dd5babb7a4c7dea2a0c22798
   _applyOp :: Types.StrOp -> Types.Exp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <S(LS),1*U(A,1*U)><S,1*U><S,1*U>,
      Inline: [2],
      Unfolding: InlineRule (3, True, False)
                 (\ (w :: Types.StrOp) (w1 :: Types.Exp) (w2 :: Types.Exp) ->
                  case w of ww { (,) ww1 ww2 -> Eval.$w_applyOp ww2 w1 w2 }) -}
-fa1f9bcbe800f71dbbbc3d5771b7934e
+d72e965c3b75b85502b191f480d46c06
   _applyOp1 :: Types.Exp
   {- Strictness: b -}
-ab56dffea01a5dbfd506d028cb32ed5a
+61568165f3d403c5af357c0650357af3
   _applyOp_go :: [Types.Wrd] -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><L,1*U> -}
-83b4d2b71f0b0a524986f23a33bf0cf2
+cb4e7b9e6135b08bf008516059382c2d
   _bind ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -401,7 +403,7 @@ ab56dffea01a5dbfd506d028cb32ed5a
                                         (Types.Bind w3 rhs (Ops._getType rhs))
                                         w1)
                                   : ipv ipv1 -> (Eval._bind1, w1) } } } } }) -}
-698ef11fc68f64592938219468914890
+3d415d3c2bd7bda8e57bc013dc8cc275
   _bind1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Eval._bind2) -}
 9204712a8b40809fd22e0a9d4e1ed2d8
@@ -411,7 +413,7 @@ ef03c9d1a606a5614e98e736f5bb80d6
   _bind3 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Syntax error: You should specify only one symbol to bind value."#) -}
-1266b80c1c79d69c0aabd82c2e5e73e2
+b02a0a608170207ca9ec35dc73c87136
   _bind4 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Eval._bind5) -}
 ee1486b0647076940cca16b6ef8b0a72
@@ -420,7 +422,7 @@ ee1486b0647076940cca16b6ef8b0a72
 1cd4434747ed5c1fa9a603e39f96e0c1
   _bind6 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("Syntax error: missing `=`"#) -}
-e243c840371dee0d5a16e0596d0846db
+3166b1589a2c240c404aec31aad94214
   _bind7 :: Types.Wrd -> GHC.Types.Bool
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -431,10 +433,10 @@ f15138fbef1656de638e9cf287137482
 cf5d5931b47c40313ece545d0af74838
   _bind9 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("="#) -}
-39a8aae654d0a80ec7a52c85fd7d0d81
+07b6a9be218a3b65ecba7b757d45b15e
   _bind_x :: Types.Wrd
   {- Strictness: m5, Unfolding: (Types.Tobe Eval._bind8) -}
-1cb420a7097310438c63d406eeca430d
+70ea316df9ff9343bf76f95ba0406048
   _eval ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -442,12 +444,12 @@ cf5d5931b47c40313ece545d0af74838
      Unfolding: InlineRule (3, True, False)
                 (\ (w :: Types.EvalMode) (w1 :: [Types.Bind]) (w2 :: Types.Exp) ->
                  case Eval.$w_eval w w1 w2 of ww { (#,#) ww1 ww2 -> (ww1, ww2) }) -}
-479d64a4913800be2b3428bc038e0ee0
+57bca50d9408bdb70054f641bbf940ae
   _evalFunctionSignature ::
     Types.Exp
     -> Data.Either.Either GHC.Base.String Eval.TypeOrTypeContents
   {- Arity: 1, Strictness: <S,U> -}
-ea197119dc49e0e45a34cef2054a2957
+eb8bc986211a7500c9417c4c52d33395
   _evalFunctions ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -456,7 +458,7 @@ ea197119dc49e0e45a34cef2054a2957
                 (\ (w :: Types.EvalMode) (w1 :: [Types.Bind]) (w2 :: Types.Exp) ->
                  case Eval.$w_evalFunctions w w1 w2 of ww { (#,#) ww1 ww2 ->
                  (ww1, ww2) }) -}
-dae80c6a01e7b800922241fca5c04b8a
+45d7a64bb5f94d9b0ed1e540604c1ce7
   _evalWrd :: Types.EvalMode -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <L,1*U><S,1*U>,
      Unfolding: (\ (mode :: Types.EvalMode) (ds :: Types.Wrd) ->
@@ -545,7 +547,7 @@ d27293affeb602f2f90f3cbaf474d4ec
                    Text.ParserCombinators.ReadPrec.minPrec
                    @ GHC.Types.Bool
                    (Text.Read.readEither7 @ GHC.Types.Bool)) -}
-38ce170869451c53a914af44b3314afc
+dc6ffd823540ee769b46cca280b79162
   _findParenthesis ::
     Types.Exp
     -> GHC.Integer.Type.Integer
@@ -553,7 +555,7 @@ d27293affeb602f2f90f3cbaf474d4ec
     -> Types.Wrd
     -> Eval.Parenthesis
   {- Arity: 4, Strictness: <S,1*U><L,U><L,U><L,U> -}
-b238b2de2692e9f073b056640416ccba
+15fc5ca94a0d9c894fdf127c339a2c03
   _isFunction :: Types.EvalMode -> Types.Wrd -> GHC.Types.Bool
   {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
      Unfolding: InlineRule (2, True, False)
@@ -569,7 +571,7 @@ b238b2de2692e9f073b056640416ccba
                         -> case ds2 of wild2 {
                              DEFAULT -> GHC.Types.False
                              Types.T_Func ds3 -> GHC.Types.True } } }) -}
-4687062eca41075f3f6f056f10adc299
+c02a724a32407bfaa3e91db36902657d
   _isOp :: Types.Wrd -> GHC.Types.Bool
   {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -580,7 +582,7 @@ b238b2de2692e9f073b056640416ccba
                    -> case ds1 of wild1 {
                         Types.Fun ipv -> GHC.Types.False
                         Types.Operator ds2 -> GHC.Types.True } }) -}
-adaf6eabc19b7f60f9d6aeb19d3cd02b
+3b128e2d0340ebda892c317b44f6f18d
   _isReplaceable :: [Types.Bind] -> Types.Exp -> GHC.Types.Bool
   {- Arity: 2, Strictness: <S,1*U><L,U>,
      Unfolding: (\ (binds :: [Types.Bind]) (ex :: Types.Exp) ->
@@ -604,7 +606,7 @@ adaf6eabc19b7f60f9d6aeb19d3cd02b
                                   ex)) }
                  } in
                  go1 binds Eval._numIn2) -}
-cd992063fa4afb9113e26c4e320b0f3f
+336c4f3c9fc583ad1959c1f3bc894243
   _iterOps ::
     Types.EvalMode
     -> [Types.StrOp]
@@ -668,14 +670,14 @@ cd992063fa4afb9113e26c4e320b0f3f
                              ((opName, Ops._typeFunction opName),
                               case ds1 of ds2 { (,) ws1 ws2 -> ws1 },
                               case ds1 of ds2 { (,) ws1 ws2 -> ws2 }) } }) -}
-03e0a8b566a8d9314bddd8e929769e4c
+2b7145ea0215f82e97a15593a4a8a278
   _iterOps1 :: ([Types.Wrd], [Types.Wrd])
   {- Strictness: b -}
-23a06235f9565e0b6da87fe521c0c1a5
+4c5dcecb7551e81fd0a5b3f4196cfd50
   _mulSubOp ::
     Types.EvalMode -> [Types.StrOp] -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <L,U><S,1*U><S,U> -}
-3d75ec32f061e2aef9d72840104953f4
+f75271e94dba78a637f78d7c31677efb
   _numIn :: Types.Wrd -> Types.Exp -> GHC.Integer.Type.Integer
   {- Arity: 2, Strictness: <L,U><S,1*U>,
      Unfolding: (\ (w :: Types.Wrd) (ex :: Types.Exp) ->
@@ -700,7 +702,7 @@ cd992063fa4afb9113e26c4e320b0f3f
 629fc779c168c4022c0ee1fa5c91bb53
   _numIn2 :: GHC.Integer.Type.Integer
   {- HasNoCafRefs, Unfolding: (0) -}
-e4dc4b49b6de03aba946bcbe11057c20
+31b7eeeb27aa895543ebc1335d215065
   _subOp :: Types.EvalMode -> Types.StrOp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <L,1*U><S,1*U(U,U)><S,U>, Inline: [2],
      Unfolding: InlineRule (3, True, False)
@@ -725,7 +727,7 @@ e6bb26d8e51bfb19646d0861304ae496
      Unfolding: InlineRule (2, True, False)
                 (\ @ a ($dShow :: GHC.Show.Show a) (x18 :: a) ->
                  Debug.Trace.trace @ a (GHC.Show.show @ a $dShow x18) x18) -}
-c0a5069a88cdbb4c688378964fb2b358
+9c53448375d53dcb4aba8e7d4289f99e
   _typeExprGen :: Types.Function -> Types.Exp
   {- Arity: 1, HasNoCafRefs, Strictness: <S(SLS),1*U(1*U,A,U)>,
      Unfolding: InlineRule (1, True, False)
@@ -749,14 +751,14 @@ c0a5069a88cdbb4c688378964fb2b358
                             Eval._typeExprGen1)
                          n
                          ds1)) }) -}
-5b7c6797b59998ee118e03af44a89a6d
+37a74cd81c57b80190a8eb7df3902c08
   _typeExprGen1 :: (Types.Type, GHC.Base.String) -> Types.Bind
   {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U(U,U)>m,
      Unfolding: InlineRule (1, True, False)
                 (\ (ds :: (Types.Type, GHC.Base.String)) ->
                  case ds of wild { (,) t id ->
                  Types.Bind id (Types.TypeCheck t) Types.T_TypeCheck }) -}
-61b57b1521a15d3c8a11898a55c42bfa
+d94dc0f5ab1b567a61a88d46384f47bb
   findParenthesis ::
     Types.Exp -> GHC.Base.String -> GHC.Base.String -> Eval.Parenthesis
   {- Arity: 3, Strictness: <S,1*U><L,U><L,U>,
@@ -772,7 +774,7 @@ c0a5069a88cdbb4c688378964fb2b358
 f5f1681883e530571395fe93091dfec0
   findParenthesis1 :: GHC.Integer.Type.Integer
   {- HasNoCafRefs, Unfolding: (-1) -}
-3077657a25677a65b65898f2e3b5660e
+0a4cc260c7c040500f63063e91cbc441
   functionTypeCheck :: [Types.Bind] -> Types.Function -> Types.Wrd
   {- Arity: 2, Strictness: <L,U><S(SLS),1*U(1*U,A,U)>,
      Unfolding: InlineRule (2, True, False)
@@ -800,7 +802,7 @@ f5f1681883e530571395fe93091dfec0
                                  n
                                  ds))) of wild1 { (,) x18 ds3 ->
                  x18 } }) -}
-7122e7ee2e6294423d3ce3e62d76dca4
+1592147282a93b7867e1f08a13d6e272
   myReadBool ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd
@@ -822,7 +824,7 @@ f5f1681883e530571395fe93091dfec0
                              -> Data.Either.Right @ GHC.Base.String @ Types.Wrd (Types.Bool x18)
                              : ipv ipv1 -> wild } }
                    Data.Either.Right w -> wild }) -}
-65ee0f7f80d3d288f7fa5a3305dc7c94
+21683cf2d0105488bb5a4cd200ab8f21
   myReadDouble ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd
@@ -847,7 +849,7 @@ f5f1681883e530571395fe93091dfec0
                                   (Types.Double x18)
                              : ipv ipv1 -> wild } }
                    Data.Either.Right u -> wild }) -}
-7961b9cf6c5c56267f86b1f4fb674a72
+4e4adaa3a6ae9efe5fe1b6a139cd4da3
   myReadInt ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd
@@ -878,11 +880,11 @@ arg docs:
 
 
 ==================== FINAL INTERFACE ====================
-2021-04-09 03:05:55.4807594 UTC
+2021-04-09 05:06:16.3764439 UTC
 
 interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Eval 8104
-  interface hash: 8e7e20b1c580f8f3b4286287965001b5
-  ABI hash: af8a5070c61e4dbe900a3c7070ef46f2
+  interface hash: 1944b6eaac711d40d41ea0b755c97fff
+  ABI hash: 4e4c9691647e3ff40573745f4fbf148e
   export-list hash: fae837bd0269baac588762786705c785
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 358a18e1043fc7ac1b015a88503b1325
@@ -927,67 +929,69 @@ family instance modules: base-4.14.1.0:Control.Applicative
                          base-4.14.1.0:Data.Functor.Identity base-4.14.1.0:Data.Monoid
                          base-4.14.1.0:Data.Semigroup.Internal base-4.14.1.0:GHC.Generics
                          base-4.14.1.0:GHC.IO.Exception
-import  -/  Ops d150b60c27dc32f3b81e8e6b8ed7e7e9
+import  -/  Ops 9ccd6b0b2d6b998e873165db1714d518
   exports: 24531ef125d46d1c52ba79243a43b497
-  _getType 90ff28e62a99dc82d7325615ac131599
-  _opls_dec 6bf4d5616317ad4dbb246754cab7efc9
-  _typeFunction 8d7df2a6b5d3b9bca57a9d4a834dd5f9
-  toList 3387bddbaface069531d5485507a58dc
+  _getType 61ce3e584263fb0db0af18116e87db36
+  _opls_dec 4fdae104e3cb477fac4af3f60e9882f1
+  _typeFunction ee95a08bf525ca090c305cc8c1f3aeb0
+  toList 27a51ba87381b8245ff7c9b364acdd1f
 import  -/  Parser 3443f1228a5fa43ab36605baa220d75c
   exports: 4e79c2f1fd013aabc39c8f81cd5374c7
   divList 5b67dd131f974ed42cde15b86592ddf7
   divListBy fb299016722c4bbaadf79441fb5b885a
   divListInto 11665a6afda1cb6f9b8180e31f195576
-import  -/  Types b9822497053d2122dc73d0cfdd1b339f
-  exports: 39b07b7f7957277f50c7c4dd7689ef5f
-  BinOp d26ca552c0a6cb13c3d3e231f243d460
-  Bind 01c53ace98412a9103c967ff13344fb0
-  Bind 607e5ce3f9595614a9cb77b2c4210b74
-  Bool b70cd53ad7a85dab48bcef177c38636b
-  Contents bfd8b6d89520df3f04fc0736bc657607
-  Double b891f973d45771521238fab46a6ae819
-  Err 49657f448604d6729aba97b2988953b9
+import  -/  Types 2870f235e2eecb0b3d25891749dd9b60
+  exports: fb3343c70ce167cabb463f2e586dc9ec
+  BinOp 248347d51f0d70dee7324f48b9d0a2d1
+  Bind 7815ac138b80fbf2b2de57eb1e30ff32
+  Bind 41e7a32a3a97b64b95a9c2dd25716e8f
+  Bool 1241c9fc4fc65d256e8c45a8fcd8d7ba
+  Contents fa4819666f5e830574317c5431de464a
+  Double e9e581551e257a870b35d7e222321699
+  Err 5729e6192c4942b542d650e149e72f10
   EvalMode 033e148ab2ed3368fa8a91bde533879d
-  Exp 607e5ce3f9595614a9cb77b2c4210b74
-  Fun 6815ac0e2ecfff4e0c829eba93adbd8b
-  Func c1251ac84fede6c4ca7d3c4f0601d771
-  FuncOp 97bc2911206d2b50aa94a433bccfe820
-  Function 267e8a4d83f0f1e1729f2be1e5904e81
-  Function 607e5ce3f9595614a9cb77b2c4210b74
-  Int 1626c1e059773b609f52829c5bb3fa74
-  List bf4e22584c08f0cbc93d4ad500ad7f0d
+  Exp 41e7a32a3a97b64b95a9c2dd25716e8f
+  Fun 42a0d5cd29c2177dcdfaca7cd63323dc
+  Func 5d1e31720c6814351c1d5fe881a7a5eb
+  FuncOp 8397c94a2f2349a2dd9e300a2647eb27
+  Function 9a9eb8e4986ec4d109057707af53cf06
+  Function 41e7a32a3a97b64b95a9c2dd25716e8f
+  Int 006171945d67657ef6faae9f16159d2e
+  List f0bad1f4683a6ff5d4c475bfda9c9085
   M_Normal 3a8c8dc348274cb5cc27d78334ca6775
   M_TypeCheck 56a174d0c5bad7ac68dc38880bde511e
-  Null 9967ba516bf5fc50c2a36c732419df94
-  Operator 89cca03e93ee20a41b3c3642d9fd3bba
-  PreList 2cd63c03f6681ef78c8cf47e3c7f2b35
-  StrOp 607e5ce3f9595614a9cb77b2c4210b74
-  T_Func cd5569cdd28f55b0418b44742170970e
-  T_Function 8cc668be17da098d88dc5ce953523aaa
-  T_Operator 2b724b9e8f3f49af40f551abcf01d31a
-  T_Tuple e233fd3595057c845dc31260603df806
-  T_TypeCheck 978af787a74b5640fa6a266387e5f47e
-  Tobe 114668cd72acff1452b72cb75dca7503
-  Tuple 24eb98ce397df75e853fb8c92b81a145
-  Type bd4ecaf43435ec6d916df969f32b0e1c
-  Type 607e5ce3f9595614a9cb77b2c4210b74
-  TypeCheck 7a98c1d9491014e3cc63bc169a5dd418
-  UnOp 8c7eed723ee8887a5e082490f6ddf7d6
-  Wrd 607e5ce3f9595614a9cb77b2c4210b74
-  args 607e5ce3f9595614a9cb77b2c4210b74
-  args_t 607e5ce3f9595614a9cb77b2c4210b74
-  identifier 607e5ce3f9595614a9cb77b2c4210b74
-  ret 607e5ce3f9595614a9cb77b2c4210b74
-  ret_t 607e5ce3f9595614a9cb77b2c4210b74
-  return_t 607e5ce3f9595614a9cb77b2c4210b74
-  value 607e5ce3f9595614a9cb77b2c4210b74
-  vtype 607e5ce3f9595614a9cb77b2c4210b74
-import  -/  Utils 73ff7515a7321f0c1e8cafe3e04576e7
+  Null 04b71613b842f7a04f5bc3ed46abb1b3
+  Operator 6909136eade762426066db644700f71f
+  PreList a5b96693bc60e76099302e7495352709
+  StrOp 41e7a32a3a97b64b95a9c2dd25716e8f
+  T_Any ebca11f0674a4eec23948a43c7ba4df1
+  T_Func cd50891eac1225bdba2c21c3e89ab64b
+  T_Function af0bd724946c4e4e99d0a5e688bd8bec
+  T_Operator 4e8715ebb2c8a3afa27ac366a90ea4dd
+  T_Tuple b991f1bb08adca19e3581f5caaa8ae73
+  T_TypeCheck b2619f3ff28d8d4e8d01bdee740a65e6
+  Tobe 3e1c049fbf40275e2d316fdeb88ae7b7
+  Tuple 787aea3d9ecc843af9c34b94030802d6
+  Type 2cf69a7355f245a5f0d937b4915d0db8
+  Type 41e7a32a3a97b64b95a9c2dd25716e8f
+  TypeCheck 743327823be34d4f772a0b2575b49c47
+  UnOp 4de264f457e8ae24d30e2ee9293e99a7
+  Wrd 41e7a32a3a97b64b95a9c2dd25716e8f
+  args 41e7a32a3a97b64b95a9c2dd25716e8f
+  args_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  identifier 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  return_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  typeEq 18f0eaa319b737788e6e4d55a60bd643
+  value 41e7a32a3a97b64b95a9c2dd25716e8f
+  vtype 41e7a32a3a97b64b95a9c2dd25716e8f
+import  -/  Utils d92d30900a25e92c20923717ad185bc6
   exports: 6b58bb7b7116017e16bec3393566cc01
-  _macroGen c68703f328b82cb17e637ef5cdcfd377
-  _mulSubst 65f687418a1441a309153e687fb91d05
-  _typeCheck 23d3b0dc7a5c7bb8220fc690190c004e
-  toType b80df28be83fde40a14a4159969b1479
+  _macroGen e4d7368d969df7fb3ed6c7b5ee8874ee
+  _mulSubst d91fd77e0cc5273b6ec49db560259d74
+  _typeCheck 7ceacfd3b7af9dc25ef466d6bf3ed1c6
+  toType bd09ffb4537576cfd2569a1d3d7bf812
 import  -/  base-4.14.1.0:Data.Either 261c1c71635999cbd73ed5ff84e95050
 import  -/  base-4.14.1.0:Data.Foldable 4c6f334a0c8a83bff823b6d582dec41d
 import  -/  base-4.14.1.0:Data.Tuple f7decaa9c10bbc586b56da3667e5fd19
@@ -1153,7 +1157,7 @@ b41cea65493456c7feb0079bba0caa11
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
-b4f8b65774def281537897bc24e91b6c
+4b5a1d8fd3e9cb06d961dc9ad6a680c8
   $w_applyOp :: Types.Op -> Types.Exp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <S,1*U><S,1*U><S,1*U>, Inline: [2],
      Unfolding: (\ (ww :: Types.Op)
@@ -1197,17 +1201,17 @@ b4f8b65774def281537897bc24e91b6c
                                  case GHC.Prim.<=# x18 0# of lwild {
                                    DEFAULT -> Eval.$wunsafeDrop @ Types.Wrd x18 wild
                                    1# -> wild } })) } } }) -}
-7bcf73c8554236a4b69cb8c6c7102750
+c0cc9b0411a1c0023a6bb3f605fe9a7b
   $w_eval ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (# Types.Wrd, [Types.Bind] #)
   {- Arity: 3, Strictness: <L,U><L,U><S,U>, Inline: [2] -}
-87cfeab4dcc3db2ba9969bf84d241a7d
+9d9a5bf414180fe72f49ee43d0032260
   $w_evalFunctions ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (# Types.Wrd, [Types.Bind] #)
   {- Arity: 3, Strictness: <L,U><S,U><S,U>, Inline: [2] -}
-7c7aab5fb15115ef5a14f2ad28ba0862
+11869cd7de8cedf201a0173a49d8e8fd
   $w_subOp ::
     Types.EvalMode
     -> GHC.Base.String -> Types.Op -> Types.Exp -> Types.Exp
@@ -1216,16 +1220,16 @@ b4f8b65774def281537897bc24e91b6c
   $wunsafeDrop :: GHC.Prim.Int# -> [a1] -> [a1]
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><S,1*U>,
      Inline: [2] -}
-ab22a9371c2f89641896f5e2764da43d
+bf4b19671208914762c7345625bea170
   type Parenthesis :: *
   data Parenthesis
     = Found (Types.Exp, Types.Exp, Types.Exp)
     | NotFound
     | Error GHC.Base.String
-f6b0270aa17aafaa557ad66ac4666afd
+9e3aba1a7b4bfa0606e7113aee751796
   type TypeOrTypeContents :: *
   data TypeOrTypeContents = TP Types.Type | TContents [Types.Type]
-3400e87666748a88e5794584384d5abf
+4599a5b5ca8b335e09d521644cc78f98
   _applyFunction ::
     Types.EvalMode
     -> Types.Wrd
@@ -1233,20 +1237,20 @@ f6b0270aa17aafaa557ad66ac4666afd
     -> Types.Exp
     -> Data.Either.Either GHC.Base.String Types.Exp
   {- Arity: 4, Strictness: <S,1*U><S,1*U><L,1*U><L,U> -}
-b02cfaf583828c9c603fc98eda0d8bc2
+ecabdff4dd5babb7a4c7dea2a0c22798
   _applyOp :: Types.StrOp -> Types.Exp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <S(LS),1*U(A,1*U)><S,1*U><S,1*U>,
      Inline: [2],
      Unfolding: InlineRule (3, True, False)
                 (\ (w :: Types.StrOp) (w1 :: Types.Exp) (w2 :: Types.Exp) ->
                  case w of ww { (,) ww1 ww2 -> Eval.$w_applyOp ww2 w1 w2 }) -}
-fa1f9bcbe800f71dbbbc3d5771b7934e
+d72e965c3b75b85502b191f480d46c06
   _applyOp1 :: Types.Exp
   {- Strictness: b -}
-ab56dffea01a5dbfd506d028cb32ed5a
+61568165f3d403c5af357c0650357af3
   _applyOp_go :: [Types.Wrd] -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><L,1*U> -}
-83b4d2b71f0b0a524986f23a33bf0cf2
+cb4e7b9e6135b08bf008516059382c2d
   _bind ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -1279,7 +1283,7 @@ ab56dffea01a5dbfd506d028cb32ed5a
                                         (Types.Bind w3 rhs (Ops._getType rhs))
                                         w1)
                                   : ipv ipv1 -> (Eval._bind1, w1) } } } } }) -}
-698ef11fc68f64592938219468914890
+3d415d3c2bd7bda8e57bc013dc8cc275
   _bind1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Eval._bind2) -}
 9204712a8b40809fd22e0a9d4e1ed2d8
@@ -1289,7 +1293,7 @@ ef03c9d1a606a5614e98e736f5bb80d6
   _bind3 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Syntax error: You should specify only one symbol to bind value."#) -}
-1266b80c1c79d69c0aabd82c2e5e73e2
+b02a0a608170207ca9ec35dc73c87136
   _bind4 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Eval._bind5) -}
 ee1486b0647076940cca16b6ef8b0a72
@@ -1298,7 +1302,7 @@ ee1486b0647076940cca16b6ef8b0a72
 1cd4434747ed5c1fa9a603e39f96e0c1
   _bind6 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("Syntax error: missing `=`"#) -}
-e243c840371dee0d5a16e0596d0846db
+3166b1589a2c240c404aec31aad94214
   _bind7 :: Types.Wrd -> GHC.Types.Bool
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -1309,10 +1313,10 @@ f15138fbef1656de638e9cf287137482
 cf5d5931b47c40313ece545d0af74838
   _bind9 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("="#) -}
-39a8aae654d0a80ec7a52c85fd7d0d81
+07b6a9be218a3b65ecba7b757d45b15e
   _bind_x :: Types.Wrd
   {- Strictness: m5, Unfolding: (Types.Tobe Eval._bind8) -}
-1cb420a7097310438c63d406eeca430d
+70ea316df9ff9343bf76f95ba0406048
   _eval ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -1320,12 +1324,12 @@ cf5d5931b47c40313ece545d0af74838
      Unfolding: InlineRule (3, True, False)
                 (\ (w :: Types.EvalMode) (w1 :: [Types.Bind]) (w2 :: Types.Exp) ->
                  case Eval.$w_eval w w1 w2 of ww { (#,#) ww1 ww2 -> (ww1, ww2) }) -}
-479d64a4913800be2b3428bc038e0ee0
+57bca50d9408bdb70054f641bbf940ae
   _evalFunctionSignature ::
     Types.Exp
     -> Data.Either.Either GHC.Base.String Eval.TypeOrTypeContents
   {- Arity: 1, Strictness: <S,U> -}
-ea197119dc49e0e45a34cef2054a2957
+eb8bc986211a7500c9417c4c52d33395
   _evalFunctions ::
     Types.EvalMode
     -> [Types.Bind] -> Types.Exp -> (Types.Wrd, [Types.Bind])
@@ -1334,7 +1338,7 @@ ea197119dc49e0e45a34cef2054a2957
                 (\ (w :: Types.EvalMode) (w1 :: [Types.Bind]) (w2 :: Types.Exp) ->
                  case Eval.$w_evalFunctions w w1 w2 of ww { (#,#) ww1 ww2 ->
                  (ww1, ww2) }) -}
-dae80c6a01e7b800922241fca5c04b8a
+45d7a64bb5f94d9b0ed1e540604c1ce7
   _evalWrd :: Types.EvalMode -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <L,1*U><S,1*U>,
      Unfolding: (\ (mode :: Types.EvalMode) (ds :: Types.Wrd) ->
@@ -1423,7 +1427,7 @@ d27293affeb602f2f90f3cbaf474d4ec
                    Text.ParserCombinators.ReadPrec.minPrec
                    @ GHC.Types.Bool
                    (Text.Read.readEither7 @ GHC.Types.Bool)) -}
-38ce170869451c53a914af44b3314afc
+dc6ffd823540ee769b46cca280b79162
   _findParenthesis ::
     Types.Exp
     -> GHC.Integer.Type.Integer
@@ -1431,7 +1435,7 @@ d27293affeb602f2f90f3cbaf474d4ec
     -> Types.Wrd
     -> Eval.Parenthesis
   {- Arity: 4, Strictness: <S,1*U><L,U><L,U><L,U> -}
-b238b2de2692e9f073b056640416ccba
+15fc5ca94a0d9c894fdf127c339a2c03
   _isFunction :: Types.EvalMode -> Types.Wrd -> GHC.Types.Bool
   {- Arity: 2, HasNoCafRefs, Strictness: <S,1*U><S,1*U>,
      Unfolding: InlineRule (2, True, False)
@@ -1447,7 +1451,7 @@ b238b2de2692e9f073b056640416ccba
                         -> case ds2 of wild2 {
                              DEFAULT -> GHC.Types.False
                              Types.T_Func ds3 -> GHC.Types.True } } }) -}
-4687062eca41075f3f6f056f10adc299
+c02a724a32407bfaa3e91db36902657d
   _isOp :: Types.Wrd -> GHC.Types.Bool
   {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -1458,7 +1462,7 @@ b238b2de2692e9f073b056640416ccba
                    -> case ds1 of wild1 {
                         Types.Fun ipv -> GHC.Types.False
                         Types.Operator ds2 -> GHC.Types.True } }) -}
-adaf6eabc19b7f60f9d6aeb19d3cd02b
+3b128e2d0340ebda892c317b44f6f18d
   _isReplaceable :: [Types.Bind] -> Types.Exp -> GHC.Types.Bool
   {- Arity: 2, Strictness: <S,1*U><L,U>,
      Unfolding: (\ (binds :: [Types.Bind]) (ex :: Types.Exp) ->
@@ -1482,7 +1486,7 @@ adaf6eabc19b7f60f9d6aeb19d3cd02b
                                   ex)) }
                  } in
                  go1 binds Eval._numIn2) -}
-cd992063fa4afb9113e26c4e320b0f3f
+336c4f3c9fc583ad1959c1f3bc894243
   _iterOps ::
     Types.EvalMode
     -> [Types.StrOp]
@@ -1546,14 +1550,14 @@ cd992063fa4afb9113e26c4e320b0f3f
                              ((opName, Ops._typeFunction opName),
                               case ds1 of ds2 { (,) ws1 ws2 -> ws1 },
                               case ds1 of ds2 { (,) ws1 ws2 -> ws2 }) } }) -}
-03e0a8b566a8d9314bddd8e929769e4c
+2b7145ea0215f82e97a15593a4a8a278
   _iterOps1 :: ([Types.Wrd], [Types.Wrd])
   {- Strictness: b -}
-23a06235f9565e0b6da87fe521c0c1a5
+4c5dcecb7551e81fd0a5b3f4196cfd50
   _mulSubOp ::
     Types.EvalMode -> [Types.StrOp] -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <L,U><S,1*U><S,U> -}
-3d75ec32f061e2aef9d72840104953f4
+f75271e94dba78a637f78d7c31677efb
   _numIn :: Types.Wrd -> Types.Exp -> GHC.Integer.Type.Integer
   {- Arity: 2, Strictness: <L,U><S,1*U>,
      Unfolding: (\ (w :: Types.Wrd) (ex :: Types.Exp) ->
@@ -1578,7 +1582,7 @@ cd992063fa4afb9113e26c4e320b0f3f
 629fc779c168c4022c0ee1fa5c91bb53
   _numIn2 :: GHC.Integer.Type.Integer
   {- HasNoCafRefs, Unfolding: (0) -}
-e4dc4b49b6de03aba946bcbe11057c20
+31b7eeeb27aa895543ebc1335d215065
   _subOp :: Types.EvalMode -> Types.StrOp -> Types.Exp -> Types.Exp
   {- Arity: 3, Strictness: <L,1*U><S,1*U(U,U)><S,U>, Inline: [2],
      Unfolding: InlineRule (3, True, False)
@@ -1603,7 +1607,7 @@ e6bb26d8e51bfb19646d0861304ae496
      Unfolding: InlineRule (2, True, False)
                 (\ @ a ($dShow :: GHC.Show.Show a) (x18 :: a) ->
                  Debug.Trace.trace @ a (GHC.Show.show @ a $dShow x18) x18) -}
-c0a5069a88cdbb4c688378964fb2b358
+9c53448375d53dcb4aba8e7d4289f99e
   _typeExprGen :: Types.Function -> Types.Exp
   {- Arity: 1, HasNoCafRefs, Strictness: <S(SLS),1*U(1*U,A,U)>,
      Unfolding: InlineRule (1, True, False)
@@ -1627,14 +1631,14 @@ c0a5069a88cdbb4c688378964fb2b358
                             Eval._typeExprGen1)
                          n
                          ds1)) }) -}
-5b7c6797b59998ee118e03af44a89a6d
+37a74cd81c57b80190a8eb7df3902c08
   _typeExprGen1 :: (Types.Type, GHC.Base.String) -> Types.Bind
   {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U(U,U)>m,
      Unfolding: InlineRule (1, True, False)
                 (\ (ds :: (Types.Type, GHC.Base.String)) ->
                  case ds of wild { (,) t id ->
                  Types.Bind id (Types.TypeCheck t) Types.T_TypeCheck }) -}
-61b57b1521a15d3c8a11898a55c42bfa
+d94dc0f5ab1b567a61a88d46384f47bb
   findParenthesis ::
     Types.Exp -> GHC.Base.String -> GHC.Base.String -> Eval.Parenthesis
   {- Arity: 3, Strictness: <S,1*U><L,U><L,U>,
@@ -1650,7 +1654,7 @@ c0a5069a88cdbb4c688378964fb2b358
 f5f1681883e530571395fe93091dfec0
   findParenthesis1 :: GHC.Integer.Type.Integer
   {- HasNoCafRefs, Unfolding: (-1) -}
-3077657a25677a65b65898f2e3b5660e
+0a4cc260c7c040500f63063e91cbc441
   functionTypeCheck :: [Types.Bind] -> Types.Function -> Types.Wrd
   {- Arity: 2, Strictness: <L,U><S(SLS),1*U(1*U,A,U)>,
      Unfolding: InlineRule (2, True, False)
@@ -1678,7 +1682,7 @@ f5f1681883e530571395fe93091dfec0
                                  n
                                  ds))) of wild1 { (,) x18 ds3 ->
                  x18 } }) -}
-7122e7ee2e6294423d3ce3e62d76dca4
+1592147282a93b7867e1f08a13d6e272
   myReadBool ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd
@@ -1700,7 +1704,7 @@ f5f1681883e530571395fe93091dfec0
                              -> Data.Either.Right @ GHC.Base.String @ Types.Wrd (Types.Bool x18)
                              : ipv ipv1 -> wild } }
                    Data.Either.Right w -> wild }) -}
-65ee0f7f80d3d288f7fa5a3305dc7c94
+21683cf2d0105488bb5a4cd200ab8f21
   myReadDouble ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd
@@ -1725,7 +1729,7 @@ f5f1681883e530571395fe93091dfec0
                                   (Types.Double x18)
                              : ipv ipv1 -> wild } }
                    Data.Either.Right u -> wild }) -}
-7961b9cf6c5c56267f86b1f4fb674a72
+4e4adaa3a6ae9efe5fe1b6a139cd4da3
   myReadInt ::
     Data.Either.Either GHC.Base.String Types.Wrd
     -> Data.Either.Either GHC.Base.String Types.Wrd

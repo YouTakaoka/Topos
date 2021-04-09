@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2021-04-08 12:27:35.0572706 UTC
+2021-04-09 04:56:43.7462806 UTC
 
 interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Ops 8104
-  interface hash: ea8c7895a3d1a7a01fa1777bc2c23497
-  ABI hash: d150b60c27dc32f3b81e8e6b8ed7e7e9
+  interface hash: ef8a11b9a42d54efababcfa712030c2a
+  ABI hash: 9ccd6b0b2d6b998e873165db1714d518
   export-list hash: 24531ef125d46d1c52ba79243a43b497
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 358a18e1043fc7ac1b015a88503b1325
@@ -97,52 +97,52 @@ family instance modules: base-4.14.1.0:Control.Applicative
                          base-4.14.1.0:GHC.IO.Exception
 import  -/  Parser 3443f1228a5fa43ab36605baa220d75c
   exports: 4e79c2f1fd013aabc39c8f81cd5374c7
-import  -/  Types b9822497053d2122dc73d0cfdd1b339f
-  exports: 39b07b7f7957277f50c7c4dd7689ef5f
-  BinOp d26ca552c0a6cb13c3d3e231f243d460
-  Bool b70cd53ad7a85dab48bcef177c38636b
-  Double b891f973d45771521238fab46a6ae819
-  Err 49657f448604d6729aba97b2988953b9
-  Exp 607e5ce3f9595614a9cb77b2c4210b74
-  Fun 6815ac0e2ecfff4e0c829eba93adbd8b
-  Func c1251ac84fede6c4ca7d3c4f0601d771
-  FuncOp 97bc2911206d2b50aa94a433bccfe820
-  Function 267e8a4d83f0f1e1729f2be1e5904e81
-  Int 1626c1e059773b609f52829c5bb3fa74
-  List bf4e22584c08f0cbc93d4ad500ad7f0d
-  Op 607e5ce3f9595614a9cb77b2c4210b74
-  Operator 89cca03e93ee20a41b3c3642d9fd3bba
-  PreList 2cd63c03f6681ef78c8cf47e3c7f2b35
-  Print e87b8ebec85f3fc24f975cc1e7e3e2cd
-  Str 8b8af5b0acf7e0323f4cbb1ea5827222
-  StrOp 607e5ce3f9595614a9cb77b2c4210b74
-  T_Bool 3d5d104ad17812f63feb2aef3b1ad4cd
-  T_Double 5e54cc1d20b392ed3d5fa02d6324f88c
-  T_EmptyList 260f30ad032fd2d54f4552772b925552
-  T_Error 235a36067aa706ad3f38a03931790620
-  T_Func cd5569cdd28f55b0418b44742170970e
-  T_Function 8cc668be17da098d88dc5ce953523aaa
-  T_Int 4e42539dd2ce6e4876d946eaf17319c8
-  T_List 54c5b828c2e4f1c661388c72c68886ad
-  T_Operator 2b724b9e8f3f49af40f551abcf01d31a
-  T_PreList c17694220febf02b1e3f97947f51ad95
-  T_Print c36f4bc1af49ddd4b4541db838e6f9c0
-  T_String 236f270036a6e60f712f937a8a1e2ed8
-  T_Tuple e233fd3595057c845dc31260603df806
-  T_Type c87dc5b3bf8d798697d64f66a60f27f0
-  T_Unknown 6666a7ed1e898402891d2d748621a86d
-  Tobe 114668cd72acff1452b72cb75dca7503
-  Tuple 24eb98ce397df75e853fb8c92b81a145
-  Type bd4ecaf43435ec6d916df969f32b0e1c
-  Type 607e5ce3f9595614a9cb77b2c4210b74
-  TypeCheck 7a98c1d9491014e3cc63bc169a5dd418
-  UnOp 8c7eed723ee8887a5e082490f6ddf7d6
-  Wrd 607e5ce3f9595614a9cb77b2c4210b74
-  args 607e5ce3f9595614a9cb77b2c4210b74
-  args_t 607e5ce3f9595614a9cb77b2c4210b74
-  ret 607e5ce3f9595614a9cb77b2c4210b74
-  ret_t 607e5ce3f9595614a9cb77b2c4210b74
-  return_t 607e5ce3f9595614a9cb77b2c4210b74
+import  -/  Types 2870f235e2eecb0b3d25891749dd9b60
+  exports: fb3343c70ce167cabb463f2e586dc9ec
+  BinOp 248347d51f0d70dee7324f48b9d0a2d1
+  Bool 1241c9fc4fc65d256e8c45a8fcd8d7ba
+  Double e9e581551e257a870b35d7e222321699
+  Err 5729e6192c4942b542d650e149e72f10
+  Exp 41e7a32a3a97b64b95a9c2dd25716e8f
+  Fun 42a0d5cd29c2177dcdfaca7cd63323dc
+  Func 5d1e31720c6814351c1d5fe881a7a5eb
+  FuncOp 8397c94a2f2349a2dd9e300a2647eb27
+  Function 9a9eb8e4986ec4d109057707af53cf06
+  Int 006171945d67657ef6faae9f16159d2e
+  List f0bad1f4683a6ff5d4c475bfda9c9085
+  Op 41e7a32a3a97b64b95a9c2dd25716e8f
+  Operator 6909136eade762426066db644700f71f
+  PreList a5b96693bc60e76099302e7495352709
+  Print 825c49422af2ec86182c776d0f7f27d2
+  Str 5f7be358727990ce68ad5fc089118acd
+  StrOp 41e7a32a3a97b64b95a9c2dd25716e8f
+  T_Bool b86db244cb09a3e2fe2aedd61bfbee3d
+  T_Double 737f6fd67b2db24d3ba875411b000d1a
+  T_EmptyList e01c7753fbb038635d5ed713eb9817eb
+  T_Error 48873ecd2091bfe3454b88dba812f4c9
+  T_Func cd50891eac1225bdba2c21c3e89ab64b
+  T_Function af0bd724946c4e4e99d0a5e688bd8bec
+  T_Int 8e2d7b1da0251ed5fe76d6e97cedfbca
+  T_List ba15cafcb7b312e20336464ba2df5fd6
+  T_Operator 4e8715ebb2c8a3afa27ac366a90ea4dd
+  T_PreList c1c2e0be950f1f71892ac83babc5ae70
+  T_Print dd66a92b4ff8847e7c08a783b6048b63
+  T_String c064da13f2e2dde0871e82011fef3383
+  T_Tuple b991f1bb08adca19e3581f5caaa8ae73
+  T_Type 739eeac08d3659c9bb2735b433dfb87f
+  T_Unknown 55a7e4e28907eaeeec59991a84410abf
+  Tobe 3e1c049fbf40275e2d316fdeb88ae7b7
+  Tuple 787aea3d9ecc843af9c34b94030802d6
+  Type 2cf69a7355f245a5f0d937b4915d0db8
+  Type 41e7a32a3a97b64b95a9c2dd25716e8f
+  TypeCheck 743327823be34d4f772a0b2575b49c47
+  UnOp 4de264f457e8ae24d30e2ee9293e99a7
+  Wrd 41e7a32a3a97b64b95a9c2dd25716e8f
+  args 41e7a32a3a97b64b95a9c2dd25716e8f
+  args_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  return_t 41e7a32a3a97b64b95a9c2dd25716e8f
 import  -/  base-4.14.1.0:Data.List aa48efeea2e877aaa8c12a1a2e589508
 import  -/  base-4.14.1.0:Debug.Trace 311b1d0b6fcef7b89debc64460553e8a
 import  -/  base-4.14.1.0:GHC.Base ede51775731a544ddfcb02b5a427fd38
@@ -171,13 +171,13 @@ ca9bc36dca399398b222432313c4b910
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
-103fbd3fa54e1684446b8b9b09d6e3c7
+6a222656f57f52efaac9824435a17553
   $wshowl :: [Types.Wrd] -> (# GHC.Types.Char, [GHC.Types.Char] #)
   {- Arity: 1, Strictness: <S,1*U>, Inline: [2] -}
-b09cc786b72fd2818f6d6eea05286af0
+aed145bdd147b3aa48670d02fb84703d
   _add :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._add0) -}
-f75419664c688defc087f76d32d22656
+8847e9ae90b861773782d43145682fa6
   _add0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -229,7 +229,7 @@ f75419664c688defc087f76d32d22656
 a8bc2cb4b2ded22b4496a1fbed2cab76
   _add2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Illegal input value: x="#) -}
-30b5baf3006a0617b9d4a275f0812218
+2e92d9d21e7200c92bab91854baf80d0
   _add_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -305,15 +305,15 @@ a8bc2cb4b2ded22b4496a1fbed2cab76
 d3a83146be059780d910ef8ebb52a172
   _add_t2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Wrd mismatch of lists: t1="#) -}
-d190d3240a169a5858d83ca487319ad4
+1ff1d2522a596192337da198470f08d1
   _add_t3 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_String) -}
-fb5b4c1dffad40319e2e1fbb0f2e20df
+e31089f768d46058027bfb746718801b
   _add_t4 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Double) -}
-5f4ddcb9f19056ec283cac24ff6f6c55
+51384bce1096dbab3f5df8587ef090bc
   _add_t5 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Int) -}
@@ -323,10 +323,10 @@ fb5b4c1dffad40319e2e1fbb0f2e20df
 6854d4481a0f7da1f8adb1f67c37d344
   _add_t7 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Illegal input type: t_x="#) -}
-fa9d3d44a843355e1a149e4f4bc13246
+7393a7111f1d62567db01add28631630
   _and :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._and1) -}
-65fdf0575a74fc92b6ff2a5e6dff7cb8
+761f14c91e5005f23186c311f3faadc4
   _and1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -351,7 +351,7 @@ fa9d3d44a843355e1a149e4f4bc13246
 1f7134b1bcd7b2d76cf3ff28f5e470eb
   _and2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:246:15-51|lambda"#) -}
-fc2743656532e0ef05c809643682003d
+feb8d3e1dc28bbac0a91580b702d7e51
   _and_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -390,7 +390,7 @@ fc2743656532e0ef05c809643682003d
                              -> case ds3 of wild3 {
                                   DEFAULT -> fail GHC.Prim.void#
                                   Types.T_Bool -> Ops._and_t1 } } } }) -}
-0575596eea8627eaa7ec602fa858dd65
+9abee605ef32f18c7645f7d41f1055c4
   _and_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Bool) -}
@@ -400,13 +400,13 @@ c14ad5c14b5d2e5fb364d19e075b9eee
 21a5a768a8a30fa169189ca503f4e131
   _and_t3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`&&`: Illegal input type: LHS="#) -}
-9693e7053c71e48558cd3548c629ee1d
+353bb4a43bbde43a2562081ad3324b7d
   _and_t4 :: Types.Wrd
   {- Strictness: b -}
-16e5c02c7fdde6e2b46ac08b12e746ed
+215fc1033c75c9712a869c6feed0ad8c
   _div :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._div0) -}
-98ac439b5a9aaf318bcd7c354a12eac4
+c7f24128ce96a06c8e28007e599be754
   _div0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <L,U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -472,7 +472,7 @@ c14ad5c14b5d2e5fb364d19e075b9eee
                    -> case ds2 of wild1 { GHC.Types.I# ds3 ->
                       case ds3 of ds4 {
                         DEFAULT -> fail GHC.Prim.void# 0# -> Ops._div1 } } }) -}
-19dda39c709a76a75b855b37d8c43079
+c7a0deb313bb0c643627b2a368287071
   _div1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._div2) -}
 8fca883992df908dfd44fa917f4b0d94
@@ -484,7 +484,7 @@ dc79cca681dd9fde60bfc3224e841ebb
 24854537f568b7ddd76b5c1c5f5d12d9
   _div4 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`/`: Illegal input value: x="#) -}
-57a81904c4c4fcff5f48389606fe3995
+3c3682977b6d4c1153123fdd2d13c9f6
   _div_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -526,17 +526,17 @@ dc79cca681dd9fde60bfc3224e841ebb
 4ccdf900e6414f9d5439cf6f1f1322a6
   _div_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`/`: Illegal input type: t_x="#) -}
-2fde59f8571c8c3c3fa3bdd5c020064e
+98897850d11ece9baca132720c333054
   _eq :: Types.Op
   {- HasNoCafRefs, Strictness: m1,
      Unfolding: (Types.BinOp Ops._eq1) -}
-1a00180c42e0b2b55d2f58601964e6b6
+02b6d287caa8d3347aead8cc64219277
   _eq1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><L,1*U>m8,
      Unfolding: InlineRule (2, True, False)
                 (\ (a :: Types.Wrd) (b :: Types.Wrd) ->
                  Types.Bool (Types.$fEqBind_$c==2 a b)) -}
-d1338c4a35a837bd4872ab8c0fde2433
+08bf420e34e5a00176a7c8b9ecc59fbd
   _eq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -568,13 +568,13 @@ d1338c4a35a837bd4872ab8c0fde2433
   _eq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("`=`: Wrd mismatch of both sides: LHS="#) -}
-53759b9cbfc052c8891b8ffe90d7f3d6
+93d138834db02a17e8d5d1fe6d958275
   _eq_t2 :: Types.Wrd
   {- Strictness: b -}
-0eb18df97009ded23de5d637589860c4
+b15abe61eb08beab401cca352a4a8bbd
   _fst :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._fst1) -}
-4959f964ff44e95bae217658d155b02e
+81587449fb5ca4097ab3245bd3444a02
   _fst1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -596,7 +596,7 @@ d1338c4a35a837bd4872ab8c0fde2433
 891d4cbd35d062601eaf7ec0eb646755
   _fst2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:340:14-37|lambda"#) -}
-c4545c97a056aabd7444aca279e04d89
+8e0c15eac112574f20d150266d484758
   _fst_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -624,10 +624,10 @@ c4545c97a056aabd7444aca279e04d89
 b6bc0ed9cd47a6358c2ac6aace023af5
   _fst_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("fst: Illegal input type: "#) -}
-80d146b862fbd4f89add80c9ea8a883e
+bfbd72c3e86b01cdd3890f0a4c94d069
   _geq :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._geq0) -}
-cbbca7b326cd07229b83dd97fc973ea5
+c15f97bb7cdf654872dc219c23b5c912
   _geq0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -660,10 +660,10 @@ cbbca7b326cd07229b83dd97fc973ea5
                                 @ GHC.Types.Bool
                                 (GHC.Prim.>=## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.geInt x y) } }) -}
-e562e95ce449faeda829e75ce75e884a
+a7bcb8891f573e49b5a0e06bc847ee12
   _geq1 :: Types.Wrd
   {- Strictness: b -}
-72da17c0c2b301d31a74998cda225ef3
+ebcbe58eefbb172657035c5cdb93032c
   _geq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -714,16 +714,16 @@ e562e95ce449faeda829e75ce75e884a
 bd2539ed84360f360a08990f0a8f318d
   _geq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`>=`: Illegal input type: LHS="#) -}
-317729e344ddf18d8949163a7d1c6659
+12ad9bd199617daac3ff7c9a1f64271a
   _geq_t2 :: Types.Wrd
   {- Strictness: b -}
-90ff28e62a99dc82d7325615ac131599
+61ce3e584263fb0db0af18116e87db36
   _getType :: Types.Wrd -> Types.Type
   {- Arity: 1, Strictness: <S,1*U> -}
-dc62302f1b88389c68771da62d81a1e4
+10c1e554db32cd582e32b2e0fe5474a3
   _gt :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._gt0) -}
-7c9ea80660d23b8e39137c03dacc0935
+cd2848feb8174d09af958751749a9e7f
   _gt0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -756,10 +756,10 @@ dc62302f1b88389c68771da62d81a1e4
                                 @ GHC.Types.Bool
                                 (GHC.Prim.>## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.gtInt x y) } }) -}
-eac7e6aa9fab27c3a709863a100d8491
+def8fb29a8458a147dc65ea0a5cf9fdb
   _gt1 :: Types.Wrd
   {- Strictness: b -}
-15981ed38b5bf349c4a1cefb70e86295
+a32901c07b78e5eb028bb5874981efbb
   _gt_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -810,13 +810,13 @@ eac7e6aa9fab27c3a709863a100d8491
 59092bd74d2d278cba5cfbd0fa9b8e41
   _gt_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`>`: Illegal input type: LHS="#) -}
-36684904f0776b02ee8213787e9d788c
+a64288728a96aab1a2539f66f472945b
   _gt_t2 :: Types.Wrd
   {- Strictness: b -}
-09b17a90ddd9920901c34f63ec960a4f
+f233998f3319ab14edd46dbf2c786e2d
   _head :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._head0) -}
-03ea664eed18c7fb6729feddae94701e
+6ffb729093c9b4409bce7d14bdb1afe0
   _head0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -825,7 +825,7 @@ eac7e6aa9fab27c3a709863a100d8491
                    DEFAULT -> Ops._head4
                    Types.List ds1
                    -> case ds1 of wild1 { [] -> Ops._head1 : x ds2 -> x } }) -}
-6f852c778c53446089bd6af0fb1bf910
+543150125bb8e35a15f1e68b296f4fb8
   _head1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._head2) -}
 10595b0063f9a03ed93ee60883e08627
@@ -834,10 +834,10 @@ eac7e6aa9fab27c3a709863a100d8491
 3872cd20e640f04e630362819e26fdd3
   _head3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head: Empty list."#) -}
-fcae7ce061bdbd1164e63fc64a78dcf6
+74047e8d1ea8019d93adb927c2de1942
   _head4 :: Types.Wrd
   {- Strictness: b -}
-2b27a262e2cee0e6012d0f773c37726c
+f6600d36d63907fe704d60e2bbcc68c6
   _head_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -857,16 +857,16 @@ fcae7ce061bdbd1164e63fc64a78dcf6
 341a78104a1baa5a630af1beff815252
   _head_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head: Illegal input type: "#) -}
-32283288a9801ad3e6c92855ef73629e
+96a4f82a79f29e1a1d0a7533dd40340c
   _head_t2 :: Types.Wrd
   {- Strictness: b -}
-21070a18bc5e91b4ed6dd4e6dcba2d17
+d9804ac97bdf090501ea00d6b282fce9
   _isConsistentType :: Types.Exp -> GHC.Maybe.Maybe Types.Type
   {- Arity: 1, Strictness: <S,1*U> -}
-2cab4733c94f1324e85361c661e2f965
+cef60dfe0de8bf011e8990eb19497bf3
   _isEmpty :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._isEmpty1) -}
-069f04523ee84c456f4d2d941471e72e
+7c2bd0f7a8b861d14bd53fecabbf247c
   _isEmpty1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m8,
      Unfolding: InlineRule (1, True, False)
@@ -880,10 +880,10 @@ fcae7ce061bdbd1164e63fc64a78dcf6
                            Types.$fEqWrd
                            ls
                            (GHC.Types.[] @ Types.Wrd)) }) -}
-0c2023312bf6364e43345ca3f69983e6
+27e075af8713c7d1015794b6d9b674b1
   _isEmpty2 :: Types.Wrd
   {- Strictness: b -}
-2130fc56c55fd1b0c46640600408c9db
+431965d892e2b6a4f09b46963acb9535
   _isEmpty_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -903,13 +903,13 @@ fcae7ce061bdbd1164e63fc64a78dcf6
 7ee732c9199798439f16df2880508448
   _isEmpty_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("isEmpty: Illegal input type: "#) -}
-ab80dec497becdf5e41a02c3e730a2e8
+52a3e13e54ffc52d7274ef5c2a0c958c
   _isEmpty_t2 :: Types.Wrd
   {- Strictness: b -}
-28cddcf7ff18d628d61e0df31b301893
+ec4a64dacfd74c2e25c459a263bf103b
   _leq :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._leq0) -}
-ef20658217a524afdcb7faedfc30efc1
+96580e36e3a3194d2178c5c1399518b7
   _leq0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -942,10 +942,10 @@ ef20658217a524afdcb7faedfc30efc1
                                 @ GHC.Types.Bool
                                 (GHC.Prim.<=## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.leInt x y) } }) -}
-5d98df5d29f38260d0d315b543f4616a
+79df9541b17b07c6d5d51b4ed0f3450e
   _leq1 :: Types.Wrd
   {- Strictness: b -}
-0c4480fba1bdffbf3d1fbe1f4ff243fb
+ec683e3ce413056a1a07c115d3e93566
   _leq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -993,13 +993,13 @@ ef20658217a524afdcb7faedfc30efc1
                                   DEFAULT -> fail GHC.Prim.void#
                                   Types.T_Int -> Ops._and_t1
                                   Types.T_Double -> Ops._and_t1 } } } }) -}
-dbde1984146efbe9a371a2234b807329
+bfde3e222592188fb46b74c1e2e21522
   _leq_t1 :: Types.Wrd
   {- Strictness: b -}
-b7ffa68aa46040f7c58f7806bc1a6468
+b71937b3e209d9ec203facf934f56aa4
   _lt :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._lt0) -}
-b7310d1a5ac336aee8be98b65f3d41c1
+95be6f09728ca03cc43b08ddf7e62d01
   _lt0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -1032,10 +1032,10 @@ b7310d1a5ac336aee8be98b65f3d41c1
                                 @ GHC.Types.Bool
                                 (GHC.Prim.<## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.ltInt x y) } }) -}
-c4ef4d9118bf40ca7b44369fd1f2e73b
+1bb107a6397e7a6f0ff5bca225cc2d0a
   _lt1 :: Types.Wrd
   {- Strictness: b -}
-a73d93a4e9ac002fee4b4370a5666be0
+30dae757c9b8f9ce3df8a767799a55b2
   _lt_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -1086,13 +1086,13 @@ a73d93a4e9ac002fee4b4370a5666be0
 ad669454c0d29617cb7160243300953c
   _lt_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`<`: Illegal input type: LHS="#) -}
-f13cf934ef7dfae56efd6391bf315353
+cf39bbdd99966e42cb93443d967ea025
   _lt_t2 :: Types.Wrd
   {- Strictness: b -}
-8a570f44f9ede9d4f31d86264de830b8
+5e61e4c8c5e4279be0fdd31f9f6c4649
   _map :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._map1) -}
-e4d6aa335075ef53e05ec7ef0c32b34a
+41bf598ee21cf0654b76bf275279c65f
   _map0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -1143,7 +1143,7 @@ e4d6aa335075ef53e05ec7ef0c32b34a
                                                      (GHC.Types.[] @ Types.Wrd)))
                                                ls)
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-6d1260b15c31039e31bb308506c332dc
+38514ef66db8038c6afa23e1d444abf2
   _map1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._map0)) -}
 5a980710633d0031752e33525ab306c7
@@ -1152,7 +1152,7 @@ e4d6aa335075ef53e05ec7ef0c32b34a
 26cbd2d6ef0999513a82757469e015cc
   _map3 :: GHC.Types.Int
   {- HasNoCafRefs, Strictness: m, Unfolding: (GHC.Types.I# 2#) -}
-a0871b5cad5308036789e4c30dcd1975
+b72c2548240667c5067939ef45ec7369
   _map_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -1196,17 +1196,17 @@ a0871b5cad5308036789e4c30dcd1975
                                             -> case ds6 of wild6 {
                                                  [] -> Ops._map_t1
                                                  : ipv ipv1 -> fail GHC.Prim.void# } } } } } } }) -}
-809d5489cfcff84283133afeeec9d63b
+8a5f87431d1f11d7bf62df526ba8a76a
   _map_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_PreList) -}
 5666b8c9336195b9a1a82d74f67442c0
   _map_t2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq: Illegal input type: "#) -}
-d8e49cff69e9b5c75d696ab64d16d0ee
+a051d9f308344f05a608d3aeddadf2b9
   _mul :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._mul0) -}
-e21899957879cc860f3a9e01ebf09b14
+46a2cbf47aa9c055cdb44a3798ddcc6a
   _mul0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -1247,7 +1247,7 @@ e21899957879cc860f3a9e01ebf09b14
 872dd2587431d4cda8474aedd8a39577
   _mul1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`*`: Illegal input value: x="#) -}
-614690b69f01a2495582092fa635b55c
+ff8705e11c17fc62e66b809c0b3a1db0
   _mul_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -1289,11 +1289,11 @@ e21899957879cc860f3a9e01ebf09b14
 3b28df4fd6f5288e63fc840b80fb328a
   _mul_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`*`: Illegal input type: t_x="#) -}
-3cf3b7e7c739d0dfcbc36aab2e3f672e
+d79823e22df75a44684136c59c88058c
   _neq :: Types.Op
   {- HasNoCafRefs, Strictness: m1,
      Unfolding: (Types.BinOp Ops._neq1) -}
-4ecaf62b18e7940ad1197cb34dece61a
+3edca622fdecbfe802460f4f3bde2480
   _neq1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><L,1*U>m8,
      Unfolding: InlineRule (2, True, False)
@@ -1302,7 +1302,7 @@ e21899957879cc860f3a9e01ebf09b14
                    (case Types.$fEqBind_$c==2 a b of wild {
                       GHC.Types.False -> GHC.Types.True
                       GHC.Types.True -> GHC.Types.False })) -}
-c98c4cd1f91387bca8a8d3550a01ee78
+e486db333126873a6b1d30b0e78e94e3
   _neq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -1334,13 +1334,13 @@ c98c4cd1f91387bca8a8d3550a01ee78
   _neq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("`!=`: Wrd mismatch of both sides: LHS="#) -}
-4393e764452d50003c80348137b93eec
+90b7cd80c0bc7e4f9eb8ef00ebbef7ed
   _neq_t2 :: Types.Wrd
   {- Strictness: b -}
-4994a3036ef01e113f203258eec61f08
+a65510cb8f47ae923832075fd1a89342
   _not :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._not1) -}
-e657d3d5cf9cde2daf82954b596aa71d
+2e32f8b1bef196b54e178f31838f20a8
   _not1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m8,
      Unfolding: InlineRule (1, True, False)
@@ -1352,10 +1352,10 @@ e657d3d5cf9cde2daf82954b596aa71d
                         (case b of wild1 {
                            GHC.Types.False -> GHC.Types.True
                            GHC.Types.True -> GHC.Types.False }) }) -}
-3cc9f4fdfc36e872873e3edfb969dd36
+0aeec3e4c926e0927fdd8b1e5332a6f3
   _not2 :: Types.Wrd
   {- Strictness: b -}
-48c8f38dd8f63263b9d8f1a8a3c0ecb8
+d5ef90f6c2e9cc24b4d26b4d99048ee9
   _not_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -1375,81 +1375,81 @@ e657d3d5cf9cde2daf82954b596aa71d
 fa61e4f175816c91155851d86c7dc9a6
   _not_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`!`: Illegal input type: "#) -}
-684fd74ead68ea307d44c3cbee16ed93
+b7a68909212e0e8ff386eae137cde6b6
   _not_t2 :: Types.Wrd
   {- Strictness: b -}
-d86f2e063acb94ce4b44e62beb3cdd6e
+e818ece1458be5a239b38177a8de4882
   _opls :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls93 Ops._opls1) -}
-780181d7f3c24e0f5778250d8310479f
+d53cb77b9c5a5467b8e4b87d5c5a0175
   _opls1 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls90 Ops._opls2) -}
-e90f2ccb6e1b026aed67e54e56d3104f
+bacc4c811bbcf9dc2e9eb957b778ca7c
   _opls10 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls63 Ops._opls11) -}
-a3545ceda17e0437e39e37f86899e66c
+bdf6d0b9258e19ee8c7282d3221729fb
   _opls11 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls60 Ops._opls12) -}
-d4bb73ee00e055a417800a068fc36f61
+d8bf223fbf13b5f204ccb46a9ede15ff
   _opls12 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls57 Ops._opls13) -}
-009e6483cded296e2b6e85b7b9b1fa16
+afb5781d064c4931bc0f17c2385a8324
   _opls13 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls54 Ops._opls14) -}
-485335f7fcca375fff4dcb66123900f0
+5f4c92b5c0e79c414e7ceabec3f9d8b9
   _opls14 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls51 Ops._opls15) -}
-6dd21a4ad8c2db5195e5661a71327e9d
+c500f46fe69e5ea89f99b6f99f491a24
   _opls15 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls48 Ops._opls16) -}
-ea0a47cba071d62a2904352fa59d0f47
+d26ae9ccf42ebc75d713d821fe00dbcf
   _opls16 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls45 Ops._opls17) -}
-fb16ba160e09f9060050e2d102134a7a
+0f38d104f73de9e6a782ea7ba57c5685
   _opls17 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls42 Ops._opls18) -}
-a848abc9a8bbc61bc86ea5d88e1082b4
+97e7424e8319b4900bb4f276232f88e8
   _opls18 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls39 Ops._opls19) -}
-c7515c5a994435fac614e065f542af14
+9b713514c6bb6194a5fe60218529b755
   _opls19 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls36 Ops._opls20) -}
-4decd8779d57fa54fd9715bfd06baa75
+e0b7c837aba0b9a35b8aecd9557d5295
   _opls2 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls87 Ops._opls3) -}
-a2e746668756bd29e8da267276cc2c37
+9457b86f1ae4c08754956e13624dbe1a
   _opls20 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls33 Ops._opls21) -}
-2ff07ac7e3bd5248081d1b49d0235a16
+f2ce498fe17c81201e51220289c62ea3
   _opls21 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls30 Ops._opls22) -}
-7aa956e0f916c2a21cbac6704dd5dd0e
+9d06a8b6d33a1b1ad82a1ba6b348c0ce
   _opls22 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls27 Ops._opls23) -}
-2451ba16cbe6ac9127a36092c2f6248d
+1c2b1f1f87704ab211eee93f62ec2260
   _opls23 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.:
                    @ Types.StrOp
                    Ops._opls24
                    (GHC.Types.[] @ Types.StrOp)) -}
-4848409e89209d0edae90da3e3a6072b
+41f88bfcda951febd56de5e6c690f1e6
   _opls24 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls25, Ops._snd)) -}
 b88b8fc9929c1c4af4643d3dd5a72755
@@ -1458,7 +1458,7 @@ b88b8fc9929c1c4af4643d3dd5a72755
 f6d6d1045b849e71c2400e298cafe159
   _opls26 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("snd"#) -}
-00e88737378008e44ef85713621374b6
+40eb1b594347f031f6730e727c769ac8
   _opls27 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls28, Ops._fst)) -}
 c730c3ad857427250719d9810b3868a0
@@ -1467,11 +1467,11 @@ c730c3ad857427250719d9810b3868a0
 9a39b858520e54a0ae3292d1cb887f3e
   _opls29 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("fst"#) -}
-a4b0ee59bbc2a2539df6a8a695ecc592
+dc8350876585a8758bc992682f91711e
   _opls3 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls84 Ops._opls4) -}
-95e7458d20cc85549fb2f658d3d68461
+53419e64df36ad0d3e79dac58f859528
   _opls30 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls31, Ops._map)) -}
 d097d06a0173844d8f0ed5f15c16af21
@@ -1480,7 +1480,7 @@ d097d06a0173844d8f0ed5f15c16af21
 20547c1bfb1f11a855800ad592b7d804
   _opls32 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("map"#) -}
-d1348dde9ae41187ab37cb9f8eafcdfb
+56969dfdf87eb4902a5abbc4186328db
   _opls33 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls34, Ops._seq)) -}
 bef029383f7f054f5dc4d887c23b5308
@@ -1489,7 +1489,7 @@ bef029383f7f054f5dc4d887c23b5308
 d0cb0bbb153c2f40d84da7691ad78481
   _opls35 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq"#) -}
-e63380f0fc0c2f37b2956ea26991f813
+46fb8e45faad3600d1980fe53d8ad995
   _opls36 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls37, Ops._take)) -}
 bc484a1f13b4457563addcce392fef3a
@@ -1498,10 +1498,10 @@ bc484a1f13b4457563addcce392fef3a
 b00287ca2ad9203459ff29407fe8f4ef
   _opls38 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take"#) -}
-b49f8af01622ff09956b50229cfe6255
+19f16a089e67ef0ba53a997a6642c74e
   _opls39 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls40, Ops._isEmpty)) -}
-c61f4a12298ab295a4a305638aaefe12
+bee11b24f2c3f98649acfa952ae52026
   _opls4 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls81 Ops._opls5) -}
@@ -1511,7 +1511,7 @@ c61f4a12298ab295a4a305638aaefe12
 c362ddada30e4c38c2095049ccb5eded
   _opls41 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("isEmpty"#) -}
-8d75f6f61daa0395ee043bfbb261409d
+e38da5e26c6532dc28811691710443b7
   _opls42 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls43, Ops._pop)) -}
 ab391930ad4b47703e2a372fc33cceeb
@@ -1520,7 +1520,7 @@ ab391930ad4b47703e2a372fc33cceeb
 adf273349e2eb5c88a12c0f2ca68f6aa
   _opls44 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop"#) -}
-a795c6a0152eb38714c1f4f4dad06eba
+70d54caef98754eb24fac496d240364e
   _opls45 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls46, Ops._tail)) -}
 b46f996224ca64f162de47a2ee3d210b
@@ -1529,20 +1529,20 @@ b46f996224ca64f162de47a2ee3d210b
 604b80a69de52eb9631a126ea9bdcbf4
   _opls47 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail"#) -}
-62f6aa5ba7f1b9cb1915395c4c7d9913
+73ab7803bc2336cba1430520ae56c443
   _opls48 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls49, Ops._head)) -}
 e92fbe548db57e876b4052c9d7c43968
   _opls49 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# Ops._opls50) -}
-4fce0cd0baf093f439e8b2e594ab9a69
+fb1396b6b2f4efd71b4b7829f2ab94be
   _opls5 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls78 Ops._opls6) -}
 f6486a2b694ad4c9c9201bafdc96f49c
   _opls50 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head"#) -}
-0565b899648b6e6bae85fbb6900d580e
+469d7661abff5031cde723be335e3816
   _opls51 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls52, Ops._succ)) -}
 8d538b21620dc8d7ed9271ab6e25155d
@@ -1551,7 +1551,7 @@ f6486a2b694ad4c9c9201bafdc96f49c
 55e5ab72180d5c460fdb3239248f9581
   _opls53 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ"#) -}
-1f1fe1b410f8a67fdf98fd522abda9bc
+9669e301d23707199d6091b4bf209faa
   _opls54 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls55, Ops._div)) -}
 13f7afebc69a107591209c8572bfb7b3
@@ -1560,7 +1560,7 @@ f6486a2b694ad4c9c9201bafdc96f49c
 1e449ce76a81b2bae75a4391fcbe782d
   _opls56 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("/"#) -}
-dcc750b2da499828865eb7689d50156b
+9a915a52d60729a527dcf8a71fbe190d
   _opls57 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls58, Ops._mul)) -}
 86762afb55361060c5c8ee07dc85dc54
@@ -1569,11 +1569,11 @@ dcc750b2da499828865eb7689d50156b
 830575ddf031d0e4175a79a4d5eb20ad
   _opls59 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("*"#) -}
-8b37dfe8405392f485b994cc6fa53550
+757ff89e6e8e6e1a043253ec72edff6f
   _opls6 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls75 Ops._opls7) -}
-9f36566bd2a3ee80f4656e1ce4e3d5d4
+284b603a8149c9d038588bf05e5b6411
   _opls60 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls61, Ops._sub)) -}
 f26e8fc64340a22e9383ef37347e3a49
@@ -1582,7 +1582,7 @@ f26e8fc64340a22e9383ef37347e3a49
 6d4847201cfca8adde0a2afe221f6481
   _opls62 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("-"#) -}
-3e00ad05831a38bcc72481a335d3250d
+a3ec4e240c199d7ad3b6adc654184629
   _opls63 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls64, Ops._add)) -}
 ee8849ac7f8733f33453bc48b964ce55
@@ -1591,7 +1591,7 @@ ee8849ac7f8733f33453bc48b964ce55
 7f465072c7f91da8ce161791cb4eb660
   _opls65 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("+"#) -}
-827cf11d437987e80e81674539a12506
+8abc1a8b335854110b914c132741e5a1
   _opls66 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls67, Ops._leq)) -}
 9a5f6895167821d505a7235542ec98b9
@@ -1600,10 +1600,10 @@ ee8849ac7f8733f33453bc48b964ce55
 b28c0efc2a392a70f53855a5279ec78c
   _opls68 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("<="#) -}
-1e72e0846308521d465049c1f5015914
+167016044b52466ab4ba4482777c0b2f
   _opls69 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls70, Ops._lt)) -}
-eeef0c02977de545e5f570d745189ed9
+fddf042a76a9eff7ae84f29aebe0ab3b
   _opls7 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls72 Ops._opls8) -}
@@ -1613,7 +1613,7 @@ d2e9a3240c2f589c49d7826f3a901c4d
 117cfd264e23e52794383ec6e0ca1191
   _opls71 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("<"#) -}
-3727bc4a8bd1180578b58c882db56c6f
+be68e58cb896a197dd467809eb32a537
   _opls72 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls73, Ops._geq)) -}
 6509007735eeab324393305a2001de50
@@ -1622,7 +1622,7 @@ d2e9a3240c2f589c49d7826f3a901c4d
 3cdadd35db43e0afb722099783af8686
   _opls74 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: (">="#) -}
-84440c9981a0fbb0f1f222b9497c6b55
+20c9e6cdf1c1b1b4bbb63612ea95ce61
   _opls75 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls76, Ops._gt)) -}
 7274999d9f5eb12b72540e0e5ed864fe
@@ -1631,20 +1631,20 @@ d2e9a3240c2f589c49d7826f3a901c4d
 0a32d4011c6818f0a574c8eec8671995
   _opls77 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: (">"#) -}
-02231fb387db08471d8826dcad83cc22
+48fb0b19bd2f20b0627a2d7ec4bbd5bc
   _opls78 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls79, Ops._neq)) -}
 673e2fb7a637aff44195c0b9f16b97ea
   _opls79 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# Ops._opls80) -}
-4527d5e45413342689182258a50d4c67
+3c5db7635f74a0811cd886d61d8b2562
   _opls8 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls69 Ops._opls9) -}
 a97b446e5af557ebc9b461585fc38a03
   _opls80 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("!="#) -}
-7a3b3961694eebf292b5769393f44828
+90c85b32c16d0c79d3b54dce884d15f2
   _opls81 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls82, Ops._eq)) -}
 e87650bf00bc7522fbe9a8f17e2dd889
@@ -1653,7 +1653,7 @@ e87650bf00bc7522fbe9a8f17e2dd889
 c0ea8113dd5b68bac078f3c6dd253382
   _opls83 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("=="#) -}
-aac75561b288e90abed0dc597f1e4a92
+099d14418f665c8ad50baf129368a374
   _opls84 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls85, Ops._not)) -}
 1f95dd299eed2d69f11491f6af520b56
@@ -1662,7 +1662,7 @@ aac75561b288e90abed0dc597f1e4a92
 eef00eeaee9e7fdbc323d2e4a8f6dce3
   _opls86 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("!"#) -}
-2607724c8835890bbcb8e99879494152
+77b146b60346a73093e2e728680f41c2
   _opls87 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls88, Ops._and)) -}
 3e64020a7ff41fcbc87f39fbeddb2763
@@ -1671,11 +1671,11 @@ eef00eeaee9e7fdbc323d2e4a8f6dce3
 d36ef3c7d62a80d628ddd8f05d8465e5
   _opls89 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("&&"#) -}
-8f004a3d4e77cbeccbd47c1a866dde36
+ffda46f12a50b4ca8ba11037daf63022
   _opls9 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls66 Ops._opls10) -}
-3384440fd9e9184007d115c458bedf81
+780c9b0fde9c7d386f5e95bdef0c9bf6
   _opls90 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls91, Ops._or)) -}
 6dfc362a54503c3d25dbab516cf70894
@@ -1684,7 +1684,7 @@ d36ef3c7d62a80d628ddd8f05d8465e5
 a94a348462aba4bb2b94ceb983f7215e
   _opls92 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("||"#) -}
-d08933d124cbfcbe557f39bb47e2d5d3
+7da2ae2867f6c2aaea805694bd443154
   _opls93 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls94, Ops._print)) -}
 62c08972a06d5331db7e28e4470e08fe
@@ -1693,16 +1693,16 @@ d08933d124cbfcbe557f39bb47e2d5d3
 0ff339576c251c9fb6e4e5f764ab22c2
   _opls95 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("print"#) -}
-6bf4d5616317ad4dbb246754cab7efc9
+4fdae104e3cb477fac4af3f60e9882f1
   _opls_dec :: [Types.StrOp]
   {- Unfolding: (GHC.List.reverse1
                    @ Types.StrOp
                    Ops._opls
                    (GHC.Types.[] @ Types.StrOp)) -}
-0d1a3b757b8d222c41f3218f99f20738
+2dad54012d1d4183e30cbb4f648be85d
   _or :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._or1) -}
-c1e249ed21ccd94709c65047d13cc58a
+f68cc639da88272c668bdc890fa04674
   _or1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -1727,7 +1727,7 @@ c1e249ed21ccd94709c65047d13cc58a
 19c8cec9d0f561af4b45d78201f1463b
   _or2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:253:14-50|lambda"#) -}
-6908699d8e0ea5bc40f18fbf9a0c7a00
+d6236793377f6f670b31cc0073f004d8
   _or_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -1769,13 +1769,13 @@ c1e249ed21ccd94709c65047d13cc58a
 856996f8fdef8285cf1f5129fafbb4ef
   _or_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`||`: Illegal input type: LHS="#) -}
-129fd2cfb6aed391ef726af5b5f29609
+87ef047113c19c2ca6e6a07f130bfafb
   _or_t2 :: Types.Wrd
   {- Strictness: b -}
-f74146b6986d2f24e32af08a17a0cb8d
+df57e6f9a3f1b44a88f121806f113b49
   _pop :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._pop0) -}
-78ff3de2a955828d3810b9b234c734f1
+a43863421cb195ba4a81ac2b795976d0
   _pop0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -1794,7 +1794,7 @@ f74146b6986d2f24e32af08a17a0cb8d
                                    @ Types.Wrd
                                    (Types.List xs)
                                    (GHC.Types.[] @ Types.Wrd))) } }) -}
-096143cf2e129c195e2e7fdbbf75dc42
+709d369fb1758868880d1fb071ed0f52
   _pop1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._pop2) -}
 67820d80a490bcd1292746a61771d56a
@@ -1803,10 +1803,10 @@ f74146b6986d2f24e32af08a17a0cb8d
 2b468eb485d5183768e6da337648fc34
   _pop3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop: Empty list."#) -}
-feea901cd6060803d1ef40ae2bfdebba
+c107aca5cd4933cc2198d0720dd0a71a
   _pop4 :: Types.Wrd
   {- Strictness: b -}
-8eb46b827bbdd9d4d6a5619009eb6e67
+7b28d897efcd51c53f0f5aac16ba00e7
   _pop_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -1835,13 +1835,13 @@ feea901cd6060803d1ef40ae2bfdebba
 4ee8181b34bb8af5a603e9b7cd5b63eb
   _pop_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop: Illegal input type: "#) -}
-d2ed9ea0c6ce9ecb8a02e125ba74a112
+c0229d1d856a735304e427f6db3d6ac4
   _pop_t2 :: Types.Wrd
   {- Strictness: b -}
-59896829b5aa2764f6347abfd56a7914
+eda6ef382233d8eaf5158800a77e8265
   _print :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._print0) -}
-a7d8db166e8264be3035052bbc8b2396
+1a8cb3abd12085fea6a1ce5fd292bb5d
   _print0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -1849,7 +1849,7 @@ a7d8db166e8264be3035052bbc8b2396
                  case ds of wild {
                    DEFAULT -> Types.Print (Types.$fShowBind_$cshow wild)
                    Types.Err e -> Types.Err e }) -}
-9bbf503ce6725b8b5d15b8b3769b4b27
+a73db97c132a9eb6be1f40eb071cef24
   _print_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m18,
      Unfolding: InlineRule (1, True, False)
@@ -1859,21 +1859,21 @@ a7d8db166e8264be3035052bbc8b2396
                    Types.TypeCheck ds1
                    -> case ds1 of wild1 {
                         DEFAULT -> Ops._print_t2 Types.T_Error -> Ops._print_t1 } }) -}
-821397a45bfc366d2f10e609e96c28ae
+778912fc82bbe1c0c8a9c2119ee0376e
   _print_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Error) -}
-f2cd44c874b6894090af7b249afc2caa
+a8c95293fd2007032728adf806d1c737
   _print_t2 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Print) -}
-be7342a422bb36ddcde8217442e86e14
+c0d8809ebbb7aa0dbcef4cef8fee8565
   _print_t3 :: Types.Wrd
   {- Strictness: b -}
-97867468b3c1a38235eac960f554ccb4
+d2fa608ce95f0fd0f24a64ac0e7ba98e
   _seq :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._seq1) -}
-d5323da05aad0e9c645aaf003eed97b7
+5c58475960d4f7c34fb7b9105246807a
   _seq0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -1929,13 +1929,13 @@ d5323da05aad0e9c645aaf003eed97b7
                                                   go x
                                                1# -> GHC.Types.[] @ Types.Wrd } } })
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-2c79ecf7867be6e9b0fcd45f73e491ee
+9f59b30d948edab820ae7bd0a9ec5b8b
   _seq1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._seq0)) -}
 459f705f54d958ea106e5d280b7fdd22
   _seq2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq: Illegal input value: "#) -}
-6b94901691271cf0d6292fcab4489b1f
+84ceff338091f1ba14cbd22e1a5e11eb
   _seq_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -1979,18 +1979,18 @@ d5323da05aad0e9c645aaf003eed97b7
                                             -> case ds5 of wild6 {
                                                  [] -> Ops._seq_t1
                                                  : ipv ipv1 -> fail GHC.Prim.void# } } } } } } }) -}
-328691fd0abf14ea1fb62a663314fe0f
+0fb3b14c4dc88304c907828cb1a7c31d
   _seq_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Ops._seq_t2) -}
-6150290243070a8d0425633c79a1420a
+2b9118bcbc7b9e1043fccc128d4f8ecd
   _seq_t2 :: Types.Type
   {- HasNoCafRefs, Strictness: m10,
      Unfolding: (Types.T_List Types.T_Int) -}
-40cb72d194751c81486f0a39e15f16e5
+e84ef485f36f52ab4e216a87a2ba462e
   _snd :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._snd1) -}
-ab7f655f11aa009428f4a39228b1c987
+1dd344d8ef4b23cfd57f69c0be093838
   _snd1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2001,10 +2001,10 @@ ab7f655f11aa009428f4a39228b1c987
                         [] -> Ops._snd2
                         : ds2 ds3
                         -> case ds3 of wild2 { [] -> Ops._snd2 : w2 ds4 -> w2 } } }) -}
-f97f638e46ae457d8336a1a206b050ad
+5392c2898a2292c44e4705cf2d555b3f
   _snd2 :: Types.Wrd
   {- Strictness: b -}
-34a45d9c0f3f01b88317fec937d37019
+0848ed9b9036c10b4a0cfe6b8a823a96
   _snd_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2039,10 +2039,10 @@ f97f638e46ae457d8336a1a206b050ad
 fb5fb730789a7a098c792d2650fc4236
   _snd_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("snd: Illegal input type: "#) -}
-85224df9a24cbe900299f817409be17f
+c65baf7f63f0bfe2c7b94d5202a5363c
   _sub :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._sub0) -}
-982b08c7e8e6bf17acda7d615bcd62d1
+380126703182f0513c5a6e449c3612e7
   _sub0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2083,7 +2083,7 @@ fb5fb730789a7a098c792d2650fc4236
 35c261a5b9aaa69c8ef7ad1d509bd398
   _sub1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`-`: Illegal input value: x="#) -}
-7647ab27e39e51539d6212c2f8f8309b
+40cd0b20fde53dd78e2991bf886f9e36
   _sub_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2125,10 +2125,10 @@ fb5fb730789a7a098c792d2650fc4236
 a1f446f17c4d6891251efc4b2fb25dcf
   _sub_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`-`: Illegal input type: t_x="#) -}
-8c7019d6bdc7048340b496fb392e0895
+2477eb98e633f7db715310a63b6538fb
   _succ :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._succ0) -}
-263b03d0bc9e513cdff4e949b54ca757
+50b724e6e0b2226fe4172250f967bada
   _succ0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2149,7 +2149,7 @@ a1f446f17c4d6891251efc4b2fb25dcf
 1e1bec2b7d8324d8c8a13fc675c5884a
   _succ1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ: Illegal input value: "#) -}
-3772e42a53fcd1b02a264fd1229bde06
+71d957eebe0c35be710ba79dec49035f
   _succ_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2171,10 +2171,10 @@ a1f446f17c4d6891251efc4b2fb25dcf
 6b00d16e376d0e6f0254d253382e9977
   _succ_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ: Illegal input type: "#) -}
-8feadc8c7a9e1d33d049597a1f41b9b2
+4d3f9fd1b4c251916b6f7b5a79282d1b
   _tail :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._tail0) -}
-39c6a8190ccefad69165a6608bb1aca6
+d752ced8c141b038dfbe64684799fc1e
   _tail0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -2184,7 +2184,7 @@ a1f446f17c4d6891251efc4b2fb25dcf
                    Types.List ds1
                    -> case ds1 of wild1 {
                         [] -> Ops._tail1 : ds2 xs -> Types.List xs } }) -}
-4682bc10d98e3a8ea22743c7c8f166c3
+1aed59bd94427900fdd063e064d1b4f6
   _tail1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._tail2) -}
 5b6bde3d420f44567d3b89d1b48068a7
@@ -2193,10 +2193,10 @@ a1f446f17c4d6891251efc4b2fb25dcf
 7707e6923ff15a353d267fc53e690104
   _tail3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail: Empty list."#) -}
-a7358c2ca66cb45992b3647f134d697d
+10dd5138a58cf4e10e6703d552a239a4
   _tail4 :: Types.Wrd
   {- Strictness: b -}
-2782328a1be6f268329020823fc8a814
+c11119d19ca66daa40e00e64d99b5edb
   _tail_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2216,13 +2216,13 @@ a7358c2ca66cb45992b3647f134d697d
 b57e45550d23ed2e01b4e297d7c50947
   _tail_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail: Illegal input type: "#) -}
-497873be8490efbee1a3738ca937abec
+857d590cf81fdc5b0c3ff276bb2c3792
   _tail_t2 :: Types.Wrd
   {- Strictness: b -}
-5e0def83df74d395e68ba2dbb4e0b119
+3ec75950f44373679e5ab7acbfa10b43
   _take :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._take1) -}
-22a1d8a1498b2747bd38758b48a89e06
+c412a6b0ac453ac304587d4da2b8dd3b
   _take0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -2265,13 +2265,13 @@ b57e45550d23ed2e01b4e297d7c50947
                                                DEFAULT -> GHC.Types.[] @ Types.Wrd
                                                1# -> GHC.List.$wunsafeTake @ Types.Wrd y ls } })
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-8db8a13df3688cb3b60e9c6944ec8849
+4ac6979170d3a4f5c827f576cfffd6bf
   _take1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._take0)) -}
 dc225380dbafec91e9b60dbf1b066df7
   _take2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take: Illegal input value: "#) -}
-4a1a4b1a09252f5ad3f4f9f2faeb3078
+fe67517ccf12bff65158b08c0ae18a43
   _take_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -2318,10 +2318,10 @@ dc225380dbafec91e9b60dbf1b066df7
 9412bd3a2c7ab6d7e81729cb7bf9fb84
   _take_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take: Illegal input type: "#) -}
-8d7df2a6b5d3b9bca57a9d4a834dd5f9
+ee95a08bf525ca090c305cc8c1f3aeb0
   _typeFunction :: GHC.Base.String -> Types.Op
   {- Arity: 1, Strictness: <S,U> -}
-f53f4449bef266b3d07ce3afe393d69f
+3ffb66a67b1e4fd04be337d8a2eceda7
   isConsistentType :: Types.Exp -> GHC.Types.Bool
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -2329,7 +2329,7 @@ f53f4449bef266b3d07ce3afe393d69f
                  case Ops._isConsistentType expr of wild {
                    GHC.Maybe.Nothing -> GHC.Types.False
                    GHC.Maybe.Just a1 -> GHC.Types.True }) -}
-3387bddbaface069531d5485507a58dc
+27a51ba87381b8245ff7c9b364acdd1f
   toList :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (expr :: Types.Exp) ->
@@ -2367,11 +2367,11 @@ arg docs:
 
 
 ==================== FINAL INTERFACE ====================
-2021-04-08 12:27:35.4464823 UTC
+2021-04-09 04:56:44.2057584 UTC
 
 interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Ops 8104
-  interface hash: ea8c7895a3d1a7a01fa1777bc2c23497
-  ABI hash: d150b60c27dc32f3b81e8e6b8ed7e7e9
+  interface hash: ef8a11b9a42d54efababcfa712030c2a
+  ABI hash: 9ccd6b0b2d6b998e873165db1714d518
   export-list hash: 24531ef125d46d1c52ba79243a43b497
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 358a18e1043fc7ac1b015a88503b1325
@@ -2464,52 +2464,52 @@ family instance modules: base-4.14.1.0:Control.Applicative
                          base-4.14.1.0:GHC.IO.Exception
 import  -/  Parser 3443f1228a5fa43ab36605baa220d75c
   exports: 4e79c2f1fd013aabc39c8f81cd5374c7
-import  -/  Types b9822497053d2122dc73d0cfdd1b339f
-  exports: 39b07b7f7957277f50c7c4dd7689ef5f
-  BinOp d26ca552c0a6cb13c3d3e231f243d460
-  Bool b70cd53ad7a85dab48bcef177c38636b
-  Double b891f973d45771521238fab46a6ae819
-  Err 49657f448604d6729aba97b2988953b9
-  Exp 607e5ce3f9595614a9cb77b2c4210b74
-  Fun 6815ac0e2ecfff4e0c829eba93adbd8b
-  Func c1251ac84fede6c4ca7d3c4f0601d771
-  FuncOp 97bc2911206d2b50aa94a433bccfe820
-  Function 267e8a4d83f0f1e1729f2be1e5904e81
-  Int 1626c1e059773b609f52829c5bb3fa74
-  List bf4e22584c08f0cbc93d4ad500ad7f0d
-  Op 607e5ce3f9595614a9cb77b2c4210b74
-  Operator 89cca03e93ee20a41b3c3642d9fd3bba
-  PreList 2cd63c03f6681ef78c8cf47e3c7f2b35
-  Print e87b8ebec85f3fc24f975cc1e7e3e2cd
-  Str 8b8af5b0acf7e0323f4cbb1ea5827222
-  StrOp 607e5ce3f9595614a9cb77b2c4210b74
-  T_Bool 3d5d104ad17812f63feb2aef3b1ad4cd
-  T_Double 5e54cc1d20b392ed3d5fa02d6324f88c
-  T_EmptyList 260f30ad032fd2d54f4552772b925552
-  T_Error 235a36067aa706ad3f38a03931790620
-  T_Func cd5569cdd28f55b0418b44742170970e
-  T_Function 8cc668be17da098d88dc5ce953523aaa
-  T_Int 4e42539dd2ce6e4876d946eaf17319c8
-  T_List 54c5b828c2e4f1c661388c72c68886ad
-  T_Operator 2b724b9e8f3f49af40f551abcf01d31a
-  T_PreList c17694220febf02b1e3f97947f51ad95
-  T_Print c36f4bc1af49ddd4b4541db838e6f9c0
-  T_String 236f270036a6e60f712f937a8a1e2ed8
-  T_Tuple e233fd3595057c845dc31260603df806
-  T_Type c87dc5b3bf8d798697d64f66a60f27f0
-  T_Unknown 6666a7ed1e898402891d2d748621a86d
-  Tobe 114668cd72acff1452b72cb75dca7503
-  Tuple 24eb98ce397df75e853fb8c92b81a145
-  Type bd4ecaf43435ec6d916df969f32b0e1c
-  Type 607e5ce3f9595614a9cb77b2c4210b74
-  TypeCheck 7a98c1d9491014e3cc63bc169a5dd418
-  UnOp 8c7eed723ee8887a5e082490f6ddf7d6
-  Wrd 607e5ce3f9595614a9cb77b2c4210b74
-  args 607e5ce3f9595614a9cb77b2c4210b74
-  args_t 607e5ce3f9595614a9cb77b2c4210b74
-  ret 607e5ce3f9595614a9cb77b2c4210b74
-  ret_t 607e5ce3f9595614a9cb77b2c4210b74
-  return_t 607e5ce3f9595614a9cb77b2c4210b74
+import  -/  Types 2870f235e2eecb0b3d25891749dd9b60
+  exports: fb3343c70ce167cabb463f2e586dc9ec
+  BinOp 248347d51f0d70dee7324f48b9d0a2d1
+  Bool 1241c9fc4fc65d256e8c45a8fcd8d7ba
+  Double e9e581551e257a870b35d7e222321699
+  Err 5729e6192c4942b542d650e149e72f10
+  Exp 41e7a32a3a97b64b95a9c2dd25716e8f
+  Fun 42a0d5cd29c2177dcdfaca7cd63323dc
+  Func 5d1e31720c6814351c1d5fe881a7a5eb
+  FuncOp 8397c94a2f2349a2dd9e300a2647eb27
+  Function 9a9eb8e4986ec4d109057707af53cf06
+  Int 006171945d67657ef6faae9f16159d2e
+  List f0bad1f4683a6ff5d4c475bfda9c9085
+  Op 41e7a32a3a97b64b95a9c2dd25716e8f
+  Operator 6909136eade762426066db644700f71f
+  PreList a5b96693bc60e76099302e7495352709
+  Print 825c49422af2ec86182c776d0f7f27d2
+  Str 5f7be358727990ce68ad5fc089118acd
+  StrOp 41e7a32a3a97b64b95a9c2dd25716e8f
+  T_Bool b86db244cb09a3e2fe2aedd61bfbee3d
+  T_Double 737f6fd67b2db24d3ba875411b000d1a
+  T_EmptyList e01c7753fbb038635d5ed713eb9817eb
+  T_Error 48873ecd2091bfe3454b88dba812f4c9
+  T_Func cd50891eac1225bdba2c21c3e89ab64b
+  T_Function af0bd724946c4e4e99d0a5e688bd8bec
+  T_Int 8e2d7b1da0251ed5fe76d6e97cedfbca
+  T_List ba15cafcb7b312e20336464ba2df5fd6
+  T_Operator 4e8715ebb2c8a3afa27ac366a90ea4dd
+  T_PreList c1c2e0be950f1f71892ac83babc5ae70
+  T_Print dd66a92b4ff8847e7c08a783b6048b63
+  T_String c064da13f2e2dde0871e82011fef3383
+  T_Tuple b991f1bb08adca19e3581f5caaa8ae73
+  T_Type 739eeac08d3659c9bb2735b433dfb87f
+  T_Unknown 55a7e4e28907eaeeec59991a84410abf
+  Tobe 3e1c049fbf40275e2d316fdeb88ae7b7
+  Tuple 787aea3d9ecc843af9c34b94030802d6
+  Type 2cf69a7355f245a5f0d937b4915d0db8
+  Type 41e7a32a3a97b64b95a9c2dd25716e8f
+  TypeCheck 743327823be34d4f772a0b2575b49c47
+  UnOp 4de264f457e8ae24d30e2ee9293e99a7
+  Wrd 41e7a32a3a97b64b95a9c2dd25716e8f
+  args 41e7a32a3a97b64b95a9c2dd25716e8f
+  args_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret 41e7a32a3a97b64b95a9c2dd25716e8f
+  ret_t 41e7a32a3a97b64b95a9c2dd25716e8f
+  return_t 41e7a32a3a97b64b95a9c2dd25716e8f
 import  -/  base-4.14.1.0:Data.List aa48efeea2e877aaa8c12a1a2e589508
 import  -/  base-4.14.1.0:Debug.Trace 311b1d0b6fcef7b89debc64460553e8a
 import  -/  base-4.14.1.0:GHC.Base ede51775731a544ddfcb02b5a427fd38
@@ -2538,13 +2538,13 @@ ca9bc36dca399398b222432313c4b910
   $trModule4 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
-103fbd3fa54e1684446b8b9b09d6e3c7
+6a222656f57f52efaac9824435a17553
   $wshowl :: [Types.Wrd] -> (# GHC.Types.Char, [GHC.Types.Char] #)
   {- Arity: 1, Strictness: <S,1*U>, Inline: [2] -}
-b09cc786b72fd2818f6d6eea05286af0
+aed145bdd147b3aa48670d02fb84703d
   _add :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._add0) -}
-f75419664c688defc087f76d32d22656
+8847e9ae90b861773782d43145682fa6
   _add0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2596,7 +2596,7 @@ f75419664c688defc087f76d32d22656
 a8bc2cb4b2ded22b4496a1fbed2cab76
   _add2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Illegal input value: x="#) -}
-30b5baf3006a0617b9d4a275f0812218
+2e92d9d21e7200c92bab91854baf80d0
   _add_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2672,15 +2672,15 @@ a8bc2cb4b2ded22b4496a1fbed2cab76
 d3a83146be059780d910ef8ebb52a172
   _add_t2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Wrd mismatch of lists: t1="#) -}
-d190d3240a169a5858d83ca487319ad4
+1ff1d2522a596192337da198470f08d1
   _add_t3 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_String) -}
-fb5b4c1dffad40319e2e1fbb0f2e20df
+e31089f768d46058027bfb746718801b
   _add_t4 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Double) -}
-5f4ddcb9f19056ec283cac24ff6f6c55
+51384bce1096dbab3f5df8587ef090bc
   _add_t5 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Int) -}
@@ -2690,10 +2690,10 @@ fb5b4c1dffad40319e2e1fbb0f2e20df
 6854d4481a0f7da1f8adb1f67c37d344
   _add_t7 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`+`: Illegal input type: t_x="#) -}
-fa9d3d44a843355e1a149e4f4bc13246
+7393a7111f1d62567db01add28631630
   _and :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._and1) -}
-65fdf0575a74fc92b6ff2a5e6dff7cb8
+761f14c91e5005f23186c311f3faadc4
   _and1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -2718,7 +2718,7 @@ fa9d3d44a843355e1a149e4f4bc13246
 1f7134b1bcd7b2d76cf3ff28f5e470eb
   _and2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:246:15-51|lambda"#) -}
-fc2743656532e0ef05c809643682003d
+feb8d3e1dc28bbac0a91580b702d7e51
   _and_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2757,7 +2757,7 @@ fc2743656532e0ef05c809643682003d
                              -> case ds3 of wild3 {
                                   DEFAULT -> fail GHC.Prim.void#
                                   Types.T_Bool -> Ops._and_t1 } } } }) -}
-0575596eea8627eaa7ec602fa858dd65
+9abee605ef32f18c7645f7d41f1055c4
   _and_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Bool) -}
@@ -2767,13 +2767,13 @@ c14ad5c14b5d2e5fb364d19e075b9eee
 21a5a768a8a30fa169189ca503f4e131
   _and_t3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`&&`: Illegal input type: LHS="#) -}
-9693e7053c71e48558cd3548c629ee1d
+353bb4a43bbde43a2562081ad3324b7d
   _and_t4 :: Types.Wrd
   {- Strictness: b -}
-16e5c02c7fdde6e2b46ac08b12e746ed
+215fc1033c75c9712a869c6feed0ad8c
   _div :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._div0) -}
-98ac439b5a9aaf318bcd7c354a12eac4
+c7f24128ce96a06c8e28007e599be754
   _div0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <L,U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2839,7 +2839,7 @@ c14ad5c14b5d2e5fb364d19e075b9eee
                    -> case ds2 of wild1 { GHC.Types.I# ds3 ->
                       case ds3 of ds4 {
                         DEFAULT -> fail GHC.Prim.void# 0# -> Ops._div1 } } }) -}
-19dda39c709a76a75b855b37d8c43079
+c7a0deb313bb0c643627b2a368287071
   _div1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._div2) -}
 8fca883992df908dfd44fa917f4b0d94
@@ -2851,7 +2851,7 @@ dc79cca681dd9fde60bfc3224e841ebb
 24854537f568b7ddd76b5c1c5f5d12d9
   _div4 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`/`: Illegal input value: x="#) -}
-57a81904c4c4fcff5f48389606fe3995
+3c3682977b6d4c1153123fdd2d13c9f6
   _div_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2893,17 +2893,17 @@ dc79cca681dd9fde60bfc3224e841ebb
 4ccdf900e6414f9d5439cf6f1f1322a6
   _div_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`/`: Illegal input type: t_x="#) -}
-2fde59f8571c8c3c3fa3bdd5c020064e
+98897850d11ece9baca132720c333054
   _eq :: Types.Op
   {- HasNoCafRefs, Strictness: m1,
      Unfolding: (Types.BinOp Ops._eq1) -}
-1a00180c42e0b2b55d2f58601964e6b6
+02b6d287caa8d3347aead8cc64219277
   _eq1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><L,1*U>m8,
      Unfolding: InlineRule (2, True, False)
                 (\ (a :: Types.Wrd) (b :: Types.Wrd) ->
                  Types.Bool (Types.$fEqBind_$c==2 a b)) -}
-d1338c4a35a837bd4872ab8c0fde2433
+08bf420e34e5a00176a7c8b9ecc59fbd
   _eq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -2935,13 +2935,13 @@ d1338c4a35a837bd4872ab8c0fde2433
   _eq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("`=`: Wrd mismatch of both sides: LHS="#) -}
-53759b9cbfc052c8891b8ffe90d7f3d6
+93d138834db02a17e8d5d1fe6d958275
   _eq_t2 :: Types.Wrd
   {- Strictness: b -}
-0eb18df97009ded23de5d637589860c4
+b15abe61eb08beab401cca352a4a8bbd
   _fst :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._fst1) -}
-4959f964ff44e95bae217658d155b02e
+81587449fb5ca4097ab3245bd3444a02
   _fst1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -2963,7 +2963,7 @@ d1338c4a35a837bd4872ab8c0fde2433
 891d4cbd35d062601eaf7ec0eb646755
   _fst2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:340:14-37|lambda"#) -}
-c4545c97a056aabd7444aca279e04d89
+8e0c15eac112574f20d150266d484758
   _fst_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -2991,10 +2991,10 @@ c4545c97a056aabd7444aca279e04d89
 b6bc0ed9cd47a6358c2ac6aace023af5
   _fst_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("fst: Illegal input type: "#) -}
-80d146b862fbd4f89add80c9ea8a883e
+bfbd72c3e86b01cdd3890f0a4c94d069
   _geq :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._geq0) -}
-cbbca7b326cd07229b83dd97fc973ea5
+c15f97bb7cdf654872dc219c23b5c912
   _geq0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -3027,10 +3027,10 @@ cbbca7b326cd07229b83dd97fc973ea5
                                 @ GHC.Types.Bool
                                 (GHC.Prim.>=## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.geInt x y) } }) -}
-e562e95ce449faeda829e75ce75e884a
+a7bcb8891f573e49b5a0e06bc847ee12
   _geq1 :: Types.Wrd
   {- Strictness: b -}
-72da17c0c2b301d31a74998cda225ef3
+ebcbe58eefbb172657035c5cdb93032c
   _geq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3081,16 +3081,16 @@ e562e95ce449faeda829e75ce75e884a
 bd2539ed84360f360a08990f0a8f318d
   _geq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`>=`: Illegal input type: LHS="#) -}
-317729e344ddf18d8949163a7d1c6659
+12ad9bd199617daac3ff7c9a1f64271a
   _geq_t2 :: Types.Wrd
   {- Strictness: b -}
-90ff28e62a99dc82d7325615ac131599
+61ce3e584263fb0db0af18116e87db36
   _getType :: Types.Wrd -> Types.Type
   {- Arity: 1, Strictness: <S,1*U> -}
-dc62302f1b88389c68771da62d81a1e4
+10c1e554db32cd582e32b2e0fe5474a3
   _gt :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._gt0) -}
-7c9ea80660d23b8e39137c03dacc0935
+cd2848feb8174d09af958751749a9e7f
   _gt0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -3123,10 +3123,10 @@ dc62302f1b88389c68771da62d81a1e4
                                 @ GHC.Types.Bool
                                 (GHC.Prim.>## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.gtInt x y) } }) -}
-eac7e6aa9fab27c3a709863a100d8491
+def8fb29a8458a147dc65ea0a5cf9fdb
   _gt1 :: Types.Wrd
   {- Strictness: b -}
-15981ed38b5bf349c4a1cefb70e86295
+a32901c07b78e5eb028bb5874981efbb
   _gt_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3177,13 +3177,13 @@ eac7e6aa9fab27c3a709863a100d8491
 59092bd74d2d278cba5cfbd0fa9b8e41
   _gt_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`>`: Illegal input type: LHS="#) -}
-36684904f0776b02ee8213787e9d788c
+a64288728a96aab1a2539f66f472945b
   _gt_t2 :: Types.Wrd
   {- Strictness: b -}
-09b17a90ddd9920901c34f63ec960a4f
+f233998f3319ab14edd46dbf2c786e2d
   _head :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._head0) -}
-03ea664eed18c7fb6729feddae94701e
+6ffb729093c9b4409bce7d14bdb1afe0
   _head0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -3192,7 +3192,7 @@ eac7e6aa9fab27c3a709863a100d8491
                    DEFAULT -> Ops._head4
                    Types.List ds1
                    -> case ds1 of wild1 { [] -> Ops._head1 : x ds2 -> x } }) -}
-6f852c778c53446089bd6af0fb1bf910
+543150125bb8e35a15f1e68b296f4fb8
   _head1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._head2) -}
 10595b0063f9a03ed93ee60883e08627
@@ -3201,10 +3201,10 @@ eac7e6aa9fab27c3a709863a100d8491
 3872cd20e640f04e630362819e26fdd3
   _head3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head: Empty list."#) -}
-fcae7ce061bdbd1164e63fc64a78dcf6
+74047e8d1ea8019d93adb927c2de1942
   _head4 :: Types.Wrd
   {- Strictness: b -}
-2b27a262e2cee0e6012d0f773c37726c
+f6600d36d63907fe704d60e2bbcc68c6
   _head_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -3224,16 +3224,16 @@ fcae7ce061bdbd1164e63fc64a78dcf6
 341a78104a1baa5a630af1beff815252
   _head_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head: Illegal input type: "#) -}
-32283288a9801ad3e6c92855ef73629e
+96a4f82a79f29e1a1d0a7533dd40340c
   _head_t2 :: Types.Wrd
   {- Strictness: b -}
-21070a18bc5e91b4ed6dd4e6dcba2d17
+d9804ac97bdf090501ea00d6b282fce9
   _isConsistentType :: Types.Exp -> GHC.Maybe.Maybe Types.Type
   {- Arity: 1, Strictness: <S,1*U> -}
-2cab4733c94f1324e85361c661e2f965
+cef60dfe0de8bf011e8990eb19497bf3
   _isEmpty :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._isEmpty1) -}
-069f04523ee84c456f4d2d941471e72e
+7c2bd0f7a8b861d14bd53fecabbf247c
   _isEmpty1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m8,
      Unfolding: InlineRule (1, True, False)
@@ -3247,10 +3247,10 @@ fcae7ce061bdbd1164e63fc64a78dcf6
                            Types.$fEqWrd
                            ls
                            (GHC.Types.[] @ Types.Wrd)) }) -}
-0c2023312bf6364e43345ca3f69983e6
+27e075af8713c7d1015794b6d9b674b1
   _isEmpty2 :: Types.Wrd
   {- Strictness: b -}
-2130fc56c55fd1b0c46640600408c9db
+431965d892e2b6a4f09b46963acb9535
   _isEmpty_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -3270,13 +3270,13 @@ fcae7ce061bdbd1164e63fc64a78dcf6
 7ee732c9199798439f16df2880508448
   _isEmpty_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("isEmpty: Illegal input type: "#) -}
-ab80dec497becdf5e41a02c3e730a2e8
+52a3e13e54ffc52d7274ef5c2a0c958c
   _isEmpty_t2 :: Types.Wrd
   {- Strictness: b -}
-28cddcf7ff18d628d61e0df31b301893
+ec4a64dacfd74c2e25c459a263bf103b
   _leq :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._leq0) -}
-ef20658217a524afdcb7faedfc30efc1
+96580e36e3a3194d2178c5c1399518b7
   _leq0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -3309,10 +3309,10 @@ ef20658217a524afdcb7faedfc30efc1
                                 @ GHC.Types.Bool
                                 (GHC.Prim.<=## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.leInt x y) } }) -}
-5d98df5d29f38260d0d315b543f4616a
+79df9541b17b07c6d5d51b4ed0f3450e
   _leq1 :: Types.Wrd
   {- Strictness: b -}
-0c4480fba1bdffbf3d1fbe1f4ff243fb
+ec683e3ce413056a1a07c115d3e93566
   _leq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3360,13 +3360,13 @@ ef20658217a524afdcb7faedfc30efc1
                                   DEFAULT -> fail GHC.Prim.void#
                                   Types.T_Int -> Ops._and_t1
                                   Types.T_Double -> Ops._and_t1 } } } }) -}
-dbde1984146efbe9a371a2234b807329
+bfde3e222592188fb46b74c1e2e21522
   _leq_t1 :: Types.Wrd
   {- Strictness: b -}
-b7ffa68aa46040f7c58f7806bc1a6468
+b71937b3e209d9ec203facf934f56aa4
   _lt :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._lt0) -}
-b7310d1a5ac336aee8be98b65f3d41c1
+95be6f09728ca03cc43b08ddf7e62d01
   _lt0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -3399,10 +3399,10 @@ b7310d1a5ac336aee8be98b65f3d41c1
                                 @ GHC.Types.Bool
                                 (GHC.Prim.<## (GHC.Prim.int2Double# i) y1) } })
                         Types.Int y -> Types.Bool (GHC.Classes.ltInt x y) } }) -}
-c4ef4d9118bf40ca7b44369fd1f2e73b
+1bb107a6397e7a6f0ff5bca225cc2d0a
   _lt1 :: Types.Wrd
   {- Strictness: b -}
-a73d93a4e9ac002fee4b4370a5666be0
+30dae757c9b8f9ce3df8a767799a55b2
   _lt_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3453,13 +3453,13 @@ a73d93a4e9ac002fee4b4370a5666be0
 ad669454c0d29617cb7160243300953c
   _lt_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`<`: Illegal input type: LHS="#) -}
-f13cf934ef7dfae56efd6391bf315353
+cf39bbdd99966e42cb93443d967ea025
   _lt_t2 :: Types.Wrd
   {- Strictness: b -}
-8a570f44f9ede9d4f31d86264de830b8
+5e61e4c8c5e4279be0fdd31f9f6c4649
   _map :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._map1) -}
-e4d6aa335075ef53e05ec7ef0c32b34a
+41bf598ee21cf0654b76bf275279c65f
   _map0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -3510,7 +3510,7 @@ e4d6aa335075ef53e05ec7ef0c32b34a
                                                      (GHC.Types.[] @ Types.Wrd)))
                                                ls)
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-6d1260b15c31039e31bb308506c332dc
+38514ef66db8038c6afa23e1d444abf2
   _map1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._map0)) -}
 5a980710633d0031752e33525ab306c7
@@ -3519,7 +3519,7 @@ e4d6aa335075ef53e05ec7ef0c32b34a
 26cbd2d6ef0999513a82757469e015cc
   _map3 :: GHC.Types.Int
   {- HasNoCafRefs, Strictness: m, Unfolding: (GHC.Types.I# 2#) -}
-a0871b5cad5308036789e4c30dcd1975
+b72c2548240667c5067939ef45ec7369
   _map_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -3563,17 +3563,17 @@ a0871b5cad5308036789e4c30dcd1975
                                             -> case ds6 of wild6 {
                                                  [] -> Ops._map_t1
                                                  : ipv ipv1 -> fail GHC.Prim.void# } } } } } } }) -}
-809d5489cfcff84283133afeeec9d63b
+8a5f87431d1f11d7bf62df526ba8a76a
   _map_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_PreList) -}
 5666b8c9336195b9a1a82d74f67442c0
   _map_t2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq: Illegal input type: "#) -}
-d8e49cff69e9b5c75d696ab64d16d0ee
+a051d9f308344f05a608d3aeddadf2b9
   _mul :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._mul0) -}
-e21899957879cc860f3a9e01ebf09b14
+46a2cbf47aa9c055cdb44a3798ddcc6a
   _mul0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3614,7 +3614,7 @@ e21899957879cc860f3a9e01ebf09b14
 872dd2587431d4cda8474aedd8a39577
   _mul1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`*`: Illegal input value: x="#) -}
-614690b69f01a2495582092fa635b55c
+ff8705e11c17fc62e66b809c0b3a1db0
   _mul_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3656,11 +3656,11 @@ e21899957879cc860f3a9e01ebf09b14
 3b28df4fd6f5288e63fc840b80fb328a
   _mul_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`*`: Illegal input type: t_x="#) -}
-3cf3b7e7c739d0dfcbc36aab2e3f672e
+d79823e22df75a44684136c59c88058c
   _neq :: Types.Op
   {- HasNoCafRefs, Strictness: m1,
      Unfolding: (Types.BinOp Ops._neq1) -}
-4ecaf62b18e7940ad1197cb34dece61a
+3edca622fdecbfe802460f4f3bde2480
   _neq1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, HasNoCafRefs, Strictness: <L,1*U><L,1*U>m8,
      Unfolding: InlineRule (2, True, False)
@@ -3669,7 +3669,7 @@ e21899957879cc860f3a9e01ebf09b14
                    (case Types.$fEqBind_$c==2 a b of wild {
                       GHC.Types.False -> GHC.Types.True
                       GHC.Types.True -> GHC.Types.False })) -}
-c98c4cd1f91387bca8a8d3550a01ee78
+e486db333126873a6b1d30b0e78e94e3
   _neq_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -3701,13 +3701,13 @@ c98c4cd1f91387bca8a8d3550a01ee78
   _neq_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs,
      Unfolding: ("`!=`: Wrd mismatch of both sides: LHS="#) -}
-4393e764452d50003c80348137b93eec
+90b7cd80c0bc7e4f9eb8ef00ebbef7ed
   _neq_t2 :: Types.Wrd
   {- Strictness: b -}
-4994a3036ef01e113f203258eec61f08
+a65510cb8f47ae923832075fd1a89342
   _not :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._not1) -}
-e657d3d5cf9cde2daf82954b596aa71d
+2e32f8b1bef196b54e178f31838f20a8
   _not1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m8,
      Unfolding: InlineRule (1, True, False)
@@ -3719,10 +3719,10 @@ e657d3d5cf9cde2daf82954b596aa71d
                         (case b of wild1 {
                            GHC.Types.False -> GHC.Types.True
                            GHC.Types.True -> GHC.Types.False }) }) -}
-3cc9f4fdfc36e872873e3edfb969dd36
+0aeec3e4c926e0927fdd8b1e5332a6f3
   _not2 :: Types.Wrd
   {- Strictness: b -}
-48c8f38dd8f63263b9d8f1a8a3c0ecb8
+d5ef90f6c2e9cc24b4d26b4d99048ee9
   _not_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -3742,81 +3742,81 @@ e657d3d5cf9cde2daf82954b596aa71d
 fa61e4f175816c91155851d86c7dc9a6
   _not_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`!`: Illegal input type: "#) -}
-684fd74ead68ea307d44c3cbee16ed93
+b7a68909212e0e8ff386eae137cde6b6
   _not_t2 :: Types.Wrd
   {- Strictness: b -}
-d86f2e063acb94ce4b44e62beb3cdd6e
+e818ece1458be5a239b38177a8de4882
   _opls :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls93 Ops._opls1) -}
-780181d7f3c24e0f5778250d8310479f
+d53cb77b9c5a5467b8e4b87d5c5a0175
   _opls1 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls90 Ops._opls2) -}
-e90f2ccb6e1b026aed67e54e56d3104f
+bacc4c811bbcf9dc2e9eb957b778ca7c
   _opls10 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls63 Ops._opls11) -}
-a3545ceda17e0437e39e37f86899e66c
+bdf6d0b9258e19ee8c7282d3221729fb
   _opls11 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls60 Ops._opls12) -}
-d4bb73ee00e055a417800a068fc36f61
+d8bf223fbf13b5f204ccb46a9ede15ff
   _opls12 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls57 Ops._opls13) -}
-009e6483cded296e2b6e85b7b9b1fa16
+afb5781d064c4931bc0f17c2385a8324
   _opls13 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls54 Ops._opls14) -}
-485335f7fcca375fff4dcb66123900f0
+5f4c92b5c0e79c414e7ceabec3f9d8b9
   _opls14 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls51 Ops._opls15) -}
-6dd21a4ad8c2db5195e5661a71327e9d
+c500f46fe69e5ea89f99b6f99f491a24
   _opls15 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls48 Ops._opls16) -}
-ea0a47cba071d62a2904352fa59d0f47
+d26ae9ccf42ebc75d713d821fe00dbcf
   _opls16 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls45 Ops._opls17) -}
-fb16ba160e09f9060050e2d102134a7a
+0f38d104f73de9e6a782ea7ba57c5685
   _opls17 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls42 Ops._opls18) -}
-a848abc9a8bbc61bc86ea5d88e1082b4
+97e7424e8319b4900bb4f276232f88e8
   _opls18 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls39 Ops._opls19) -}
-c7515c5a994435fac614e065f542af14
+9b713514c6bb6194a5fe60218529b755
   _opls19 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls36 Ops._opls20) -}
-4decd8779d57fa54fd9715bfd06baa75
+e0b7c837aba0b9a35b8aecd9557d5295
   _opls2 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls87 Ops._opls3) -}
-a2e746668756bd29e8da267276cc2c37
+9457b86f1ae4c08754956e13624dbe1a
   _opls20 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls33 Ops._opls21) -}
-2ff07ac7e3bd5248081d1b49d0235a16
+f2ce498fe17c81201e51220289c62ea3
   _opls21 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls30 Ops._opls22) -}
-7aa956e0f916c2a21cbac6704dd5dd0e
+9d06a8b6d33a1b1ad82a1ba6b348c0ce
   _opls22 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls27 Ops._opls23) -}
-2451ba16cbe6ac9127a36092c2f6248d
+1c2b1f1f87704ab211eee93f62ec2260
   _opls23 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.:
                    @ Types.StrOp
                    Ops._opls24
                    (GHC.Types.[] @ Types.StrOp)) -}
-4848409e89209d0edae90da3e3a6072b
+41f88bfcda951febd56de5e6c690f1e6
   _opls24 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls25, Ops._snd)) -}
 b88b8fc9929c1c4af4643d3dd5a72755
@@ -3825,7 +3825,7 @@ b88b8fc9929c1c4af4643d3dd5a72755
 f6d6d1045b849e71c2400e298cafe159
   _opls26 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("snd"#) -}
-00e88737378008e44ef85713621374b6
+40eb1b594347f031f6730e727c769ac8
   _opls27 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls28, Ops._fst)) -}
 c730c3ad857427250719d9810b3868a0
@@ -3834,11 +3834,11 @@ c730c3ad857427250719d9810b3868a0
 9a39b858520e54a0ae3292d1cb887f3e
   _opls29 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("fst"#) -}
-a4b0ee59bbc2a2539df6a8a695ecc592
+dc8350876585a8758bc992682f91711e
   _opls3 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls84 Ops._opls4) -}
-95e7458d20cc85549fb2f658d3d68461
+53419e64df36ad0d3e79dac58f859528
   _opls30 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls31, Ops._map)) -}
 d097d06a0173844d8f0ed5f15c16af21
@@ -3847,7 +3847,7 @@ d097d06a0173844d8f0ed5f15c16af21
 20547c1bfb1f11a855800ad592b7d804
   _opls32 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("map"#) -}
-d1348dde9ae41187ab37cb9f8eafcdfb
+56969dfdf87eb4902a5abbc4186328db
   _opls33 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls34, Ops._seq)) -}
 bef029383f7f054f5dc4d887c23b5308
@@ -3856,7 +3856,7 @@ bef029383f7f054f5dc4d887c23b5308
 d0cb0bbb153c2f40d84da7691ad78481
   _opls35 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq"#) -}
-e63380f0fc0c2f37b2956ea26991f813
+46fb8e45faad3600d1980fe53d8ad995
   _opls36 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls37, Ops._take)) -}
 bc484a1f13b4457563addcce392fef3a
@@ -3865,10 +3865,10 @@ bc484a1f13b4457563addcce392fef3a
 b00287ca2ad9203459ff29407fe8f4ef
   _opls38 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take"#) -}
-b49f8af01622ff09956b50229cfe6255
+19f16a089e67ef0ba53a997a6642c74e
   _opls39 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls40, Ops._isEmpty)) -}
-c61f4a12298ab295a4a305638aaefe12
+bee11b24f2c3f98649acfa952ae52026
   _opls4 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls81 Ops._opls5) -}
@@ -3878,7 +3878,7 @@ c61f4a12298ab295a4a305638aaefe12
 c362ddada30e4c38c2095049ccb5eded
   _opls41 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("isEmpty"#) -}
-8d75f6f61daa0395ee043bfbb261409d
+e38da5e26c6532dc28811691710443b7
   _opls42 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls43, Ops._pop)) -}
 ab391930ad4b47703e2a372fc33cceeb
@@ -3887,7 +3887,7 @@ ab391930ad4b47703e2a372fc33cceeb
 adf273349e2eb5c88a12c0f2ca68f6aa
   _opls44 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop"#) -}
-a795c6a0152eb38714c1f4f4dad06eba
+70d54caef98754eb24fac496d240364e
   _opls45 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls46, Ops._tail)) -}
 b46f996224ca64f162de47a2ee3d210b
@@ -3896,20 +3896,20 @@ b46f996224ca64f162de47a2ee3d210b
 604b80a69de52eb9631a126ea9bdcbf4
   _opls47 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail"#) -}
-62f6aa5ba7f1b9cb1915395c4c7d9913
+73ab7803bc2336cba1430520ae56c443
   _opls48 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls49, Ops._head)) -}
 e92fbe548db57e876b4052c9d7c43968
   _opls49 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# Ops._opls50) -}
-4fce0cd0baf093f439e8b2e594ab9a69
+fb1396b6b2f4efd71b4b7829f2ab94be
   _opls5 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls78 Ops._opls6) -}
 f6486a2b694ad4c9c9201bafdc96f49c
   _opls50 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("head"#) -}
-0565b899648b6e6bae85fbb6900d580e
+469d7661abff5031cde723be335e3816
   _opls51 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls52, Ops._succ)) -}
 8d538b21620dc8d7ed9271ab6e25155d
@@ -3918,7 +3918,7 @@ f6486a2b694ad4c9c9201bafdc96f49c
 55e5ab72180d5c460fdb3239248f9581
   _opls53 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ"#) -}
-1f1fe1b410f8a67fdf98fd522abda9bc
+9669e301d23707199d6091b4bf209faa
   _opls54 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls55, Ops._div)) -}
 13f7afebc69a107591209c8572bfb7b3
@@ -3927,7 +3927,7 @@ f6486a2b694ad4c9c9201bafdc96f49c
 1e449ce76a81b2bae75a4391fcbe782d
   _opls56 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("/"#) -}
-dcc750b2da499828865eb7689d50156b
+9a915a52d60729a527dcf8a71fbe190d
   _opls57 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls58, Ops._mul)) -}
 86762afb55361060c5c8ee07dc85dc54
@@ -3936,11 +3936,11 @@ dcc750b2da499828865eb7689d50156b
 830575ddf031d0e4175a79a4d5eb20ad
   _opls59 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("*"#) -}
-8b37dfe8405392f485b994cc6fa53550
+757ff89e6e8e6e1a043253ec72edff6f
   _opls6 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls75 Ops._opls7) -}
-9f36566bd2a3ee80f4656e1ce4e3d5d4
+284b603a8149c9d038588bf05e5b6411
   _opls60 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls61, Ops._sub)) -}
 f26e8fc64340a22e9383ef37347e3a49
@@ -3949,7 +3949,7 @@ f26e8fc64340a22e9383ef37347e3a49
 6d4847201cfca8adde0a2afe221f6481
   _opls62 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("-"#) -}
-3e00ad05831a38bcc72481a335d3250d
+a3ec4e240c199d7ad3b6adc654184629
   _opls63 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls64, Ops._add)) -}
 ee8849ac7f8733f33453bc48b964ce55
@@ -3958,7 +3958,7 @@ ee8849ac7f8733f33453bc48b964ce55
 7f465072c7f91da8ce161791cb4eb660
   _opls65 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("+"#) -}
-827cf11d437987e80e81674539a12506
+8abc1a8b335854110b914c132741e5a1
   _opls66 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls67, Ops._leq)) -}
 9a5f6895167821d505a7235542ec98b9
@@ -3967,10 +3967,10 @@ ee8849ac7f8733f33453bc48b964ce55
 b28c0efc2a392a70f53855a5279ec78c
   _opls68 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("<="#) -}
-1e72e0846308521d465049c1f5015914
+167016044b52466ab4ba4482777c0b2f
   _opls69 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls70, Ops._lt)) -}
-eeef0c02977de545e5f570d745189ed9
+fddf042a76a9eff7ae84f29aebe0ab3b
   _opls7 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls72 Ops._opls8) -}
@@ -3980,7 +3980,7 @@ d2e9a3240c2f589c49d7826f3a901c4d
 117cfd264e23e52794383ec6e0ca1191
   _opls71 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("<"#) -}
-3727bc4a8bd1180578b58c882db56c6f
+be68e58cb896a197dd467809eb32a537
   _opls72 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls73, Ops._geq)) -}
 6509007735eeab324393305a2001de50
@@ -3989,7 +3989,7 @@ d2e9a3240c2f589c49d7826f3a901c4d
 3cdadd35db43e0afb722099783af8686
   _opls74 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: (">="#) -}
-84440c9981a0fbb0f1f222b9497c6b55
+20c9e6cdf1c1b1b4bbb63612ea95ce61
   _opls75 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls76, Ops._gt)) -}
 7274999d9f5eb12b72540e0e5ed864fe
@@ -3998,20 +3998,20 @@ d2e9a3240c2f589c49d7826f3a901c4d
 0a32d4011c6818f0a574c8eec8671995
   _opls77 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: (">"#) -}
-02231fb387db08471d8826dcad83cc22
+48fb0b19bd2f20b0627a2d7ec4bbd5bc
   _opls78 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls79, Ops._neq)) -}
 673e2fb7a637aff44195c0b9f16b97ea
   _opls79 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# Ops._opls80) -}
-4527d5e45413342689182258a50d4c67
+3c5db7635f74a0811cd886d61d8b2562
   _opls8 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls69 Ops._opls9) -}
 a97b446e5af557ebc9b461585fc38a03
   _opls80 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("!="#) -}
-7a3b3961694eebf292b5769393f44828
+90c85b32c16d0c79d3b54dce884d15f2
   _opls81 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls82, Ops._eq)) -}
 e87650bf00bc7522fbe9a8f17e2dd889
@@ -4020,7 +4020,7 @@ e87650bf00bc7522fbe9a8f17e2dd889
 c0ea8113dd5b68bac078f3c6dd253382
   _opls83 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("=="#) -}
-aac75561b288e90abed0dc597f1e4a92
+099d14418f665c8ad50baf129368a374
   _opls84 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls85, Ops._not)) -}
 1f95dd299eed2d69f11491f6af520b56
@@ -4029,7 +4029,7 @@ aac75561b288e90abed0dc597f1e4a92
 eef00eeaee9e7fdbc323d2e4a8f6dce3
   _opls86 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("!"#) -}
-2607724c8835890bbcb8e99879494152
+77b146b60346a73093e2e728680f41c2
   _opls87 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls88, Ops._and)) -}
 3e64020a7ff41fcbc87f39fbeddb2763
@@ -4038,11 +4038,11 @@ eef00eeaee9e7fdbc323d2e4a8f6dce3
 d36ef3c7d62a80d628ddd8f05d8465e5
   _opls89 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("&&"#) -}
-8f004a3d4e77cbeccbd47c1a866dde36
+ffda46f12a50b4ca8ba11037daf63022
   _opls9 :: [Types.StrOp]
   {- Strictness: m2,
      Unfolding: (GHC.Types.: @ Types.StrOp Ops._opls66 Ops._opls10) -}
-3384440fd9e9184007d115c458bedf81
+780c9b0fde9c7d386f5e95bdef0c9bf6
   _opls90 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls91, Ops._or)) -}
 6dfc362a54503c3d25dbab516cf70894
@@ -4051,7 +4051,7 @@ d36ef3c7d62a80d628ddd8f05d8465e5
 a94a348462aba4bb2b94ceb983f7215e
   _opls92 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("||"#) -}
-d08933d124cbfcbe557f39bb47e2d5d3
+7da2ae2867f6c2aaea805694bd443154
   _opls93 :: ([GHC.Types.Char], Types.Op)
   {- Strictness: m, Unfolding: ((Ops._opls94, Ops._print)) -}
 62c08972a06d5331db7e28e4470e08fe
@@ -4060,16 +4060,16 @@ d08933d124cbfcbe557f39bb47e2d5d3
 0ff339576c251c9fb6e4e5f764ab22c2
   _opls95 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("print"#) -}
-6bf4d5616317ad4dbb246754cab7efc9
+4fdae104e3cb477fac4af3f60e9882f1
   _opls_dec :: [Types.StrOp]
   {- Unfolding: (GHC.List.reverse1
                    @ Types.StrOp
                    Ops._opls
                    (GHC.Types.[] @ Types.StrOp)) -}
-0d1a3b757b8d222c41f3218f99f20738
+2dad54012d1d4183e30cbb4f648be85d
   _or :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._or1) -}
-c1e249ed21ccd94709c65047d13cc58a
+f68cc639da88272c668bdc890fa04674
   _or1 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,1*U>m8, Inline: [2],
      Unfolding: InlineRule (2, True, False)
@@ -4094,7 +4094,7 @@ c1e249ed21ccd94709c65047d13cc58a
 19c8cec9d0f561af4b45d78201f1463b
   _or2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("src/Ops.hs:253:14-50|lambda"#) -}
-6908699d8e0ea5bc40f18fbf9a0c7a00
+d6236793377f6f670b31cc0073f004d8
   _or_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,1*U><S,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -4136,13 +4136,13 @@ c1e249ed21ccd94709c65047d13cc58a
 856996f8fdef8285cf1f5129fafbb4ef
   _or_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`||`: Illegal input type: LHS="#) -}
-129fd2cfb6aed391ef726af5b5f29609
+87ef047113c19c2ca6e6a07f130bfafb
   _or_t2 :: Types.Wrd
   {- Strictness: b -}
-f74146b6986d2f24e32af08a17a0cb8d
+df57e6f9a3f1b44a88f121806f113b49
   _pop :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._pop0) -}
-78ff3de2a955828d3810b9b234c734f1
+a43863421cb195ba4a81ac2b795976d0
   _pop0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -4161,7 +4161,7 @@ f74146b6986d2f24e32af08a17a0cb8d
                                    @ Types.Wrd
                                    (Types.List xs)
                                    (GHC.Types.[] @ Types.Wrd))) } }) -}
-096143cf2e129c195e2e7fdbbf75dc42
+709d369fb1758868880d1fb071ed0f52
   _pop1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._pop2) -}
 67820d80a490bcd1292746a61771d56a
@@ -4170,10 +4170,10 @@ f74146b6986d2f24e32af08a17a0cb8d
 2b468eb485d5183768e6da337648fc34
   _pop3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop: Empty list."#) -}
-feea901cd6060803d1ef40ae2bfdebba
+c107aca5cd4933cc2198d0720dd0a71a
   _pop4 :: Types.Wrd
   {- Strictness: b -}
-8eb46b827bbdd9d4d6a5619009eb6e67
+7b28d897efcd51c53f0f5aac16ba00e7
   _pop_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4202,13 +4202,13 @@ feea901cd6060803d1ef40ae2bfdebba
 4ee8181b34bb8af5a603e9b7cd5b63eb
   _pop_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("pop: Illegal input type: "#) -}
-d2ed9ea0c6ce9ecb8a02e125ba74a112
+c0229d1d856a735304e427f6db3d6ac4
   _pop_t2 :: Types.Wrd
   {- Strictness: b -}
-59896829b5aa2764f6347abfd56a7914
+eda6ef382233d8eaf5158800a77e8265
   _print :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._print0) -}
-a7d8db166e8264be3035052bbc8b2396
+1a8cb3abd12085fea6a1ce5fd292bb5d
   _print0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -4216,7 +4216,7 @@ a7d8db166e8264be3035052bbc8b2396
                  case ds of wild {
                    DEFAULT -> Types.Print (Types.$fShowBind_$cshow wild)
                    Types.Err e -> Types.Err e }) -}
-9bbf503ce6725b8b5d15b8b3769b4b27
+a73db97c132a9eb6be1f40eb071cef24
   _print_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>m18,
      Unfolding: InlineRule (1, True, False)
@@ -4226,21 +4226,21 @@ a7d8db166e8264be3035052bbc8b2396
                    Types.TypeCheck ds1
                    -> case ds1 of wild1 {
                         DEFAULT -> Ops._print_t2 Types.T_Error -> Ops._print_t1 } }) -}
-821397a45bfc366d2f10e609e96c28ae
+778912fc82bbe1c0c8a9c2119ee0376e
   _print_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Error) -}
-f2cd44c874b6894090af7b249afc2caa
+a8c95293fd2007032728adf806d1c737
   _print_t2 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Types.T_Print) -}
-be7342a422bb36ddcde8217442e86e14
+c0d8809ebbb7aa0dbcef4cef8fee8565
   _print_t3 :: Types.Wrd
   {- Strictness: b -}
-97867468b3c1a38235eac960f554ccb4
+d2fa608ce95f0fd0f24a64ac0e7ba98e
   _seq :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._seq1) -}
-d5323da05aad0e9c645aaf003eed97b7
+5c58475960d4f7c34fb7b9105246807a
   _seq0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -4296,13 +4296,13 @@ d5323da05aad0e9c645aaf003eed97b7
                                                   go x
                                                1# -> GHC.Types.[] @ Types.Wrd } } })
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-2c79ecf7867be6e9b0fcd45f73e491ee
+9f59b30d948edab820ae7bd0a9ec5b8b
   _seq1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._seq0)) -}
 459f705f54d958ea106e5d280b7fdd22
   _seq2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("seq: Illegal input value: "#) -}
-6b94901691271cf0d6292fcab4489b1f
+84ceff338091f1ba14cbd22e1a5e11eb
   _seq_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -4346,18 +4346,18 @@ d5323da05aad0e9c645aaf003eed97b7
                                             -> case ds5 of wild6 {
                                                  [] -> Ops._seq_t1
                                                  : ipv ipv1 -> fail GHC.Prim.void# } } } } } } }) -}
-328691fd0abf14ea1fb62a663314fe0f
+0fb3b14c4dc88304c907828cb1a7c31d
   _seq_t1 :: Types.Wrd
   {- HasNoCafRefs, Strictness: m18,
      Unfolding: (Types.TypeCheck Ops._seq_t2) -}
-6150290243070a8d0425633c79a1420a
+2b9118bcbc7b9e1043fccc128d4f8ecd
   _seq_t2 :: Types.Type
   {- HasNoCafRefs, Strictness: m10,
      Unfolding: (Types.T_List Types.T_Int) -}
-40cb72d194751c81486f0a39e15f16e5
+e84ef485f36f52ab4e216a87a2ba462e
   _snd :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._snd1) -}
-ab7f655f11aa009428f4a39228b1c987
+1dd344d8ef4b23cfd57f69c0be093838
   _snd1 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4368,10 +4368,10 @@ ab7f655f11aa009428f4a39228b1c987
                         [] -> Ops._snd2
                         : ds2 ds3
                         -> case ds3 of wild2 { [] -> Ops._snd2 : w2 ds4 -> w2 } } }) -}
-f97f638e46ae457d8336a1a206b050ad
+5392c2898a2292c44e4705cf2d555b3f
   _snd2 :: Types.Wrd
   {- Strictness: b -}
-34a45d9c0f3f01b88317fec937d37019
+0848ed9b9036c10b4a0cfe6b8a823a96
   _snd_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4406,10 +4406,10 @@ f97f638e46ae457d8336a1a206b050ad
 fb5fb730789a7a098c792d2650fc4236
   _snd_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("snd: Illegal input type: "#) -}
-85224df9a24cbe900299f817409be17f
+c65baf7f63f0bfe2c7b94d5202a5363c
   _sub :: Types.Op
   {- Strictness: m1, Unfolding: (Types.BinOp Ops._sub0) -}
-982b08c7e8e6bf17acda7d615bcd62d1
+380126703182f0513c5a6e449c3612e7
   _sub0 :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -4450,7 +4450,7 @@ fb5fb730789a7a098c792d2650fc4236
 35c261a5b9aaa69c8ef7ad1d509bd398
   _sub1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`-`: Illegal input value: x="#) -}
-7647ab27e39e51539d6212c2f8f8309b
+40cd0b20fde53dd78e2991bf886f9e36
   _sub_t :: Types.Wrd -> Types.Wrd -> Types.Wrd
   {- Arity: 2, Strictness: <S,U><L,U>,
      Unfolding: (\ (ds :: Types.Wrd) (ds1 :: Types.Wrd) ->
@@ -4492,10 +4492,10 @@ fb5fb730789a7a098c792d2650fc4236
 a1f446f17c4d6891251efc4b2fb25dcf
   _sub_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("`-`: Illegal input type: t_x="#) -}
-8c7019d6bdc7048340b496fb392e0895
+2477eb98e633f7db715310a63b6538fb
   _succ :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._succ0) -}
-263b03d0bc9e513cdff4e949b54ca757
+50b724e6e0b2226fe4172250f967bada
   _succ0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4516,7 +4516,7 @@ a1f446f17c4d6891251efc4b2fb25dcf
 1e1bec2b7d8324d8c8a13fc675c5884a
   _succ1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ: Illegal input value: "#) -}
-3772e42a53fcd1b02a264fd1229bde06
+71d957eebe0c35be710ba79dec49035f
   _succ_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4538,10 +4538,10 @@ a1f446f17c4d6891251efc4b2fb25dcf
 6b00d16e376d0e6f0254d253382e9977
   _succ_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("succ: Illegal input type: "#) -}
-8feadc8c7a9e1d33d049597a1f41b9b2
+4d3f9fd1b4c251916b6f7b5a79282d1b
   _tail :: Types.Op
   {- Strictness: m2, Unfolding: (Types.UnOp Ops._tail0) -}
-39c6a8190ccefad69165a6608bb1aca6
+d752ced8c141b038dfbe64684799fc1e
   _tail0 :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -4551,7 +4551,7 @@ a1f446f17c4d6891251efc4b2fb25dcf
                    Types.List ds1
                    -> case ds1 of wild1 {
                         [] -> Ops._tail1 : ds2 xs -> Types.List xs } }) -}
-4682bc10d98e3a8ea22743c7c8f166c3
+1aed59bd94427900fdd063e064d1b4f6
   _tail1 :: Types.Wrd
   {- Strictness: m12, Unfolding: (Types.Err Ops._tail2) -}
 5b6bde3d420f44567d3b89d1b48068a7
@@ -4560,10 +4560,10 @@ a1f446f17c4d6891251efc4b2fb25dcf
 7707e6923ff15a353d267fc53e690104
   _tail3 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail: Empty list."#) -}
-a7358c2ca66cb45992b3647f134d697d
+10dd5138a58cf4e10e6703d552a239a4
   _tail4 :: Types.Wrd
   {- Strictness: b -}
-2782328a1be6f268329020823fc8a814
+c11119d19ca66daa40e00e64d99b5edb
   _tail_t :: Types.Wrd -> Types.Wrd
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: (\ (ds :: Types.Wrd) ->
@@ -4583,13 +4583,13 @@ a7358c2ca66cb45992b3647f134d697d
 b57e45550d23ed2e01b4e297d7c50947
   _tail_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("tail: Illegal input type: "#) -}
-497873be8490efbee1a3738ca937abec
+857d590cf81fdc5b0c3ff276bb2c3792
   _tail_t2 :: Types.Wrd
   {- Strictness: b -}
-5e0def83df74d395e68ba2dbb4e0b119
+3ec75950f44373679e5ab7acbfa10b43
   _take :: Types.Op
   {- Strictness: m3, Unfolding: (Types.FuncOp Ops._take1) -}
-22a1d8a1498b2747bd38758b48a89e06
+c412a6b0ac453ac304587d4da2b8dd3b
   _take0 :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -4632,13 +4632,13 @@ b57e45550d23ed2e01b4e297d7c50947
                                                DEFAULT -> GHC.Types.[] @ Types.Wrd
                                                1# -> GHC.List.$wunsafeTake @ Types.Wrd y ls } })
                                        : ipv ipv1 -> fail GHC.Prim.void# } } } } }) -}
-8db8a13df3688cb3b60e9c6944ec8849
+4ac6979170d3a4f5c827f576cfffd6bf
   _take1 :: (GHC.Types.Int, Types.Exp -> Types.Wrd)
   {- Strictness: m, Unfolding: ((Ops._map3, Ops._take0)) -}
 dc225380dbafec91e9b60dbf1b066df7
   _take2 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take: Illegal input value: "#) -}
-4a1a4b1a09252f5ad3f4f9f2faeb3078
+fe67517ccf12bff65158b08c0ae18a43
   _take_t :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (ds :: [Types.Wrd]) ->
@@ -4685,10 +4685,10 @@ dc225380dbafec91e9b60dbf1b066df7
 9412bd3a2c7ab6d7e81729cb7bf9fb84
   _take_t1 :: GHC.Prim.Addr#
   {- HasNoCafRefs, Unfolding: ("take: Illegal input type: "#) -}
-8d7df2a6b5d3b9bca57a9d4a834dd5f9
+ee95a08bf525ca090c305cc8c1f3aeb0
   _typeFunction :: GHC.Base.String -> Types.Op
   {- Arity: 1, Strictness: <S,U> -}
-f53f4449bef266b3d07ce3afe393d69f
+3ffb66a67b1e4fd04be337d8a2eceda7
   isConsistentType :: Types.Exp -> GHC.Types.Bool
   {- Arity: 1, Strictness: <S,1*U>,
      Unfolding: InlineRule (1, True, False)
@@ -4696,7 +4696,7 @@ f53f4449bef266b3d07ce3afe393d69f
                  case Ops._isConsistentType expr of wild {
                    GHC.Maybe.Nothing -> GHC.Types.False
                    GHC.Maybe.Just a1 -> GHC.Types.True }) -}
-3387bddbaface069531d5485507a58dc
+27a51ba87381b8245ff7c9b364acdd1f
   toList :: Types.Exp -> Types.Wrd
   {- Arity: 1, Strictness: <S,U>,
      Unfolding: (\ (expr :: Types.Exp) ->
