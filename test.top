@@ -22,7 +22,7 @@ print ( foo ( foo 4 ) == 256 )
 let f = Function < Function < Int -> Int > , Int -> Int > : g z -> g ( g z )
 print "----------------- hoge -----------------"
 print ( f foo 4 == 256 )
-let fact = Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1
+define fact as Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1
 print ( fact 4 + 1 == 25 )
 print ( 1 + fact 4 == 25 )
 let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )

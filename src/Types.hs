@@ -1,6 +1,6 @@
 module Types where
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Any | T_Type | T_Error | T_TypeCheck deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Any | T_Type | T_Error | T_TypeCheck | T_ToEval deriving (Eq, Show)
 
 typeEq :: Type -> Type -> Bool
 typeEq T_Unknown _ = False
@@ -43,6 +43,7 @@ instance Eq Wrd where
     (==) (Tuple a) (Tuple b) = a == b
     (==) (List l1) (List l2) = l1 == l2
     (==) (TypeCheck t1) (TypeCheck t2) = t1 == t2
+    (==) (ToEval te1) (ToEval te2) = te1 == te2
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s

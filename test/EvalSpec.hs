@@ -8,7 +8,7 @@ import Eval
 
 spec :: Spec
 spec = do
-    let fact_binds = snd $ _eval M_Normal  [] $ toExp "let fact = Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1"
+    let fact_binds = snd $ _eval M_Normal  [] $ toExp "define fact as Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1"
     describe "_eval（ノーマルモード）" $ do
         it "ただの計算1" $
             _eval M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` (Int 20, [])

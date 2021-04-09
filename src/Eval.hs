@@ -216,6 +216,17 @@ _eval mode binds (Tobe "Function" : rest) =
                                     Err s -> (Err s, binds)
                                     _ -> (Func $ Fun f, binds)
         _ -> (Err "Function: Syntax error.", binds)
+_eval mode binds (Tobe "define" : rest) =
+    case mode of
+        M_TypeCheck -> (Err "Cannot use `define` statement in function definition.", binds)
+        M_Normal ->
+            case divListBy (Tobe "as") rest of
+                Nothing -> (Err "Keyword `as` not found in `define` statement.", binds)
+                Just (_, (Tobe id : []), (Tobe "Function" : rest2)) ->
+                    let rest2' = (Tobe "Function" : rest2)
+                        bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
+                    in _bind mode (bind : binds) rest2'
+                _ -> (Err "Syntax error in function definition.", binds)
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
     let (_, binds2) = _bind mode binds rest
@@ -273,32 +284,38 @@ _evalFunctions :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で�
 _evalFunctions mode binds expr =
     let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
     in
-        case divList (_isFunction mode) ws of -- 関数探し
-        Just (Func (Fun f), expr1, expr2) -> -- 関数
-            case _applyFunction mode (Func (Fun f)) expr1 expr2 of
-                Right rslt -> _eval mode binds rslt
-                Left s -> (Err s, binds)
-        Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
-            case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
-                Right rslt -> _eval mode binds rslt
-                Left s -> (Err s, binds)
-        Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
-            _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
-        Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
-            _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
-        _ ->
-            case _iterOps mode _opls_dec ws of -- オペレータ探し
-            Just (sop, ws1, ws2) -> -- オペレータが見つかった
-                _eval mode binds $ _applyOp sop ws1 ws2
-            Nothing -> -- オペレータ見つからなかった
-                case ws of
-                    [] -> (Null, binds)
-                    (PreList pls : []) ->
-                        let ls = map (\ expr -> fst $ _eval mode binds expr) pls
-                        in (List ls, binds)
-                    (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
-                    (w : []) -> (w, binds)
-                    _ -> (Err $ "Parse failed: " ++ show ws, binds) -- TODO: 複数エラーをうまくまとめて表示
+        case divList (\ x -> case x of { ToEval _ -> True ; _ -> False }) ws of
+        Just (ToEval to_eval, expr1, expr2) ->
+            case _eval mode binds to_eval of
+            (Err s, _) -> (Err s, binds)
+            (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr2
+        Nothing ->
+            case divList (_isFunction mode) ws of -- 関数探し
+            Just (Func (Fun f), expr1, expr2) -> -- 関数
+                case _applyFunction mode (Func (Fun f)) expr1 expr2 of
+                    Right rslt -> _eval mode binds rslt
+                    Left s -> (Err s, binds)
+            Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
+                case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
+                    Right rslt -> _eval mode binds rslt
+                    Left s -> (Err s, binds)
+            Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
+                _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+            Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
+                _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+            _ ->
+                case _iterOps mode _opls_dec ws of -- オペレータ探し
+                Just (sop, ws1, ws2) -> -- オペレータが見つかった
+                    _eval mode binds $ _applyOp sop ws1 ws2
+                Nothing -> -- オペレータ見つからなかった
+                    case ws of
+                        [] -> (Null, binds)
+                        (PreList pls : []) -> -- TODO: 上に持ってく（至急！！）
+                            let ls = map (\ expr -> fst $ _eval mode binds expr) pls
+                            in (List ls, binds)
+                        (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
+                        (w : []) -> (w, binds)
+                        _ -> (Err $ "Parse failed: " ++ show ws, binds) -- TODO: 複数エラーをうまくまとめて表示
 
 functionTypeCheck :: [Bind] -> Function -> Wrd
 functionTypeCheck binds f = fst $ _eval M_TypeCheck binds $ _typeExprGen f
