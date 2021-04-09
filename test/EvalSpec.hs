@@ -8,6 +8,7 @@ import Eval
 
 spec :: Spec
 spec = do
+    let fact_binds = snd $ _eval M_Normal  [] $ toExp "let fact = Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1"
     describe "_eval（ノーマルモード）" $ do
         it "ただの計算1" $
             _eval M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` (Int 20, [])
@@ -17,6 +18,12 @@ spec = do
             _eval M_Normal [] (toExp "4 / ((3 + 5) * 2)") `shouldBe` (Double 0.25, [])
         it "関数リテラル1" $
             _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> x * x) 3") `shouldBe` (Int 9, [])
+        it "if条件分岐1" $
+            _eval M_Normal [] (toExp "if 4 > 5 then \"hoge\" else \"fuga\"") `shouldBe` (Str "fuga", [])
+        it "if条件分岐2" $
+            _eval M_Normal [Bind {identifier="x", value=Int 5, vtype=T_Int}] (toExp "if x > 0 then \"hoge\" else \"fuga\"") `shouldBe` (Str "hoge", [Bind {identifier="x", value=Int 5, vtype=T_Int}])
+        it "再帰関数" $
+            _eval M_Normal fact_binds (toExp "fact 4") `shouldBe` (Int 24, fact_binds)
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, [])

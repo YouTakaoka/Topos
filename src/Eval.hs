@@ -225,7 +225,7 @@ _eval mode binds (Tobe "if" : rest) =
     in case _eval mode binds cond of
         (Bool truth, binds2) ->
             if truth then (fst $ _eval mode binds2 thn, binds) else (fst $ _eval mode binds2 els, binds)
-        _ -> (Err "Entered a non-boolean value into `if` statement.", binds)
+        (w, _) -> (Err $ "Entered a non-boolean value into `if` statement: " ++ (show w), binds)
 _eval mode binds expr =
     case divListBy (Tobe "#") expr of --コメント探し
     Just (_, expr1, expr2) ->
