@@ -134,7 +134,7 @@ _applyFunction mode f_w expr1 expr2 =
                 l = length $ args f
                 as = take l expr2
                 rest = drop l expr2
-            in case (_macroGen f) as of
+            in case _macroGen f as of
                 Left s -> Left s
                 Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
         M_TypeCheck ->
@@ -152,9 +152,9 @@ _bind mode binds rest =
  case divListBy (Tobe "=") rest of
         Nothing ->
             (Err "Syntax error: missing `=`", binds)
-        Just (_, (Tobe w: []), expr) ->
+        Just (_, [Tobe w], expr) ->
             let (rhs, _) = _eval mode binds expr
-            in (rhs, (Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds))
+            in (rhs, Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds)
         _ -> (Err "Syntax error: You should specify only one symbol to bind value.", binds)
 
 data TypeOrTypeContents = TP Type | TContents [Type]
@@ -173,9 +173,9 @@ _evalFunctionSignature expr = -- exprは<>の中身
                 NotFound ->
                     case divListBy (Tobe "->") expr of
                         Nothing ->
-                            Right $ TContents $ map (\ ex -> toType ex) $ divListInto (Tobe ",") expr
+                            Right $ TContents $ map toType $ divListInto (Tobe ",") expr
                         Just (_, expr1, t_r) ->
-                            let as_t = map (\ ex -> toType ex) $ divListInto (Tobe ",") expr1
+                            let as_t = map toType $ divListInto (Tobe ",") expr1
                             in Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = toType t_r }
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
@@ -222,10 +222,10 @@ _eval mode binds (Tobe "define" : rest) =
         M_Normal ->
             case divListBy (Tobe "as") rest of
                 Nothing -> (Err "Keyword `as` not found in `define` statement.", binds)
-                Just (_, (Tobe id : []), (Tobe "Function" : rest2)) ->
+                Just (_, [Tobe id], Tobe "Function" : rest2) ->
                     let rest2' = (Tobe "Function" : rest2)
                         bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
-                    in _bind mode (bind : binds) rest2'
+                    in _eval mode (bind : binds) rest2'
                 _ -> (Err "Syntax error in function definition.", binds)
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
