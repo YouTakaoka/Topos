@@ -25,8 +25,6 @@ print ( f foo 4 == 256 )
 define fact as Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1
 print ( fact 4 + 1 == 25 )
 print ( 1 + fact 4 == 25 )
-let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )
-print ( g succ 4 == 6 )
 print ( succ ( succ 4 ) == 6 ) # piyo
 print ( head [1,2,3] == 1 )
 let tpl = ( 4 , ( "hoge" , 1.0 / 2.0 ) )
@@ -38,7 +36,7 @@ print ( swap ( 4 , "takaoka" ) )
 let ls = seq 1 10
 print ( pop ls )
 print "-------------------------------"
-let sum = Function < List Int -> Int > : ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
+define sum as Function < List Int -> Int > : ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
 print ( sum ls == 55 )
 print ( take 3 ls == [ 1 , 2 , 3 ] )
 print ( map succ ls )
@@ -46,3 +44,6 @@ print ( map foo ls )
 print ( map fact ls )
 print ("hoge" + "fuga" + "piyo")
 print ([1, 2, 3] + [4, 5])
+print "----------------- waaaaaaaaaaa ------------"
+let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )
+print ( g succ 4 == 6 )
