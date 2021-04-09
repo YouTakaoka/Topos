@@ -94,7 +94,8 @@ _evalWrd mode (Tobe s) =
             case mode of
                 M_Normal -> w
                 M_TypeCheck -> TypeCheck $ _getType w
-_evalWrd mode w = w
+_evalWrd M_TypeCheck (Str s) = TypeCheck T_String
+_evalWrd _ w = w
     
 _subOp :: EvalMode -> StrOp -> Exp -> Exp
 _subOp mode (opName, op) expr =
@@ -241,7 +242,7 @@ _eval mode binds (Tobe "if" : rest) =
                             (TypeCheck t2, binds2)
                                 | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds2) else (TypeCheck t1, binds2)
                                 | otherwise -> (Err $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`" , binds)
-                    (w, _) -> (Err $ "Unexpected return value: " ++ (show w) , binds)
+                    (w, _) -> (Err $ "Unexpected return type: " ++ (show $ _getType w) , binds)
 _eval mode binds expr =
     case divListBy (Tobe "#") expr of --コメント探し
     Just (_, expr1, expr2) ->

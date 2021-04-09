@@ -33,3 +33,9 @@ spec = do
             _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t)))]
         it "無理やり置き換え" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t))), TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, []) 
+        it "Strが変換されない件1" $
+            _eval M_TypeCheck [] [Str "hoge"] `shouldBe` (TypeCheck T_String, [])
+        it "Strが変換されない件2" $
+            _evalFunctions M_TypeCheck [] [Str "hoge"] `shouldBe` (TypeCheck T_String, [])
+        it "Intは変換されるか？" $
+            _evalFunctions M_TypeCheck [] [Tobe "2"] `shouldBe` (TypeCheck T_Int, [])
