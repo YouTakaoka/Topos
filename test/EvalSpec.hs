@@ -9,6 +9,8 @@ import Eval
 spec :: Spec
 spec = do
     let fact_binds = snd $ _eval M_Normal  [] $ toExp "define fact as Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1"
+        sqr_binds = snd $ _eval M_Normal  [] $ toExp "define sqr as Function < Int -> Int >: x -> x * x"
+        sqr_binds2 = snd $ _eval M_Normal  [] $ toExp "let sqr = Function < Int -> Int >: x -> x * x"
     describe "_eval（ノーマルモード）" $ do
         it "ただの計算1" $
             _eval M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` (Int 20, [])
@@ -26,6 +28,16 @@ spec = do
             _eval M_Normal [] (toExp "(Function < Int -> Str >: x -> if x > 3 then \"hoge\" else \"fuga\") 4") `shouldBe` (Str "hoge", [])
         it "再帰関数" $
             _eval M_Normal fact_binds (toExp "fact 4") `shouldBe` (Int 24, fact_binds)
+        it "計算の順序1" $
+            _eval M_Normal [] (toExp "1 + succ 3") `shouldBe` (Int 5, [])
+        it "計算の順序2" $
+            _eval M_Normal fact_binds (toExp "1 + fact 3") `shouldBe` (Int 7, fact_binds)
+        it "計算の順序3" $
+            _eval M_Normal sqr_binds (toExp "1 + sqr 3") `shouldBe` (Int 10, sqr_binds)
+        it "計算の順序4" $
+            _eval M_Normal sqr_binds2 (toExp "1 + sqr 3") `shouldBe` (Int 10, sqr_binds2)
+        it "計算の順序5" $
+            _eval M_Normal [] (toExp "1 + (Function <Int -> Int>: x -> x * x) 3") `shouldBe` (Int 10, [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, [])

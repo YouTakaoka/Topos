@@ -57,8 +57,10 @@ _isReplaceable :: [Bind] -> Exp -> Bool
 _isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
 
 _isFunction :: EvalMode -> Wrd -> Bool
-_isFunction M_Normal (Func _) = True
-_isFunction M_TypeCheck (TypeCheck (T_Func {})) = True
+_isFunction M_Normal (Func Fun {}) = True
+_isFunction M_Normal (Func (Operator (_, FuncOp _))) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func T_Function {})) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func (T_Operator (_, FuncOp _)))) = True
 _isFunction _ _ = False
 
 _isOp :: Wrd -> Bool
@@ -303,7 +305,7 @@ _evalFunctions mode binds expr =
                 _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
             Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
                 _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
-            _ ->
+            Nothing ->
                 case _iterOps mode _opls_dec ws of -- オペレータ探し
                 Just (sop, ws1, ws2) -> -- オペレータが見つかった
                     _eval mode binds $ _applyOp sop ws1 ws2
