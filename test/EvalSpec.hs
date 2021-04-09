@@ -13,9 +13,7 @@ spec = do
         Result (_, sqr_binds2) = _eval M_Normal  [] $ toExp "let sqr = Function < Int -> Int >: x -> x * x"
     describe "_eval（ノーマルモード）" $ do
         it "ただの計算1" $
-            _evalFunctions M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` Result (Int 20, [])
-        it "ただの計算1.1" $
-            _evalFunctions M_Normal [] (toExp "4 * 3") `shouldBe` Result (Int 12, [])
+            _eval M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` Result (Int 20, [])
         it "ただの計算2" $
             _eval M_Normal [] (toExp "3 * succ 4") `shouldBe` Result (Int 15, [])
         it "ただの計算3" $
