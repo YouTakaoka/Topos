@@ -1,7 +1,0 @@
-Configuring quickcheck-io-0.2.0...
-Preprocessing library for quickcheck-io-0.2.0..
-Building library for quickcheck-io-0.2.0..
-[1 of 2] Compiling Paths_quickcheck_io ( .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/Paths_quickcheck_io.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Paths_quickcheck_io.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Paths_quickcheck_io.dyn_o )
-[2 of 2] Compiling Test.QuickCheck.IO ( src/Test/QuickCheck/IO.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/IO.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/IO.dyn_o )
-Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/quickcheck-io-0.2.0-9W1Qdf5zZJVFPWUQzj7CzL
-Registering library for quickcheck-io-0.2.0..
