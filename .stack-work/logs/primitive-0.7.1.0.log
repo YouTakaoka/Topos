@@ -1,0 +1,18 @@
+Configuring primitive-0.7.1.0...
+Preprocessing library for primitive-0.7.1.0..
+Building library for primitive-0.7.1.0..
+[ 1 of 13] Compiling Control.Monad.Primitive ( Control/Monad/Primitive.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Control/Monad/Primitive.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Control/Monad/Primitive.dyn_o )
+[ 2 of 13] Compiling Data.Primitive.Internal.Compat ( Data/Primitive/Internal/Compat.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Internal/Compat.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Internal/Compat.dyn_o )
+[ 3 of 13] Compiling Data.Primitive.Array ( Data/Primitive/Array.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Array.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Array.dyn_o )
+[ 4 of 13] Compiling Data.Primitive.MVar ( Data/Primitive/MVar.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MVar.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MVar.dyn_o )
+[ 5 of 13] Compiling Data.Primitive.MachDeps ( Data/Primitive/MachDeps.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MachDeps.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MachDeps.dyn_o )
+[ 6 of 13] Compiling Data.Primitive.Internal.Operations ( Data/Primitive/Internal/Operations.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Internal/Operations.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Internal/Operations.dyn_o )
+[ 7 of 13] Compiling Data.Primitive.MutVar ( Data/Primitive/MutVar.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MutVar.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/MutVar.dyn_o )
+[ 8 of 13] Compiling Data.Primitive.SmallArray ( Data/Primitive/SmallArray.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/SmallArray.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/SmallArray.dyn_o )
+[ 9 of 13] Compiling Data.Primitive.Types ( Data/Primitive/Types.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Types.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Types.dyn_o )
+[10 of 13] Compiling Data.Primitive.ByteArray ( Data/Primitive/ByteArray.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/ByteArray.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/ByteArray.dyn_o )
+[11 of 13] Compiling Data.Primitive.PrimArray ( Data/Primitive/PrimArray.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/PrimArray.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/PrimArray.dyn_o )
+[12 of 13] Compiling Data.Primitive.Ptr ( Data/Primitive/Ptr.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Ptr.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive/Ptr.dyn_o )
+[13 of 13] Compiling Data.Primitive   ( Data/Primitive.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Primitive.dyn_o )
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/primitive-0.7.1.0-Jxsyd70oUttYiCXCa0HqV
+Registering library for primitive-0.7.1.0..

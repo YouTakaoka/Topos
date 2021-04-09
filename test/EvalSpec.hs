@@ -17,6 +17,10 @@ spec = do
             _eval M_Normal [] (toExp "4 / ((3 + 5) * 2)") `shouldBe` (Double 0.25, [])
         it "関数リテラル1" $
             _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> x * x) 3") `shouldBe` (Int 9, [])
-    describe "_eval（タイプチェックモード）" $ do
+    describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
-            _eval M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, [])
+            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, [])
+        it "_mulSubOp" $
+            _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t)))]
+        it "無理やり置き換え" $
+            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t))), TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, []) 

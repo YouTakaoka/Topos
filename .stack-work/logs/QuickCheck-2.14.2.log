@@ -1,0 +1,21 @@
+Configuring QuickCheck-2.14.2...
+Preprocessing library for QuickCheck-2.14.2..
+Building library for QuickCheck-2.14.2..
+[ 1 of 16] Compiling Test.QuickCheck.Exception ( src/Test/QuickCheck/Exception.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Exception.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Exception.dyn_o )
+[ 2 of 16] Compiling Test.QuickCheck.Random ( src/Test/QuickCheck/Random.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Random.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Random.dyn_o )
+[ 3 of 16] Compiling Test.QuickCheck.Gen ( src/Test/QuickCheck/Gen.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Gen.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Gen.dyn_o )
+[ 4 of 16] Compiling Test.QuickCheck.Gen.Unsafe ( src/Test/QuickCheck/Gen/Unsafe.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Gen/Unsafe.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Gen/Unsafe.dyn_o )
+[ 5 of 16] Compiling Test.QuickCheck.Arbitrary ( src/Test/QuickCheck/Arbitrary.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Arbitrary.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Arbitrary.dyn_o )
+[ 6 of 16] Compiling Test.QuickCheck.Poly ( src/Test/QuickCheck/Poly.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Poly.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Poly.dyn_o )
+[ 7 of 16] Compiling Test.QuickCheck.Modifiers ( src/Test/QuickCheck/Modifiers.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Modifiers.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Modifiers.dyn_o )
+[ 8 of 16] Compiling Test.QuickCheck.Function ( src/Test/QuickCheck/Function.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Function.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Function.dyn_o )
+[ 9 of 16] Compiling Test.QuickCheck.Text ( src/Test/QuickCheck/Text.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Text.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Text.dyn_o )
+[10 of 16] Compiling Test.QuickCheck.State ( src/Test/QuickCheck/State.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/State.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/State.dyn_o )
+[11 of 16] Compiling Test.QuickCheck.Property ( src/Test/QuickCheck/Property.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Property.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Property.dyn_o )
+[12 of 16] Compiling Test.QuickCheck.Test ( src/Test/QuickCheck/Test.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Test.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Test.dyn_o )
+[13 of 16] Compiling Test.QuickCheck.Monadic ( src/Test/QuickCheck/Monadic.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Monadic.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Monadic.dyn_o )
+[14 of 16] Compiling Test.QuickCheck.All ( src/Test/QuickCheck/All.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/All.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/All.dyn_o )
+[15 of 16] Compiling Test.QuickCheck.Features ( src/Test/QuickCheck/Features.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Features.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck/Features.dyn_o )
+[16 of 16] Compiling Test.QuickCheck  ( src/Test/QuickCheck.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/QuickCheck.dyn_o )
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/QuickCheck-2.14.2-1rgy6m2txlL6P9xFMqTWv8
+Registering library for QuickCheck-2.14.2..

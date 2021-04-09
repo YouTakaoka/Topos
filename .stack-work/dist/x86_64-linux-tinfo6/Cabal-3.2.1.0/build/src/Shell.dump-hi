@@ -1,0 +1,236 @@
+
+==================== FINAL INTERFACE ====================
+2021-04-08 12:27:37.0229603 UTC
+
+interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Shell 8104
+  interface hash: bc3ab0d23659f4bae2e1201229064026
+  ABI hash: e06b98c22aba2c2e3726f54df4970c39
+  export-list hash: bb83829ec3a3b0d082654083ee8963ee
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 358a18e1043fc7ac1b015a88503b1325
+  opt_hash: cb09a535710eb16767a299f2ded44a31
+  hpc_hash: 93b885adfe0da089cdf634904fd59f71
+  plugin_hash: ad164012d6b1e14942349d58b1132007
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Shell.prompt
+  Shell.shell
+module dependencies: Eval Ops Parser Types Utils
+package dependencies: base-4.14.1.0 ghc-prim-0.6.1
+                      integer-gmp-1.0.3.0
+orphans: base-4.14.1.0:GHC.Float base-4.14.1.0:GHC.Base
+family instance modules: base-4.14.1.0:Control.Applicative
+                         base-4.14.1.0:Control.Arrow base-4.14.1.0:Data.Functor.Const
+                         base-4.14.1.0:Data.Functor.Identity base-4.14.1.0:Data.Monoid
+                         base-4.14.1.0:Data.Semigroup.Internal base-4.14.1.0:GHC.Generics
+                         base-4.14.1.0:GHC.IO.Exception
+import  -/  Eval 5f2a5f037bd6b71963778054412b5e3c
+  exports: fae837bd0269baac588762786705c785
+  _eval 1cb420a7097310438c63d406eeca430d
+import  -/  Types b9822497053d2122dc73d0cfdd1b339f
+  exports: 39b07b7f7957277f50c7c4dd7689ef5f
+  Bind 607e5ce3f9595614a9cb77b2c4210b74
+  Err 49657f448604d6729aba97b2988953b9
+  M_Normal 3a8c8dc348274cb5cc27d78334ca6775
+  Null 9967ba516bf5fc50c2a36c732419df94
+import  -/  Utils 73ff7515a7321f0c1e8cafe3e04576e7
+  exports: 6b58bb7b7116017e16bec3393566cc01
+  toExp 56997acbdecff4a8ba65bf7abda198db
+import  -/  base-4.14.1.0:GHC.Base ede51775731a544ddfcb02b5a427fd38
+import  -/  base-4.14.1.0:GHC.IO.Handle e0d00a8fe0ef514daf3ca1785aa53daf
+import  -/  base-4.14.1.0:GHC.IO.Handle.FD bc4f2199b28cd7ab4b627839aa6a9186
+import  -/  base-4.14.1.0:Prelude 5c84dfddbb8583fc340ecd15bead164a
+import  -/  base-4.14.1.0:System.IO c79a1aaf6e5729c54d3610e8fbb70f0b
+import  -/  ghc-prim-0.6.1:GHC.Types ad770f5636e106a570b9a9cab841b17d
+4605f0865294b9f4798330eecac0be70
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module Shell.$trModule3 Shell.$trModule1) -}
+b4a006d01bfdfc3c9212a34c7f976ff0
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shell.$trModule2) -}
+4134cc2e8310a6c0afb132380494a3ba
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Shell"#) -}
+3770f7fe65cab3f553f75555b4a7db02
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shell.$trModule4) -}
+46851be3ce723a1e55f1bf16890654b6
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs,
+     Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
+fcdbf43ca0a47a9451fadc0526c0e18c
+  prompt :: GHC.Types.IO ()
+  {- Arity: 1, Strictness: <L,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shell.prompt1 `cast` (Sym (GHC.Types.N:IO[0] <()>_R)) -}
+4e1ca4e1b28219b6686a498bfa7c8d4b
+  prompt1 ::
+    GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
+  {- Arity: 1, Strictness: <L,U>,
+     Unfolding: (\ (s :: GHC.Prim.State# GHC.Prim.RealWorld) ->
+                 case (GHC.IO.Handle.Text.hPutStr'
+                         GHC.IO.Handle.FD.stdout
+                         Shell.prompt2
+                         GHC.Types.False)
+                        `cast`
+                      (GHC.Types.N:IO[0] <()>_R)
+                        s of ds1 { (#,#) ipv ipv1 ->
+                 GHC.IO.Handle.Internals.wantWritableHandle1
+                   @ ()
+                   GHC.IO.Handle.hFlush2
+                   GHC.IO.Handle.FD.stdout
+                   GHC.IO.Handle.Internals.flushWriteBuffer1
+                     `cast`
+                   (<GHC.IO.Handle.Types.Handle__>_R
+                    ->_R Sym (GHC.Types.N:IO[0] <()>_R))
+                   ipv }) -}
+17a890a29a03be282c31d99dddbe451a
+  prompt2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString# Shell.prompt3) -}
+32bbd1a22fcd74f49ee2762a9b3ebbd3
+  prompt3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Topos> "#) -}
+54c6ac71b6049803e186ac3f5213cdb9
+  shell :: [Types.Bind] -> GHC.Types.IO ()
+  {- Arity: 2, Strictness: <L,U><L,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shell.shell1
+                  `cast`
+                (<[Types.Bind]>_R ->_R Sym (GHC.Types.N:IO[0] <()>_R)) -}
+3233afb222967a566af08304da1b386e
+  shell1 ::
+    [Types.Bind]
+    -> GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
+  {- Arity: 2, Strictness: <L,U><L,U> -}
+trusted: none
+require own pkg trusted: False
+module header:
+  Nothing
+declaration docs:
+arg docs:
+
+
+==================== FINAL INTERFACE ====================
+2021-04-08 12:27:37.0504356 UTC
+
+interface Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F:Shell 8104
+  interface hash: bc3ab0d23659f4bae2e1201229064026
+  ABI hash: e06b98c22aba2c2e3726f54df4970c39
+  export-list hash: bb83829ec3a3b0d082654083ee8963ee
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 358a18e1043fc7ac1b015a88503b1325
+  opt_hash: cb09a535710eb16767a299f2ded44a31
+  hpc_hash: 93b885adfe0da089cdf634904fd59f71
+  plugin_hash: ad164012d6b1e14942349d58b1132007
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Shell.prompt
+  Shell.shell
+module dependencies: Eval Ops Parser Types Utils
+package dependencies: base-4.14.1.0 ghc-prim-0.6.1
+                      integer-gmp-1.0.3.0
+orphans: base-4.14.1.0:GHC.Float base-4.14.1.0:GHC.Base
+family instance modules: base-4.14.1.0:Control.Applicative
+                         base-4.14.1.0:Control.Arrow base-4.14.1.0:Data.Functor.Const
+                         base-4.14.1.0:Data.Functor.Identity base-4.14.1.0:Data.Monoid
+                         base-4.14.1.0:Data.Semigroup.Internal base-4.14.1.0:GHC.Generics
+                         base-4.14.1.0:GHC.IO.Exception
+import  -/  Eval 5f2a5f037bd6b71963778054412b5e3c
+  exports: fae837bd0269baac588762786705c785
+  _eval 1cb420a7097310438c63d406eeca430d
+import  -/  Types b9822497053d2122dc73d0cfdd1b339f
+  exports: 39b07b7f7957277f50c7c4dd7689ef5f
+  Bind 607e5ce3f9595614a9cb77b2c4210b74
+  Err 49657f448604d6729aba97b2988953b9
+  M_Normal 3a8c8dc348274cb5cc27d78334ca6775
+  Null 9967ba516bf5fc50c2a36c732419df94
+import  -/  Utils 73ff7515a7321f0c1e8cafe3e04576e7
+  exports: 6b58bb7b7116017e16bec3393566cc01
+  toExp 56997acbdecff4a8ba65bf7abda198db
+import  -/  base-4.14.1.0:GHC.Base ede51775731a544ddfcb02b5a427fd38
+import  -/  base-4.14.1.0:GHC.IO.Handle e0d00a8fe0ef514daf3ca1785aa53daf
+import  -/  base-4.14.1.0:GHC.IO.Handle.FD bc4f2199b28cd7ab4b627839aa6a9186
+import  -/  base-4.14.1.0:Prelude 5c84dfddbb8583fc340ecd15bead164a
+import  -/  base-4.14.1.0:System.IO c79a1aaf6e5729c54d3610e8fbb70f0b
+import  -/  ghc-prim-0.6.1:GHC.Types ad770f5636e106a570b9a9cab841b17d
+4605f0865294b9f4798330eecac0be70
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module Shell.$trModule3 Shell.$trModule1) -}
+b4a006d01bfdfc3c9212a34c7f976ff0
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shell.$trModule2) -}
+4134cc2e8310a6c0afb132380494a3ba
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Shell"#) -}
+3770f7fe65cab3f553f75555b4a7db02
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shell.$trModule4) -}
+46851be3ce723a1e55f1bf16890654b6
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs,
+     Unfolding: ("Topos-0.1.0.0-L2hSunVxFDyol1qAzNo2F"#) -}
+fcdbf43ca0a47a9451fadc0526c0e18c
+  prompt :: GHC.Types.IO ()
+  {- Arity: 1, Strictness: <L,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shell.prompt1 `cast` (Sym (GHC.Types.N:IO[0] <()>_R)) -}
+4e1ca4e1b28219b6686a498bfa7c8d4b
+  prompt1 ::
+    GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
+  {- Arity: 1, Strictness: <L,U>,
+     Unfolding: (\ (s :: GHC.Prim.State# GHC.Prim.RealWorld) ->
+                 case (GHC.IO.Handle.Text.hPutStr'
+                         GHC.IO.Handle.FD.stdout
+                         Shell.prompt2
+                         GHC.Types.False)
+                        `cast`
+                      (GHC.Types.N:IO[0] <()>_R)
+                        s of ds1 { (#,#) ipv ipv1 ->
+                 GHC.IO.Handle.Internals.wantWritableHandle1
+                   @ ()
+                   GHC.IO.Handle.hFlush2
+                   GHC.IO.Handle.FD.stdout
+                   GHC.IO.Handle.Internals.flushWriteBuffer1
+                     `cast`
+                   (<GHC.IO.Handle.Types.Handle__>_R
+                    ->_R Sym (GHC.Types.N:IO[0] <()>_R))
+                   ipv }) -}
+17a890a29a03be282c31d99dddbe451a
+  prompt2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString# Shell.prompt3) -}
+32bbd1a22fcd74f49ee2762a9b3ebbd3
+  prompt3 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Topos> "#) -}
+54c6ac71b6049803e186ac3f5213cdb9
+  shell :: [Types.Bind] -> GHC.Types.IO ()
+  {- Arity: 2, Strictness: <L,U><L,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shell.shell1
+                  `cast`
+                (<[Types.Bind]>_R ->_R Sym (GHC.Types.N:IO[0] <()>_R)) -}
+3233afb222967a566af08304da1b386e
+  shell1 ::
+    [Types.Bind]
+    -> GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
+  {- Arity: 2, Strictness: <L,U><L,U> -}
+trusted: none
+require own pkg trusted: False
+module header:
+  Nothing
+declaration docs:
+arg docs:
+

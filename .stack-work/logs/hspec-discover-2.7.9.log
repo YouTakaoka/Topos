@@ -1,0 +1,15 @@
+Configuring hspec-discover-2.7.9...
+Preprocessing library for hspec-discover-2.7.9..
+Building library for hspec-discover-2.7.9..
+[1 of 4] Compiling Paths_hspec_discover ( .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/autogen/Paths_hspec_discover.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Paths_hspec_discover.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Paths_hspec_discover.dyn_o )
+[2 of 4] Compiling Test.Hspec.Discover.Config ( src/Test/Hspec/Discover/Config.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Config.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Config.dyn_o )
+[3 of 4] Compiling Test.Hspec.Discover.Sort ( src/Test/Hspec/Discover/Sort.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Sort.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Sort.dyn_o )
+[4 of 4] Compiling Test.Hspec.Discover.Run ( src/Test/Hspec/Discover/Run.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Run.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Test/Hspec/Discover/Run.dyn_o )
+Preprocessing executable 'hspec-discover' for hspec-discover-2.7.9..
+Building executable 'hspec-discover' for hspec-discover-2.7.9..
+[1 of 2] Compiling Main             ( driver/hspec-discover.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/hspec-discover/hspec-discover-tmp/Main.o )
+[2 of 2] Compiling Paths_hspec_discover ( .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/hspec-discover/autogen/Paths_hspec_discover.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/hspec-discover/hspec-discover-tmp/Paths_hspec_discover.o )
+Linking .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/hspec-discover/hspec-discover ...
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/hspec-discover-2.7.9-BEbsndSnv6f5LCt5b9EdUg
+Installing executable hspec-discover in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/bin
+Registering library for hspec-discover-2.7.9..

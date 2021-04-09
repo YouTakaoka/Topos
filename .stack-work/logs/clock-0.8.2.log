@@ -1,0 +1,6 @@
+Configuring clock-0.8.2...
+Preprocessing library for clock-0.8.2..
+Building library for clock-0.8.2..
+[1 of 1] Compiling System.Clock     ( .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Clock.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Clock.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Clock.dyn_o )
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/clock-0.8.2-BltpiTOmO5T3s8HRKRzmgF
+Registering library for clock-0.8.2..

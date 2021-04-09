@@ -1,0 +1,8 @@
+Configuring random-1.2.0...
+Preprocessing library for random-1.2.0..
+Building library for random-1.2.0..
+[1 of 3] Compiling System.Random.Internal ( src/System/Random/Internal.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/Internal.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/Internal.dyn_o )
+[2 of 3] Compiling System.Random    ( src/System/Random.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random.dyn_o )
+[3 of 3] Compiling System.Random.Stateful ( src/System/Random/Stateful.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/Stateful.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/Stateful.dyn_o )
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/random-1.2.0-6zIdUIrmHInBiqbyqpDYsu
+Registering library for random-1.2.0..

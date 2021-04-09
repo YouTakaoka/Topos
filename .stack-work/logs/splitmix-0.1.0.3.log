@@ -1,0 +1,9 @@
+Configuring splitmix-0.1.0.3...
+Preprocessing library for splitmix-0.1.0.3..
+Building library for splitmix-0.1.0.3..
+[1 of 4] Compiling Data.Bits.Compat ( src-compat/Data/Bits/Compat.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Bits/Compat.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/Data/Bits/Compat.dyn_o )
+[2 of 4] Compiling System.Random.SplitMix.Init ( src/System/Random/SplitMix/Init.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix/Init.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix/Init.dyn_o )
+[3 of 4] Compiling System.Random.SplitMix ( src/System/Random/SplitMix.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix.dyn_o )
+[4 of 4] Compiling System.Random.SplitMix32 ( src/System/Random/SplitMix32.hs, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix32.o, .stack-work/dist/x86_64-linux-tinfo6/Cabal-3.2.1.0/build/System/Random/SplitMix32.dyn_o )
+Installing library in /home/takaoka/programming/haskell/Topos/.stack-work/install/x86_64-linux-tinfo6/ghc-8.10.4/8.10.4/lib/x86_64-linux-ghc-8.10.4/splitmix-0.1.0.3-1YkuweqDYq8DBxer1Np43T
+Registering library for splitmix-0.1.0.3..

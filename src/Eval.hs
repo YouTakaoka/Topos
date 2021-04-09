@@ -43,7 +43,12 @@ _iterOps mode strops expr =
         [] -> Nothing
         (sop: _) -> 
             let Just (_, ws1, ws2) = divListBy (f sop) expr
-            in Just (sop, ws1, ws2)
+            in case mode of
+                M_Normal -> Just (sop, ws1, ws2)
+                M_TypeCheck ->
+                    let opName = fst sop
+                        op_t = _typeFunction opName
+                    in Just ((opName, op_t), ws1, ws2)
 
 _numIn :: Wrd -> Exp -> Integer
 _numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
