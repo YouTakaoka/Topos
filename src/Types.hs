@@ -13,9 +13,9 @@ instance Ord Type where
     (<=) T_EmptyList (T_List _) = True
     (<=) t1 t2 = typeEq t1 t2
 
-type BinaryOp = Wrd -> Wrd -> Wrd
-type UnaryOp = Wrd -> Wrd
-type FunctionOp = (Int, Exp -> Wrd)
+type BinaryOp = Wrd -> Wrd -> Either Error Wrd
+type UnaryOp = Wrd -> Either Error Wrd
+type FunctionOp = (Int, Exp -> Either Error Wrd)
 data Op = BinOp BinaryOp | UnOp UnaryOp | FuncOp FunctionOp
 instance Show Op where
     show (BinOp _) = "[BinOp]"
@@ -66,7 +66,7 @@ instance Show Wrd where
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
 
-data Error = UnknownKeywordError String | ParseError String | TypeError String | SyntaxError String | ValueError Wrd | InternalError String deriving Show
+data Error = UnknownKeywordError String | ParseError String | TypeError String | SyntaxError String | ValueError String | InternalError String deriving Show
 data Result = Result (Wrd, [Bind]) | Error Error
 instance Show Result where
     show (Result (w, _)) = show w

@@ -106,19 +106,25 @@ _mulSubOp :: EvalMode -> [StrOp] -> Exp -> Exp
 _mulSubOp mode (strop: []) expr = _subOp mode strop expr
 _mulSubOp mode (strop: strops) expr = _mulSubOp mode strops $ _subOp mode strop expr
 
-_applyOp :: StrOp -> Exp -> Exp -> Exp -- TODO: 引数の型がTobe型でないかチェック
+_applyOp :: StrOp -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
 _applyOp (opName, op) ws1 (y : rest2) =
     case op of
     BinOp binop -> 
         let x = last ws1
             rest1 = init ws1
-        in rest1 ++ [binop x y] ++ rest2
+        in case binop x y of
+            Left e -> Left e
+            Right w -> Right $ rest1 ++ [w] ++ rest2
     UnOp unop ->
-        ws1 ++ [unop y] ++ rest2
+        case unop y of
+            Left e -> Left e
+            Right w -> Right $ ws1 ++ [w] ++ rest2
     FuncOp (nargs, fnop) ->
         let args = take nargs (y : rest2)
             rest = drop nargs (y : rest2)
-        in ws1 ++ [fnop args] ++ rest
+        in case fnop args of
+            Left e -> Left e
+            Right w -> Right $ ws1 ++ [w] ++ rest
 
 _applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
@@ -286,10 +292,12 @@ _eval mode binds expr =
             case findParenthesis expr "[" "]" of
             ParError s -> Error $ ParseError s
             ParFound (expr1, expr2, expr3) ->
-                let res = case _eval mode binds expr2 of
-                            Result (Contents ls, _) -> toList ls
-                            Result (w, _) -> w
-                in _eval mode binds $ expr1 ++ [res] ++ expr3
+                case _eval mode binds expr2 of
+                Result (Contents ls, _) ->
+                    case toList ls of
+                        Left e -> Error e
+                        Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr3
+                Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
             ParNotFound ->
                 case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
                     Left e -> Error e
@@ -310,7 +318,10 @@ _evalFunctions mode binds expr =
             Just (PreList pls, expr1, expr2) ->
                 case _evalEach mode binds pls of
                     Left e -> Error e
-                    Right ls -> _eval mode binds $ expr1 ++ [toList ls] ++ expr2
+                    Right ls ->
+                        case toList ls of
+                            Left e -> Error e
+                            Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
             Nothing ->
                 case divList (_isFunction mode) ws of -- 関数探し
                 Just (Func (Fun f), expr1, expr2) -> -- 関数
@@ -322,13 +333,19 @@ _evalFunctions mode binds expr =
                         Right rslt -> _eval mode binds rslt
                         Left e -> Error e
                 Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
-                    _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+                    case _applyOp (opName, FuncOp fnop) ws1 ws2 of
+                        Left e -> Error e
+                        Right ex -> _eval mode binds ex
                 Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
-                    _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
+                    case _applyOp (opName, FuncOp fnop) ws1 ws2 of
+                        Left e -> Error e
+                        Right ex -> _eval mode binds ex
                 Nothing ->
                     case _iterOps mode _opls_dec ws of -- オペレータ探し
                     Just (sop, ws1, ws2) -> -- オペレータが見つかった
-                        _eval mode binds $ _applyOp sop ws1 ws2
+                        case _applyOp sop ws1 ws2 of
+                            Left e -> Error e
+                            Right ex -> _eval mode binds ex
                     Nothing -> -- オペレータ見つからなかった
                         case ws of
                             [] -> Result (Null, binds)
