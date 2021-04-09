@@ -31,7 +31,7 @@ instance Eq T_Func where
     (==) (T_Operator (s1, _)) (T_Operator (s2, _)) = s1 == s2
     (==) _ _ = False
 data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
-data Wrd = Str String | Func Func | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp | TypeCheck Type
+data Wrd = Str String | Func Func | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp | TypeCheck Type -- TODO: Error型を作る: UnknownKeywordErrorなど
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b

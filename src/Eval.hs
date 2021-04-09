@@ -6,7 +6,7 @@ import Utils
 import Text.Read
 import Debug.Trace
 
-data Parenthesis = Found (Exp, Exp, Exp) | NotFound | Error String
+data Parenthesis = Found (Exp, Exp, Exp) | NotFound | Error String -- TODO: 型構築子名にParをつける
 
 _traceShow :: Show a => a -> a
 _traceShow x = trace (show x) x
@@ -112,7 +112,7 @@ _mulSubOp :: EvalMode -> [StrOp] -> Exp -> Exp
 _mulSubOp mode (strop: []) expr = _subOp mode strop expr
 _mulSubOp mode (strop: strops) expr = _mulSubOp mode strops $ _subOp mode strop expr
 
-_applyOp :: StrOp -> Exp -> Exp -> Exp
+_applyOp :: StrOp -> Exp -> Exp -> Exp -- TODO: 引数の型がTobe型でないかチェック
 _applyOp (opName, op) ws1 (y : rest2) =
     case op of
     BinOp binop -> 
@@ -236,11 +236,11 @@ _eval mode binds (Tobe "if" : rest) =
             M_TypeCheck ->
                 case _eval mode binds thn of
                     (Err s, _) -> (Err s, binds)
-                    (TypeCheck t1, binds1) ->
-                        case _eval mode binds1 els of
+                    (TypeCheck t1, binds) ->
+                        case _eval mode binds els of
                             (Err s, _) -> (Err s, binds)
-                            (TypeCheck t2, binds2)
-                                | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds2) else (TypeCheck t1, binds2)
+                            (TypeCheck t2, binds)
+                                | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds) else (TypeCheck t1, binds)
                                 | otherwise -> (Err $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`" , binds)
                     (w, _) -> (Err $ "Unexpected return type: " ++ (show $ _getType w) , binds)
 _eval mode binds expr =
@@ -298,7 +298,7 @@ _evalFunctions mode binds expr =
                         in (List ls, binds)
                     (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
                     (w : []) -> (w, binds)
-                    _ -> (Err $ "Parse failed: " ++ show ws, binds)
+                    _ -> (Err $ "Parse failed: " ++ show ws, binds) -- TODO: 複数エラーをうまくまとめて表示
 
 functionTypeCheck :: [Bind] -> Function -> Wrd
 functionTypeCheck binds f = fst $ _eval M_TypeCheck binds $ _typeExprGen f
