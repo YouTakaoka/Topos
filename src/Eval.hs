@@ -155,12 +155,14 @@ _evalNewBinds mode binds_new binds_old expr =
 
 _bind :: EvalMode -> [Bind] -> Exp -> Result
 _bind mode binds rest =
- case divListBy (Tobe "=") rest of
+    case divListBy (Tobe "=") rest of
         Nothing ->
             Error $ SyntaxError "Missing `=` in `let` statement."
         Just (_, [Tobe w], expr) ->
-            let Result (rhs, _) = _eval mode binds expr
-            in Result (rhs, Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds)
+            case _eval mode binds expr of
+                Error e -> Error e
+                Result (rhs, _) ->
+                    Result (rhs, Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds)
         _ -> Error $ SyntaxError "Specify only one symbol to bind value."
 
 data TypeOrTypeContents = TP Type | TContents [Type]
@@ -284,10 +286,10 @@ _eval mode binds expr =
         case findParenthesis expr "(" ")" of
         ParError s -> Error $ ParseError s
         ParFound (expr1, expr2, expr3) ->
-            let res = case _eval mode binds expr2 of
-                        Result (Contents ls, _) -> Tuple ls
-                        Result (w, _) -> w
-            in _eval mode binds $ expr1 ++ [res] ++ expr3
+            case _eval mode binds expr2 of
+                Result (Contents ls, _) -> _eval mode binds $ expr1 ++ [Tuple ls] ++ expr3
+                Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+                Error e -> Error e
         ParNotFound ->
             case findParenthesis expr "[" "]" of
             ParError s -> Error $ ParseError s
@@ -298,6 +300,7 @@ _eval mode binds expr =
                         Left e -> Error e
                         Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr3
                 Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+                Error e -> Error e
             ParNotFound ->
                 case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
                     Left e -> Error e
