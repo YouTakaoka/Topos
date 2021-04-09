@@ -241,6 +241,7 @@ _eval mode binds (Tobe "if" : rest) =
                             (TypeCheck t2, binds2)
                                 | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds2) else (TypeCheck t1, binds2)
                                 | otherwise -> (Err $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`" , binds)
+                    (w, _) -> (Err $ "Unexpected return value: " ++ (show w) , binds)
 _eval mode binds expr =
     case divListBy (Tobe "#") expr of --コメント探し
     Just (_, expr1, expr2) ->
