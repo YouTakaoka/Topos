@@ -62,14 +62,12 @@ _typeFunction op
     | op == "snd" = UnOp _snd_t
 
 _print0 :: Wrd -> Wrd
-_print0 (Err e) = Err e
 _print0 w = Print (show w)
 
 _print :: Op
 _print = UnOp _print0
 
 _print_t :: Wrd -> Wrd
-_print_t (TypeCheck T_Error) = TypeCheck T_Error
 _print_t (TypeCheck _) = TypeCheck T_Print
 
 _mul0 :: Wrd -> Wrd -> Wrd
@@ -352,7 +350,6 @@ _getType (Int _) = T_Int
 _getType (Double _) = T_Double
 _getType (Bool _) = T_Bool
 _getType (Tobe _) = T_Unknown
-_getType (Err _) = T_Error
 _getType (List (w: _)) = T_List $ _getType w
 _getType (List []) = T_EmptyList
 _getType (Tuple tp) = T_Tuple $ map _getType tp

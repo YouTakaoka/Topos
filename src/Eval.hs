@@ -120,7 +120,7 @@ _applyOp (opName, op) ws1 (y : rest2) =
             rest = drop nargs (y : rest2)
         in ws1 ++ [fnop args] ++ rest
 
-_applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either String Exp
+_applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
     case mode of
         M_Normal ->
@@ -129,7 +129,7 @@ _applyFunction mode f_w expr1 expr2 =
                 as = take l expr2
                 rest = drop l expr2
             in case _macroGen f as of
-                Left s -> Left s
+                Left e -> Left e
                 Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
         M_TypeCheck ->
             let TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })) = f_w
@@ -138,27 +138,33 @@ _applyFunction mode f_w expr1 expr2 =
                 rest = drop l expr2
                 binds_tc = map (\ (t, a) -> Bind { identifier = "", value = a, vtype = t }) $ zip as_t as
             in case _typeCheck mode binds_tc of
-                    Just s -> Left s
+                    Just e -> Left e
                     Nothing -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
 
-_bind :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind])
+_evalNewBinds :: EvalMode -> [Bind] -> [Bind] -> Exp -> Result
+_evalNewBinds mode binds_new binds_old expr =
+    case _eval mode binds_new expr of
+        Error e -> Error e
+        Result (w, _) -> Result (w, binds_old)
+
+_bind :: EvalMode -> [Bind] -> Exp -> Result
 _bind mode binds rest =
  case divListBy (Tobe "=") rest of
         Nothing ->
-            (Err "Syntax error: missing `=`", binds)
+            Error $ SyntaxError "Missing `=` in `let` statement."
         Just (_, [Tobe w], expr) ->
-            let (rhs, _) = _eval mode binds expr
-            in (rhs, Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds)
-        _ -> (Err "Syntax error: Specify only one symbol to bind value.", binds)
+            let Result (rhs, _) = _eval mode binds expr
+            in Result (rhs, Bind { identifier = w, value = rhs, vtype = _getType rhs } : binds)
+        _ -> Error $ SyntaxError "Specify only one symbol to bind value."
 
 data TypeOrTypeContents = TP Type | TContents [Type]
 
-_evalFunctionSignature :: Exp -> Either String TypeOrTypeContents
+_evalFunctionSignature :: Exp -> Either Error TypeOrTypeContents
 _evalFunctionSignature expr = -- exprは<>の中身
     case divListBy (Tobe "Function") expr of
         Nothing ->
             case findParenthesis expr "(" ")" of
-                ParError s -> Left s
+                ParError s -> Left $ ParseError s
                 ParFound (expr2, expr3, expr4) ->
                     case _evalFunctionSignature expr3 of
                         Left s -> Left s
@@ -173,131 +179,148 @@ _evalFunctionSignature expr = -- exprは<>の中身
                             in Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = toType t_r }
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
-                ParError s -> Left s
-                ParNotFound -> Left "Syntax error: `<` not found after `Function`"
+                ParError s -> Left $ ParseError s
+                ParNotFound -> Left $ SyntaxError "`<` not found after `Function`"
                 ParFound ([], expr3, expr4) ->
                     case _evalFunctionSignature expr3 of
                         Left s -> Left s
                         Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
-                        _ -> Left "Syntax error: missing `->`"
-                _ -> Left "Syntax error: `<` must follow just after `Function`"
+                        _ -> Left $ SyntaxError "Missing `->` in `Function` statement"
+                _ -> Left $ SyntaxError "`<` must follow just after `Function`"
 
-_eval :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind])
+_evalEach :: EvalMode -> [Bind] -> [Exp] -> Either Error Exp
+_evalEach mode binds ls =
+    let res_l = map (_eval mode binds) ls
+    in case divList (\ x -> case x of { Error _ -> True ; _ -> False }) res_l of
+        Nothing -> Right $ map (\ (Result (w, _)) -> w) res_l
+        Just (Error e, _, _) -> Left e
+
+_evalFunctionsEach :: EvalMode -> [Bind] -> [Exp] -> Either Error Exp
+_evalFunctionsEach mode binds ls =
+    let res_l = map (_evalFunctions mode binds) ls
+    in case divList (\ x -> case x of { Error _ -> True ; _ -> False }) res_l of
+        Nothing -> Right $ map (\ (Result (w, _)) -> w) res_l
+        Just (Error e, _, _) -> Left e
+
+_eval :: EvalMode -> [Bind] -> Exp -> Result
 _eval mode binds (Tobe "Function" : rest) =
     case divListBy (Tobe ":") rest of
-    Nothing -> (Err "Function: Syntax error, missing `:`", binds)
+    Nothing -> Error $ SyntaxError "Missing `:` in `Function` statement."
     Just (_, rest1, rest2) ->
         case findParenthesis rest1 "<" ">" of
-        ParError s -> (Err s, binds)
-        ParNotFound -> (Err "Function: Syntax error, `<` must follow just after `Function`", binds)
+        ParError s -> Error $ ParseError s
+        ParNotFound -> Error $ SyntaxError "`<` must follow just after `Function`"
         ParFound ([], expr1, []) ->
             case _evalFunctionSignature expr1 of
-            Left s -> (Err s, binds)
+            Left e -> Error e
             Right (TP (T_Func f_t)) ->
                 let ts = args_t f_t
                     rt = return_t f_t
                 in case divListBy (Tobe "->") rest2 of
-                    Nothing -> (Err "Function: Syntax error, missing `->`", binds)
+                    Nothing -> Error $ SyntaxError "Missing `->` in `Function` statement."
                     Just (_, as, expr2)
-                        | length ts /= length as -> (Err "Function: Mismatch numbers of types and arguments.", binds)
+                        | length ts /= length as -> Error $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
                         | otherwise ->
                             let ass = map (\ (Tobe a) -> a) as
                                 f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
                             in case mode of
-                                M_TypeCheck -> (TypeCheck (T_Func f_t), binds)
+                                M_TypeCheck -> Result (TypeCheck (T_Func f_t), binds)
                                 M_Normal ->
                                     case functionTypeCheck binds f of
-                                    Err s -> (Err s, binds)
-                                    _ -> (Func $ Fun f, binds)
-        _ -> (Err "Function: Syntax error.", binds)
+                                    Left e -> Error e
+                                    _ -> Result (Func $ Fun f, binds)
+        _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 _eval mode binds (Tobe "define" : rest) =
     case mode of
-        M_TypeCheck -> (Err "Cannot use `define` statement in function definition.", binds)
+        M_TypeCheck -> Error $ SyntaxError "Cannot use `define` statement in function literal."
         M_Normal ->
             case divListBy (Tobe "as") rest of
-                Nothing -> (Err "Keyword `as` not found in `define` statement.", binds)
+                Nothing -> Error $ SyntaxError "Keyword `as` not found in `define` statement."
                 Just (_, [Tobe id], Tobe "Function" : rest2) ->
                     let rest2' = (Tobe "Function" : rest2)
                         bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
                     in _eval mode (bind : binds) rest2'
-                _ -> (Err "Syntax error in function definition.", binds)
+                _ -> Error $ SyntaxError "`Function` statement must follow just after `as` keyword."
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
-    let (_, binds2) = _bind mode binds rest
-    in (Null, binds2)
+    case _bind mode binds rest of
+        Error e -> Error e
+        Result (_, binds2) -> Result (Null, binds2)
 _eval mode binds (Tobe "if" : rest) =
     case divListBy (Tobe "then") rest of
-    Nothing -> (Err "Syntax error: Missing `then` keyword in `if` statement.", binds)
+    Nothing -> Error $ SyntaxError "Missing `then` keyword in `if` statement."
     Just (_, cond, rest2) ->
         case divListBy (Tobe "else") rest2 of
-        Nothing -> (Err "Syntax error: Missing `else` keyword in `if` statement.", binds)
+        Nothing -> Error $ SyntaxError "Missing `else` keyword in `if` statement."
         Just (_, thn, els) ->
             case mode of
             M_Normal ->
                 case _eval mode binds cond of
-                (Bool truth, binds2) ->
-                    if truth then (fst $ _eval mode binds2 thn, binds) else (fst $ _eval mode binds2 els, binds)
-                (w, _) -> (Err $ "Entered a non-boolean value into `if` statement: " ++ (show w), binds)
+                Result (Bool truth, binds2) ->
+                    _evalNewBinds mode binds2 binds $ if truth then  thn else els
+                Result (w, _) -> Error $ SyntaxError $ "Entered a non-boolean value into `if` statement: " ++ show w
+                Error e -> Error e
             M_TypeCheck ->
                 case _eval mode binds thn of
-                    (Err s, _) -> (Err s, binds)
-                    (TypeCheck t1, binds) ->
+                    Error e -> Error e
+                    Result (TypeCheck t1, binds) ->
                         case _eval mode binds els of
-                            (Err s, _) -> (Err s, binds)
-                            (TypeCheck t2, binds)
-                                | typeEq t1 t2 -> if t1 == T_Any then (TypeCheck t2, binds) else (TypeCheck t1, binds)
-                                | otherwise -> (Err $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`" , binds)
-                    (w, _) -> (Err $ "Unexpected return type: " ++ (show $ _getType w) , binds)
+                            Error e -> Error e
+                            Result (TypeCheck t2, binds)
+                                | typeEq t1 t2 -> if t1 == T_Any then Result (TypeCheck t2, binds) else Result (TypeCheck t1, binds)
+                                | otherwise -> Error $ SyntaxError $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`"
+                    Result (w, _) -> Error $ InternalError $ "Unexpected return type: " ++ show (_getType w)
 _eval mode binds expr =
     case divListBy (Tobe "#") expr of --コメント探し
     Just (_, expr1, expr2) ->
         _eval mode binds expr1
     Nothing ->
         case findParenthesis expr "(" ")" of
-        ParError s -> (Err s, binds)
+        ParError s -> Error $ ParseError s
         ParFound (expr1, expr2, expr3) ->
             let res = case _eval mode binds expr2 of
-                        (Contents ls, _) -> Tuple ls
-                        (w, _) -> w
+                        Result (Contents ls, _) -> Tuple ls
+                        Result (w, _) -> w
             in _eval mode binds $ expr1 ++ [res] ++ expr3
         ParNotFound ->
             case findParenthesis expr "[" "]" of
-            ParError s -> (Err s, binds)
+            ParError s -> Error $ ParseError s
             ParFound (expr1, expr2, expr3) ->
                 let res = case _eval mode binds expr2 of
-                            (Contents ls, _) -> toList ls
-                            (w, _) -> w
+                            Result (Contents ls, _) -> toList ls
+                            Result (w, _) -> w
                 in _eval mode binds $ expr1 ++ [res] ++ expr3
             ParNotFound ->
-                let ls = map (fst . _evalFunctions mode binds) $ divListInto (Tobe ",") expr
-                in case ls of
-                    (w : []) -> (w, binds)
-                    _ -> (Contents ls, binds)
+                case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
+                    Left e -> Error e
+                    Right [w] -> Result (w, binds)
+                    Right ls -> Result (Contents ls, binds)
 
-_evalFunctions :: EvalMode -> [Bind] -> Exp -> (Wrd, [Bind]) -- 初期状態で第一引数は空リスト
+_evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
     let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
     in
         case divList (\ x -> case x of { ToEval _ -> True ; _ -> False }) ws of
         Just (ToEval to_eval, expr1, expr2) ->
             case _eval mode binds to_eval of
-            (Err s, _) -> (Err s, binds)
-            (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr2
+            Error e -> Error e
+            Result (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr2
         Nothing ->
             case divList (\ x -> case x of { PreList _ -> True ; _ -> False }) ws of
             Just (PreList pls, expr1, expr2) ->
-                let ls = map (fst . _eval mode binds) pls
-                in _eval mode binds $ expr1 ++ [toList ls] ++ expr2
+                case _evalEach mode binds pls of
+                    Left e -> Error e
+                    Right ls -> _eval mode binds $ expr1 ++ [toList ls] ++ expr2
             Nothing ->
                 case divList (_isFunction mode) ws of -- 関数探し
                 Just (Func (Fun f), expr1, expr2) -> -- 関数
                     case _applyFunction mode (Func (Fun f)) expr1 expr2 of
                         Right rslt -> _eval mode binds rslt
-                        Left s -> (Err s, binds)
+                        Left e -> Error e
                 Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
                     case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
                         Right rslt -> _eval mode binds rslt
-                        Left s -> (Err s, binds)
+                        Left e -> Error e
                 Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
                     _eval mode binds $ _applyOp (opName, FuncOp fnop) ws1 ws2
                 Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
@@ -308,13 +331,16 @@ _evalFunctions mode binds expr =
                         _eval mode binds $ _applyOp sop ws1 ws2
                     Nothing -> -- オペレータ見つからなかった
                         case ws of
-                            [] -> (Null, binds)
-                            (Tobe s: []) -> (Err $ "Unknown keyword: " ++ s, binds)
-                            (w : []) -> (w, binds)
-                            _ -> (Err $ "Parse failed: " ++ show ws, binds) -- TODO: 複数エラーをうまくまとめて表示
+                            [] -> Result (Null, binds)
+                            (Tobe s: []) -> Error $ UnknownKeywordError s
+                            [w] -> Result (w, binds)
+                            _ -> Error $ ParseError $ show ws
 
-functionTypeCheck :: [Bind] -> Function -> Wrd
-functionTypeCheck binds f = fst $ _eval M_TypeCheck binds $ _typeExprGen f
+functionTypeCheck :: [Bind] -> Function -> Either Error Wrd
+functionTypeCheck binds f = 
+    case _eval M_TypeCheck binds $ _typeExprGen f of
+        Error e -> Left e
+        Result (w, _) -> Right w
 
 _typeExprGen :: Function -> Exp
 _typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =

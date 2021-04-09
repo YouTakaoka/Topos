@@ -83,23 +83,23 @@ _isListType :: Type -> Bool
 _isListType (T_List _) = True 
 _isListType _ = False
 
-_typeCheck :: EvalMode -> [Bind] -> Maybe String -- NothingならOK，Justはエラー
+_typeCheck :: EvalMode -> [Bind] -> Maybe Error -- NothingならOK，Justはエラー
 _typeCheck mode [] = Nothing
 _typeCheck mode (Bind { identifier = id, value = v, vtype = t } : binds)
     | actype <= t = _typeCheck mode binds
-    | otherwise = Just $ "Type mismatch of variable `" ++ id ++ "`. Expected type is `" ++ (show t) ++ "` but input type is `" ++ (show actype) ++ "`."
+    | otherwise = Just $ TypeError $ "Type mismatch of variable `" ++ id ++ "`. Expected type is `" ++ (show t) ++ "` but input type is `" ++ (show actype) ++ "`."
     where
         actype = case mode of
                     M_Normal -> _getType v
                     M_TypeCheck -> (\ (TypeCheck tp) -> tp) v
 
-_macroGen :: Function -> (Exp -> Either String Exp)
+_macroGen :: Function -> (Exp -> Either Error Exp)
 _macroGen (Function { args = as, ret_t = _, ret = expr }) =
     \ arguments ->
         case length as == length arguments of
-            False -> Left "Number of arguments of function does not match."
+            False -> Left $ InternalError "Number of arguments of function does not match."
             True ->
                 let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
                 in case _typeCheck M_Normal binds of
                     Nothing -> Right $ _mulSubst expr binds
-                    Just s -> Left s
+                    Just e -> Left e
