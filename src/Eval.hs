@@ -6,14 +6,6 @@ import Utils
 import Text.Read
 import Debug.Trace
 
-data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける
-
-_traceShow :: Show a => a -> a
-_traceShow x = trace (show x) x
-
-_traceIf :: Show a => Bool -> String -> a -> a
-_traceIf b s x = if b then trace s x else x
-
 _findParenthesis :: Exp -> Integer -> Wrd -> Wrd -> Parenthesis
 _findParenthesis ws cnt b e = -- cnt は初期値 -1
     case divList (\ w -> w == b || w == e) ws of

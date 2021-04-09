@@ -66,3 +66,8 @@ instance Show Wrd where
 
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
+
+data Error = UnknownKeywordError String | ParseError String | TypeError Type Type | SyntaxError String | InternalError String
+data Result = Either Error (Wrd, [Bind])
+
+data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける

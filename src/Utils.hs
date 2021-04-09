@@ -4,6 +4,12 @@ import Types
 import Ops
 import Debug.Trace
 
+_traceShow :: Show a => a -> a
+_traceShow x = trace (show x) x
+
+_traceIf :: Show a => Bool -> String -> a -> a
+_traceIf b s x = if b then trace s x else x
+
 smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "==", "!=", "&&", "||", "!", "+", "-", "*", "/", "=", "#", "|"]
 
 _isInitialSym :: String -> String -> Maybe String
