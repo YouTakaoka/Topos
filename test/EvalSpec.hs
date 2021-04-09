@@ -38,6 +38,8 @@ spec = do
             _eval M_Normal sqr_binds2 (toExp "1 + sqr 3") `shouldBe` (Int 10, sqr_binds2)
         it "計算の順序5" $
             _eval M_Normal [] (toExp "1 + (Function <Int -> Int>: x -> x * x) 3") `shouldBe` (Int 10, [])
+        it "リスト処理（PreList）のバグ" $
+            _eval M_Normal [] (toExp "[1,2,3] + map succ [4,5]") `shouldBe` (List [Int 1, Int 2, Int 3, Int 5, Int 6], [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` (TypeCheck T_Int, [])

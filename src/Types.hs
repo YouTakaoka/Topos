@@ -62,6 +62,7 @@ instance Show Wrd where
     show (Tuple a) = show a
     show (ToEval _) = "[ToEval]"
     show (TypeCheck t) = show t
+    show (PreList ls) = "(Prelist: " ++ show ls ++ ")"
 
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
