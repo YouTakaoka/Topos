@@ -44,6 +44,7 @@ print ( map foo ls )
 print ( map fact ls )
 print ("hoge" + "fuga" + "piyo")
 print ([1, 2, 3] + [4, 5])
+print ([1, 2, 3] + map succ ls)
 print "----------------- waaaaaaaaaaa ------------"
 let g = Function < UnaryOp , Int -> Int > : op x -> op ( op x )
 print ( g succ 4 == 6 )
