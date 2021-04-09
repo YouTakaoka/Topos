@@ -6,7 +6,7 @@ import Utils
 import Text.Read
 import Debug.Trace
 
-data Parenthesis = Found (Exp, Exp, Exp) | NotFound | Error String -- TODO: 型構築子名にParをつける
+data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける
 
 _traceShow :: Show a => a -> a
 _traceShow x = trace (show x) x
@@ -17,19 +17,19 @@ _traceIf b s x = if b then trace s x else x
 _findParenthesis :: Exp -> Integer -> Wrd -> Wrd -> Parenthesis
 _findParenthesis ws cnt b e = -- cnt は初期値 -1
     case divList (\ w -> w == b || w == e) ws of
-    Nothing -> NotFound
+    Nothing -> ParNotFound
     Just (d, ws1, ws2)
         | (d, cnt) == (b, -1) ->
             case _findParenthesis ws2 1 b e of
-            Found (_, ex2, ex3) -> Found (ws1, ex2, ex3)
-            Error s -> Error s
-            NotFound -> Error ("End of parenthesis not found:" ++ show ws2)
+            ParFound (_, ex2, ex3) -> ParFound (ws1, ex2, ex3)
+            ParError s -> ParError s
+            ParNotFound -> ParError ("End of parenthesis not found:" ++ show ws2)
         | (d, cnt) == (e, 1) ->
-            Found ([], ws1, ws2)
+            ParFound ([], ws1, ws2)
         | otherwise ->
             case _findParenthesis ws2 (if d == b then cnt + 1 else cnt - 1) b e of
-            Found (_, ex2, ex3) -> Found ([], ws1 ++ [d] ++ ex2, ex3)
-            NotFound -> Error "Mismatch of parenthesis."
+            ParFound (_, ex2, ex3) -> ParFound ([], ws1 ++ [d] ++ ex2, ex3)
+            ParNotFound -> ParError "Mismatch of parenthesis."
 
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
@@ -166,13 +166,13 @@ _evalFunctionSignature expr = -- exprは<>の中身
     case divListBy (Tobe "Function") expr of
         Nothing ->
             case findParenthesis expr "(" ")" of
-                Error s -> Left s
-                Found (expr2, expr3, expr4) ->
+                ParError s -> Left s
+                ParFound (expr2, expr3, expr4) ->
                     case _evalFunctionSignature expr3 of
                         Left s -> Left s
                         Right (TContents ts) ->
                             _evalFunctionSignature $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
-                NotFound ->
+                ParNotFound ->
                     case divListBy (Tobe "->") expr of
                         Nothing ->
                             Right $ TContents $ map toType $ divListInto (Tobe ",") expr
@@ -181,9 +181,9 @@ _evalFunctionSignature expr = -- exprは<>の中身
                             in Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = toType t_r }
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
-                Error s -> Left s
-                NotFound -> Left "Syntax error: `<` not found after `Function`"
-                Found ([], expr3, expr4) ->
+                ParError s -> Left s
+                ParNotFound -> Left "Syntax error: `<` not found after `Function`"
+                ParFound ([], expr3, expr4) ->
                     case _evalFunctionSignature expr3 of
                         Left s -> Left s
                         Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
@@ -196,9 +196,9 @@ _eval mode binds (Tobe "Function" : rest) =
     Nothing -> (Err "Function: Syntax error, missing `:`", binds)
     Just (_, rest1, rest2) ->
         case findParenthesis rest1 "<" ">" of
-        Error s -> (Err s, binds)
-        NotFound -> (Err "Function: Syntax error, `<` must follow just after `Function`", binds)
-        Found ([], expr1, []) ->
+        ParError s -> (Err s, binds)
+        ParNotFound -> (Err "Function: Syntax error, `<` must follow just after `Function`", binds)
+        ParFound ([], expr1, []) ->
             case _evalFunctionSignature expr1 of
             Left s -> (Err s, binds)
             Right (TP (T_Func f_t)) ->
@@ -262,21 +262,21 @@ _eval mode binds expr =
         _eval mode binds expr1
     Nothing ->
         case findParenthesis expr "(" ")" of
-        Error s -> (Err s, binds)
-        Found (expr1, expr2, expr3) ->
+        ParError s -> (Err s, binds)
+        ParFound (expr1, expr2, expr3) ->
             let res = case _eval mode binds expr2 of
                         (Contents ls, _) -> Tuple ls
                         (w, _) -> w
             in _eval mode binds $ expr1 ++ [res] ++ expr3
-        NotFound ->
+        ParNotFound ->
             case findParenthesis expr "[" "]" of
-            Error s -> (Err s, binds)
-            Found (expr1, expr2, expr3) ->
+            ParError s -> (Err s, binds)
+            ParFound (expr1, expr2, expr3) ->
                 let res = case _eval mode binds expr2 of
                             (Contents ls, _) -> toList ls
                             (w, _) -> w
                 in _eval mode binds $ expr1 ++ [res] ++ expr3
-            NotFound ->
+            ParNotFound ->
                 let ls = map (fst . _evalFunctions mode binds) $ divListInto (Tobe ",") expr
                 in case ls of
                     (w : []) -> (w, binds)
