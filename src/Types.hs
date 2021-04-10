@@ -1,6 +1,6 @@
 module Types where
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck | T_ToEval deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck | T_ToEval | T_Num | T_Additive | T_Ord | T_Any deriving (Eq, Show)
 
 typeEq :: Type -> Type -> Bool
 typeEq T_Unknown _ = False
@@ -64,7 +64,20 @@ instance Show Wrd where
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
 
-data Error = UnknownKeywordError String | ParseError String | TypeError String | SyntaxError String | ValueError String | InternalError String deriving (Show, Eq)
+data Error = UnknownKeywordError String | ParseError String | TypeError Type Type String | SyntaxError String | ValueError String | InternalError String
+
+instance Eq Error where
+    (==) (UnknownKeywordError s1) (UnknownKeywordError s2) = s1 == s2
+    (==) (TypeError t1 t2 _) (TypeError t1' t2' _) = t1 == t1' && t2 == t2'
+
+instance Show Error where
+    show (UnknownKeywordError s) = "Error: Unknown keyword: " ++ s
+    show (ParseError s) = s
+    show (TypeError _ _ s) = s
+    show (SyntaxError s) = s
+    show (ValueError s) = s
+    show (InternalError s) = s
+
 data Result = Result (Wrd, [Bind]) | Error Error
 instance Show Result where
     show (Result (w, _)) = show w

@@ -57,4 +57,4 @@ spec = do
         it "UnknownKeywordError 1" $
             _eval M_Normal [] (toExp "1 + hoge") `shouldBe` Error (UnknownKeywordError "hoge")
         it "関数の型エラー1" $
-            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError "")
+            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError T_Double T_Int "")

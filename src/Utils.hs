@@ -88,7 +88,8 @@ _typeCheck :: EvalMode -> [Bind] -> Maybe Error -- NothingならOK，Justはエ�
 _typeCheck mode [] = Nothing
 _typeCheck mode (Bind { identifier = id, value = v, vtype = t } : binds)
     | actype <= t = _typeCheck mode binds
-    | otherwise = Just $ TypeError $ "Type mismatch of variable `" ++ id ++ "`. Expected type is `" ++ (show t) ++ "` but input type is `" ++ (show actype) ++ "`."
+    | otherwise = Just $ TypeError t actype $
+                    "Type mismatch of variable `" ++ id ++ "`. Expected type is `" ++ (show t) ++ "` but input type is `" ++ (show actype) ++ "`."
     where
         actype = case mode of
                     M_Normal -> _getType v
