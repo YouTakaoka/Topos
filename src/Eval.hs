@@ -264,6 +264,7 @@ _eval mode binds (Tobe "Function" : rest) =
                                             else Error $ TypeError rt t $
                                                 "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
                                                     ++ "` but Topos predicts `" ++ show t ++ "`"
+                                    Right w -> Error $ InternalError $ "InternalError: Got unexpected return value from type check:" ++ show w
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 _eval mode binds (Tobe "define" : rest) =
     case mode of
