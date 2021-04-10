@@ -258,7 +258,12 @@ _eval mode binds (Tobe "Function" : rest) =
                                 M_Normal ->
                                     case functionTypeCheck binds f of
                                     Left e -> Error e
-                                    _ -> Result (Func $ Fun f, binds)
+                                    Right (TypeCheck t) ->
+                                        if t == rt
+                                            then Result (Func $ Fun f, binds)
+                                            else Error $ TypeError rt t $
+                                                "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
+                                                    ++ "` but Topos predicts `" ++ show t ++ "`"
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 _eval mode binds (Tobe "define" : rest) =
     case mode of
