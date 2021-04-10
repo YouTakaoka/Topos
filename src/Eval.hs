@@ -194,10 +194,19 @@ _evalFunctionSignature expr = -- exprは<>の中身
                 ParNotFound ->
                     case divListBy (Tobe "->") expr of
                         Nothing ->
-                            Right $ TContents $ map toType $ divListInto (Tobe ",") expr
+                            let ls = map toType $ divListInto (Tobe ",") expr
+                            in case divList (\ x -> case x of { Left _ -> True ; Right _ -> False }) ls of
+                                Nothing -> Right $ TContents $ map (\ (Right t) -> t) ls
+                                Just (Left e, _, _) -> Left e
                         Just (_, expr1, t_r) ->
-                            let as_t = map toType $ divListInto (Tobe ",") expr1
-                            in Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = toType t_r }
+                            let ls = map toType $ divListInto (Tobe ",") expr1
+                            in case divList (\ x -> case x of { Left _ -> True ; Right _ -> False }) ls of
+                                Nothing ->
+                                    let as_t = map (\ (Right t) -> t) ls
+                                    in case toType t_r of
+                                        Right rt -> Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = rt }
+                                        Left e -> Left e
+                                Just (Left e, _, _) -> Left e
         Just (_, expr1, expr2) ->
             case findParenthesis expr2 "<" ">" of
                 ParError s -> Left $ ParseError s

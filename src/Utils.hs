@@ -65,17 +65,20 @@ _mulSubst ws (Bind { identifier = target, value = sbst } : sbsts) =
     _mulSubst (_subst ws (Tobe target) sbst) sbsts
 _mulSubst ws [] = ws
 
-_toType :: Wrd -> Type
-_toType (Tobe "String") = T_String
-_toType (Tobe "Int") = T_Int
-_toType (Tobe "Double") = T_Double
-_toType (Tobe "Bool") = T_Bool
-_toType (Tobe _) = T_Unknown
-_toType (Type t) = t
+_toType :: Wrd -> Either Error Type
+_toType (Tobe "String") = Right T_String
+_toType (Tobe "Int") = Right T_Int
+_toType (Tobe "Double") = Right T_Double
+_toType (Tobe "Bool") = Right T_Bool
+_toType (Tobe s) = Left $ UnknownKeywordError s
+_toType (Type t) = Right t
 
-toType :: Exp -> Type
-toType (w: []) = _toType w
-toType (Tobe "List": (w: [])) = T_List $ _toType w
+toType :: Exp -> Either Error Type
+toType [w] = _toType w
+toType [Tobe "List", w] = 
+    case _toType w of
+        Left e -> Left e
+        Right t -> Right $ T_List t
 
 _isListType :: Type -> Bool
 _isListType (T_List _) = True 
