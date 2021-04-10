@@ -60,3 +60,5 @@ spec = do
             _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError T_Double T_Int "")
         it "関数の型エラー2" $
             _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError T_Int T_Double "")
+        it "関数の型エラー3" $
+            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError T_Int T_Double "")
