@@ -70,9 +70,7 @@ _toType (Tobe "String") = T_String
 _toType (Tobe "Int") = T_Int
 _toType (Tobe "Double") = T_Double
 _toType (Tobe "Bool") = T_Bool
-_toType (Tobe "UnaryOp") = T_UnaryOp
-_toType (Tobe "BinaryOp") = T_BinaryOp
-_toType (Tobe "FunctionOp") = T_FunctionOp
+_toType (Tobe _) = T_Unknown
 _toType (Type t) = t
 
 toType :: Exp -> Type

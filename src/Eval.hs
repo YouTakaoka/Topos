@@ -288,7 +288,7 @@ _eval mode binds (Tobe "if" : rest) =
                         case _eval mode binds els of
                             Error e -> Error e
                             Result (TypeCheck t2, binds)
-                                | typeEq t1 t2 -> if t1 == T_Any then Result (TypeCheck t2, binds) else Result (TypeCheck t1, binds)
+                                | typeEq t1 t2 -> Result (TypeCheck t1, binds)
                                 | otherwise -> Error $ SyntaxError $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`"
                     Result (w, _) -> Error $ InternalError $ "Unexpected return type: " ++ show (_getType w)
 _eval mode binds expr =
