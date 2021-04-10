@@ -106,6 +106,17 @@ _mulSubOp :: EvalMode -> [StrOp] -> Exp -> Exp
 _mulSubOp mode (strop: []) expr = _subOp mode strop expr
 _mulSubOp mode (strop: strops) expr = _mulSubOp mode strops $ _subOp mode strop expr
 
+_examineInput :: Wrd -> Maybe Error
+_examineInput (Tobe s) = Just $ UnknownKeywordError s
+_examineInput _ = Nothing
+
+_examineInputList :: Exp -> Maybe Error
+_examineInputList expr =
+    let ls = map _examineInput expr
+    in case divList (\ x -> case x of { Just _ -> True ; Nothing -> False }) ls of
+        Just (Just e, _, _) -> Just e
+        Nothing -> Nothing
+
 _applyOp :: StrOp -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
 _applyOp (opName, op) ws1 (y : rest2) =
     case op of
@@ -119,12 +130,14 @@ _applyOp (opName, op) ws1 (y : rest2) =
         case unop y of
             Left e -> Left e
             Right w -> Right $ ws1 ++ [w] ++ rest2
-    FuncOp (nargs, fnop) ->
-        let args = take nargs (y : rest2)
-            rest = drop nargs (y : rest2)
-        in case fnop args of
-            Left e -> Left e
-            Right w -> Right $ ws1 ++ [w] ++ rest
+    FuncOp (nargs, fnop)
+        | length (y : rest2) < nargs -> Left $ ParseError $ "Supplied too few arguments to function operator `" ++ opName ++ "`"
+        | otherwise ->
+            let args = take nargs (y : rest2)
+                rest = drop nargs (y : rest2)
+            in case fnop args of
+                Left e -> Left e
+                Right w -> Right $ ws1 ++ [w] ++ rest
 
 _applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
@@ -310,51 +323,53 @@ _eval mode binds expr =
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
     let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
-    in
-        case divList (\ x -> case x of { ToEval _ -> True ; _ -> False }) ws of
-        Just (ToEval to_eval, expr1, expr2) ->
-            case _eval mode binds to_eval of
-            Error e -> Error e
-            Result (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr2
+    in case _examineInputList ws of
+        Just e -> Error e
         Nothing ->
-            case divList (\ x -> case x of { PreList _ -> True ; _ -> False }) ws of
-            Just (PreList pls, expr1, expr2) ->
-                case _evalEach mode binds pls of
-                    Left e -> Error e
-                    Right ls ->
-                        case toList ls of
-                            Left e -> Error e
-                            Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
+            case divList (\ x -> case x of { ToEval _ -> True ; _ -> False }) ws of
+            Just (ToEval to_eval, expr1, expr2) ->
+                case _eval mode binds to_eval of
+                Error e -> Error e
+                Result (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr2
             Nothing ->
-                case divList (_isFunction mode) ws of -- 関数探し
-                Just (Func (Fun f), expr1, expr2) -> -- 関数
-                    case _applyFunction mode (Func (Fun f)) expr1 expr2 of
-                        Right rslt -> _eval mode binds rslt
+                case divList (\ x -> case x of { PreList _ -> True ; _ -> False }) ws of
+                Just (PreList pls, expr1, expr2) ->
+                    case _evalEach mode binds pls of
                         Left e -> Error e
-                Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
-                    case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
-                        Right rslt -> _eval mode binds rslt
-                        Left e -> Error e
-                Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
-                    case _applyOp (opName, FuncOp fnop) ws1 ws2 of
-                        Left e -> Error e
-                        Right ex -> _eval mode binds ex
-                Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
-                    case _applyOp (opName, FuncOp fnop) ws1 ws2 of
-                        Left e -> Error e
-                        Right ex -> _eval mode binds ex
+                        Right ls ->
+                            case toList ls of
+                                Left e -> Error e
+                                Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
                 Nothing ->
-                    case _iterOps mode _opls_dec ws of -- オペレータ探し
-                    Just (sop, ws1, ws2) -> -- オペレータが見つかった
-                        case _applyOp sop ws1 ws2 of
+                    case divList (_isFunction mode) ws of -- 関数探し
+                    Just (Func (Fun f), expr1, expr2) -> -- 関数
+                        case _applyFunction mode (Func (Fun f)) expr1 expr2 of
+                            Right rslt -> _eval mode binds rslt
+                            Left e -> Error e
+                    Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
+                        case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
+                            Right rslt -> _eval mode binds rslt
+                            Left e -> Error e
+                    Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
+                        case _applyOp (opName, FuncOp fnop) ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
-                    Nothing -> -- オペレータ見つからなかった
-                        case ws of
-                            [] -> Result (Null, binds)
-                            (Tobe s: []) -> Error $ UnknownKeywordError s
-                            [w] -> Result (w, binds)
-                            _ -> Error $ ParseError $ show ws
+                    Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
+                        case _applyOp (opName, FuncOp fnop) ws1 ws2 of
+                            Left e -> Error e
+                            Right ex -> _eval mode binds ex
+                    Nothing ->
+                        case _iterOps mode _opls_dec ws of -- オペレータ探し
+                        Just (sop, ws1, ws2) -> -- オペレータが見つかった
+                            case _applyOp sop ws1 ws2 of
+                                Left e -> Error e
+                                Right ex -> _eval mode binds ex
+                        Nothing -> -- オペレータ見つからなかった
+                            case ws of
+                                [] -> Result (Null, binds)
+                                (Tobe s: []) -> Error $ UnknownKeywordError s
+                                [w] -> Result (w, binds)
+                                _ -> Error $ InternalError $ "Evaluation failed: " ++ show ws
 
 functionTypeCheck :: [Bind] -> Function -> Either Error Wrd
 functionTypeCheck binds f = 

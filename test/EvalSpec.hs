@@ -53,3 +53,6 @@ spec = do
             _evalFunctions M_TypeCheck [] [Str "hoge"] `shouldBe` Result (TypeCheck T_String, [])
         it "Intは変換されるか？" $
             _evalFunctions M_TypeCheck [] [Tobe "2"] `shouldBe` Result (TypeCheck T_Int, [])
+    describe "エラーチェック" $ do
+        it "UnknownKeywordError 1" $
+            _eval M_Normal [] (toExp "1 + hoge") `shouldBe` Error (UnknownKeywordError "hoge")

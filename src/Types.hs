@@ -66,13 +66,14 @@ instance Show Wrd where
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
 
-data Error = UnknownKeywordError String | ParseError String | TypeError String | SyntaxError String | ValueError String | InternalError String deriving Show
+data Error = UnknownKeywordError String | ParseError String | TypeError String | SyntaxError String | ValueError String | InternalError String deriving (Show, Eq)
 data Result = Result (Wrd, [Bind]) | Error Error
 instance Show Result where
     show (Result (w, _)) = show w
     show (Error e) = show e
 instance Eq Result where
     (==) (Result (w1, _)) (Result (w2, _)) = w1 == w2
+    (==) (Error e1) (Error e2) = e1 == e2
     (==) _ _ = False
 
 data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける
