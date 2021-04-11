@@ -258,13 +258,12 @@ _eval mode binds (Tobe "Function" : rest) =
                                 M_Normal ->
                                     case functionTypeCheck binds f of
                                     Left e -> Error e
-                                    Right (TypeCheck t) ->
+                                    Right t ->
                                         if t == rt
                                             then Result (Func $ Fun f, binds)
                                             else Error $ TypeError rt t $
                                                 "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
                                                     ++ "` but Topos predicts `" ++ show t ++ "`"
-                                    Right w -> Error $ InternalError $ "InternalError: Got unexpected return value from type check:" ++ show w
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 _eval mode binds (Tobe "define" : rest) =
     case mode of
@@ -386,11 +385,18 @@ _evalFunctions mode binds expr =
                                 [w] -> Result (w, binds)
                                 _ -> Error $ InternalError $ "Evaluation failed: " ++ show ws
 
-functionTypeCheck :: [Bind] -> Function -> Either Error Wrd
+unveilTypeCheck :: Wrd -> Type
+unveilTypeCheck w =
+    case w of
+        TypeCheck t -> t
+        List ls -> T_List (unveilTypeCheck $ head ls)
+        Tuple ls -> T_Tuple (map unveilTypeCheck ls)
+
+functionTypeCheck :: [Bind] -> Function -> Either Error Type
 functionTypeCheck binds f = 
     case _eval M_TypeCheck binds $ _typeExprGen f of
         Error e -> Left e
-        Result (w, _) -> Right w
+        Result (w, _) -> Right $ unveilTypeCheck w
 
 _typeExprGen :: Function -> Exp
 _typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =
