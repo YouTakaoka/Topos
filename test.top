@@ -45,3 +45,6 @@ print ( map fact ls )
 print ("hoge" + "fuga" + "piyo")
 print ([1, 2, 3] + [4, 5])
 print ([1, 2, 3] + map succ ls)
+
+
+print hoge

@@ -3,18 +3,19 @@ import Types
 import Utils
 import Shell
 import System.Environment (getArgs)
+import System.IO
 
-interpret :: [String] -> [Bind] -> IO ()
-interpret (str: rest) binds =
+interpret :: Int -> [String] -> [Bind] -> IO ()
+interpret cnt (str: rest) binds =
     case _eval M_Normal binds (toExp str) of
         Error e -> do
-            putStrLn $ show e
+            hPutStrLn stderr $ "Line " ++ show cnt ++ ": " ++ show e
         Result (Print res, binds2) -> do
             putStrLn res
-            interpret rest binds2
+            interpret (cnt + 1) rest binds2
         Result (_, binds2) -> do
-            interpret rest binds2
-interpret [] _ = return ()
+            interpret (cnt + 1) rest binds2
+interpret _ [] _ = return ()
 
 main = do
     args <- getArgs
@@ -24,4 +25,4 @@ main = do
         (file_name : _) -> do
             cs <- readFile file_name
             let ls = lines cs
-            interpret ls []
+            interpret 1 ls []
