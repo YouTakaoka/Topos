@@ -56,6 +56,9 @@ spec = do
     describe "エラーチェック" $ do
         it "UnknownKeywordError 1" $
             _eval M_Normal [] (toExp "1 + hoge") `shouldBe` Error (UnknownKeywordError "hoge")
+        it "UnknownKeywordError 2" $
+            _eval M_Normal [] (toExp "let g = Function <UnaryOp, Int -> Int > : op x -> op ( op x )")
+                `shouldBe` Error (UnknownKeywordError "UnaryOp")
         it "関数の型エラー1" $
             _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError T_Double T_Int "")
         it "関数の型エラー2" $
