@@ -57,13 +57,13 @@ _removeComment expr =
 toExp :: String -> Exp
 toExp str = _removeComment $ _toExp '"' str False []
 
-getExpression :: [String] -> (Exp, [String])
-getExpression (str : rest)
-    | null expr = (expr, rest)
+getExpression :: Int -> [String] -> (Int, Exp, [String])
+getExpression cnt (str : rest)
+    | null expr = (cnt, expr, rest)
     | last expr == Tobe "\\" =
-            let (expr2, rest2) = getExpression rest
-            in (init expr ++ expr2, rest2)
-    | otherwise = (expr, rest)
+            let (cnt2, expr2, rest2) = getExpression (cnt + 1) rest
+            in (cnt2, init expr ++ expr2, rest2)
+    | otherwise = (cnt, expr, rest)
     where expr = toExp str
 
 _fromExp :: Exp -> [String]
