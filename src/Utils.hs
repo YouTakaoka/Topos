@@ -31,7 +31,7 @@ _divStrBySyms syms wrk inp =  --wrkの初期値は空
         Nothing ->
             case inp of
                 [] -> []
-                (c : []) -> [Tobe (wrk ++ [c])]
+                [c] -> [Tobe (wrk ++ [c])]
                 (c : rest) -> _divStrBySyms syms (wrk ++ [c]) rest
         Just (sym, rest) ->
             (if wrk == "" then [] else [Tobe wrk])
@@ -43,16 +43,22 @@ _toExp0 str = concat $ map (_divStrBySyms smbls []) $ words str
 _toExp :: Char -> String -> Bool -> Exp -> Exp
 _toExp q str inq expr =  -- inq: 引用符の中にいるかどうかのフラグ．初期状態でfalse
     case divListBy q str of
-        Nothing -> expr ++ (_toExp0 str)
+        Nothing -> expr ++ _toExp0 str
         Just (_, str1, str2)
             | inq -> _toExp q str2 (not inq) $ expr ++ [Str str1]
-            | otherwise -> _toExp q str2 (not inq) $ expr ++ (_toExp0 str1)
+            | otherwise -> _toExp q str2 (not inq) $ expr ++ _toExp0 str1
+
+_removeComment :: Exp -> Exp
+_removeComment expr =
+    case divListBy (Tobe "#") expr of
+        Nothing -> expr
+        Just (_, expr1, expr2) -> expr1
 
 toExp :: String -> Exp
-toExp str = _toExp '"' str False []
+toExp str = _removeComment $ _toExp '"' str False []
 
 _fromExp :: Exp -> [String]
-_fromExp expr = map show expr
+_fromExp = map show
 
 _subst :: Exp -> Wrd -> Wrd -> Exp
 _subst ws target sbst =
