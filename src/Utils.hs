@@ -57,15 +57,6 @@ _removeComment expr =
 toExp :: String -> Exp
 toExp str = _removeComment $ _toExp '"' str False []
 
-getExpression :: Int -> [String] -> (Int, Exp, [String])
-getExpression cnt (str : rest)
-    | null expr = (cnt, expr, rest)
-    | last expr == Tobe "\\" =
-            let (cnt2, expr2, rest2) = getExpression (cnt + 1) rest
-            in (cnt2, init expr ++ expr2, rest2)
-    | otherwise = (cnt, expr, rest)
-    where expr = toExp str
-
 _fromExp :: Exp -> [String]
 _fromExp = map show
 

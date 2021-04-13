@@ -5,10 +5,19 @@ import Shell
 import System.Environment (getArgs)
 import System.IO
 
+cutOutExp :: Int -> [String] -> (Int, Exp, [String])
+cutOutExp cnt (str : rest)
+    | null expr = (cnt, expr, rest)
+    | last expr == Tobe "\\" =
+            let (cnt2, expr2, rest2) = cutOutExp (cnt + 1) rest
+            in (cnt2, init expr ++ expr2, rest2)
+    | otherwise = (cnt, expr, rest)
+    where expr = toExp str
+
 interpret :: Int -> [String] -> [Bind] -> IO ()
 interpret _ [] _ = return ()
 interpret cnt strs binds =
-    let (cnt2, expr, rest) = getExpression cnt strs
+    let (cnt2, expr, rest) = cutOutExp cnt strs
     in case _eval M_Normal binds expr of
         Error e -> do
             hPutStrLn stderr $ "Line " ++ show cnt2 ++ ": " ++ show e
