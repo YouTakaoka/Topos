@@ -1,50 +1,48 @@
-print (2 * 3 == 6)
-print (2 * 3 * 4 == 24)
-print (succ 4 == 5)
-print (3 * succ 4 == 15)
-print (4 * 3 + 2 == 14)
-print (2 + 4 * 3 == 14)
-print ( 5 / 2 - 1 == 1.5 )
-print ( 3 / 2 * 5 == 7.5 )
-print ( 1 - 2  + 3 == 2 )
-print ( 4 * ( 2 + 3 ) == 20 )
-print (4 / ((3 + 5) * 2) == 0.25)
-print ((Function <Int -> Int>: x -> x * x) 3 == 9 )
-print ((Function<Double,Double->Double>: x y -> (x+y)/2) 3.0 5.0 == 4.0 )
+print (2 * 3) # => 6
+print (2 * 3 * 4) # => 24
+print (succ 4) # => 5
+print (3 * succ 4) # => 15
+print (4 * 3 + 2) # => 14
+print (2 + 4 * 3) # => 14
+print (5 / 2 - 1) # => 1.5
+print (3 / 2 * 5) # => 7.5
+print (1 - 2  + 3) # => 2
+print (4 * (2 + 3)) # => 20
+print (4 / ((3 + 5) * 2)) # => 0.25
+print "--------------------------------"
+print ((Function <Int -> Int>: x -> x * x) 3) # => 9
+print ((Function <Double, Double -> Double>: x y -> (x + y) / 2) 3.0 5.0) # => 4.0
 let x = 4
 let y = 5
-print ( x * y == 20 )
-let foo = Function < Int -> Int > : x -> x * x
-print ( foo 4 == 16 )
-let bar = Function < Double , Double -> Double > : x y -> ( x + y ) / 2
-print ( bar 3.0 5.0 == 4.0 )
-print ( foo ( foo 4 ) == 256 )
-let f = Function < Function < Int -> Int > , Int -> Int > : g z -> g ( g z )
-print "----------------- hoge -----------------"
-print ( f foo 4 == 256 )
-define fact as Function < Int -> Int >: x -> if x > 0 then x * (fact (x - 1)) else 1
-print ( fact 4 + 1 == 25 )
-print ( 1 + fact 4 == 25 )
-print ( succ ( succ 4 ) == 6 ) # piyo
-print ( head [1,2,3] == 1 )
-let tpl = ( 4 , ( "hoge" , 1.0 / 2.0 ) )
-print "------------- fuga ----------------------"
-print ( fst tpl == 4 )
-print ( snd tpl == ( "hoge" , 0.5 ) )
-let swap = Function<(Int, String) -> (String, Int)>: tpl -> (snd tpl, fst tpl)
-print ( swap ( 4 , "takaoka" ) )
+print (x * y) # => 20
+let foo = Function <Int -> Int>: x -> x * x
+print (foo 4) # => 16
+let bar = Function <Double, Double -> Double>: x y -> (x + y) / 2
+print (bar 3.0 5.0) # => 4.0
+print (foo ( foo 4 )) # => 256
+let f = Function <Function <Int -> Int>, Int -> Int>: g z -> g (g z)
+print (f foo 4) # => 256
+define fact as Function <Int -> Int>:\
+    x -> if x > 0 then x * (fact (x - 1)) else 1
+print (fact 4 + 1) # => 25
+print (1 + fact 4) # => 25
+print (succ (succ 4)) # => 6
+print "-------------------------------------------"
+print (head [1,2,3]) # => 1
+let tpl = (4, ("hoge", 1.0 / 2.0))
+print (fst tpl) # => 4
+print (snd tpl) # => ("hoge", 0.5)
+let swap = Function <(Int, String) -> (String, Int)>: tpl -> (snd tpl, fst tpl)
+print (swap (4, "takaoka")) # => ("takaoka", 4)
 let ls = seq 1 10
-print ( pop ls )
-print "-------------------------------"
-define sum as Function < List Int -> Int >:\ #複数行の確認
-    ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
-print ( sum ls == 55 )
-print ( take 3 ls == [ 1 , 2 , 3 ] )
-print ( map succ ls )
-print ( map foo ls )
-print ( map fact ls )
-print ("hoge" + "fuga" + "piyo")
-print ([1, 2, 3] + [4, 5])
-print ([1, 2, 3] + map succ ls)
-
-print hoge # エラー時に行番号を正しく出力するかの確認。
+print (pop ls) # => (1, [2, 3, 4, 5, 6, 7, 8, 9, 10])
+define sum as Function <List Int -> Int>:\
+    ls -> if isEmpty ls then 0 else sum (tail ls) + head ls
+print (sum ls) # => 55
+print (take 3 ls) # => [1,2,3]
+print (map succ ls) # => [2,3,4,5,6,7,8,9,10,11]
+print (map foo ls) # => [1,4,9,16,25,36,49,64,81,100]
+print (map fact ls) # => [1,2,6,24,120,720,5040,40320,362880,3628800]
+print ("hoge" + "fuga" + "piyo") # => hogefugapiyo
+print ([1, 2, 3] + [4, 5]) # => [1,2,3,4,5]
+print ([1, 2, 3] + map succ ls) # => [1,2,3,2,3,4,5,6,7,8,9,10,11]
