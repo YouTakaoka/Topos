@@ -20,6 +20,7 @@ _opls = [
             ("-", _sub),
             ("*", _mul),
             ("/", _div),
+            ("//", _quot),
             ("%", _mod),
             ("succ", _succ),
             ("head", _head),
@@ -42,6 +43,7 @@ _typeFunction op
     | op == "-" = BinOp _sub_t
     | op == "/" = BinOp _div_t
     | op == "%" = BinOp _mod_t
+    | op == "//" = BinOp _quot_t
     | op == "||" = BinOp _or_t
     | op == "&&" = BinOp _and_t
     | op == "!" = UnOp _not_t
@@ -197,9 +199,26 @@ _mod0 x _ = Left $ TypeError T_Int (_getType x) $
 _mod_t :: BinaryOp
 _mod_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
 _mod_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
-        "`%`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
+    "`%`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
 _mod_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-        "`%`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
+    "`%`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
+
+_quot :: Op
+_quot = BinOp _mod0
+
+_quot0 :: BinaryOp
+_quot0 (Int x) (Int y) = Right $ Int $ mod x y
+_quot0 (Int _) y = Left $ TypeError T_Int (_getType y) $
+    "`//`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
+_quot0 x _ = Left $ TypeError T_Int (_getType x) $
+    "`//`: Illegal input type in the first argument: Expected `Int` but got `" ++ show (_getType x) ++ "`"
+
+_quot_t :: BinaryOp
+_quot_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_quot_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
+    "`//`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
+_quot_t (TypeCheck t) _ = Left $ TypeError T_Num t $
+    "`//`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
 _succ_t :: Wrd -> Either Error Wrd
 _succ_t (TypeCheck T_Int) = Right $ TypeCheck T_Int

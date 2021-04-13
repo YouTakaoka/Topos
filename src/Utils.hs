@@ -10,7 +10,7 @@ _traceShow x = trace (show x) x
 _traceIf :: Show a => Bool -> String -> a -> a
 _traceIf b s x = if b then trace s x else x
 
-smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "==", "!=", "&&", "||", "!", "+", "-", "*", "/", "=", "#", "|"]
+smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "==", "!=", "&&", "||", "!", "+", "-", "*", "//", "/", "%", "$", "=", "#", "|"]
 
 _isInitialSym :: String -> String -> Maybe String
 _isInitialSym str sym
