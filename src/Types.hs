@@ -1,5 +1,7 @@
 module Types where
 
+import Data.List
+
 data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck | T_ToEval | T_Num | T_Additive | T_Ord | T_Any deriving (Eq, Show)
 
 typeEq :: Type -> Type -> Bool
@@ -42,6 +44,7 @@ instance Eq Wrd where
     (==) (List l1) (List l2) = l1 == l2
     (==) (TypeCheck t1) (TypeCheck t2) = t1 == t2
     (==) (ToEval te1) (ToEval te2) = te1 == te2
+    (==) (Print a) (Print b) = a == b
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
@@ -56,7 +59,7 @@ instance Show Wrd where
     show Null = ""
     show (List l) = show l
     show (Pair t) = show t
-    show (Tuple a) = show a
+    show (Tuple tpl) = "(" ++ intercalate "," (map show tpl) ++ ")"
     show (ToEval _) = "[ToEval]"
     show (TypeCheck t) = show t
     show (PreList ls) = "(Prelist: " ++ show ls ++ ")"
