@@ -44,6 +44,8 @@ print (take 3 ls) # => [1,2,3]
 print (map succ ls) # => [2,3,4,5,6,7,8,9,10,11]
 print (map foo ls) # => [1,4,9,16,25,36,49,64,81,100]
 print (map fact ls) # => [1,2,6,24,120,720,5040,40320,362880,3628800]
-print ("hoge" + "fuga" + "piyo") # => hogefugapiyo
 print ([1, 2, 3] + [4, 5]) # => [1,2,3,4,5]
 print ([1, 2, 3] + map succ ls) # => [1,2,3,2,3,4,5,6,7,8,9,10,11]
+print "-------------------------------------"
+print "hoge" + "fuga" + "piyo" # => hogefugapiyo
+print "I'm " + $(25 + 6) + " years old." # => I'm 31 years old.

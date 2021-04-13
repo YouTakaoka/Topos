@@ -22,6 +22,7 @@ _opls = [
             ("/", _div),
             ("//", _quot),
             ("%", _mod),
+            ("$", _tostr),
             ("succ", _succ),
             ("head", _head),
             ("tail", _tail),
@@ -44,6 +45,7 @@ _typeFunction op
     | op == "/" = BinOp _div_t
     | op == "%" = BinOp _mod_t
     | op == "//" = BinOp _quot_t
+    | op == "$" = UnOp _tostr_t
     | op == "||" = BinOp _or_t
     | op == "&&" = BinOp _and_t
     | op == "!" = UnOp _not_t
@@ -220,6 +222,9 @@ _quot_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
 _quot_t (TypeCheck t) _ = Left $ TypeError T_Num t $
     "`//`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
+_succ :: Op
+_succ = UnOp _succ0
+
 _succ_t :: Wrd -> Either Error Wrd
 _succ_t (TypeCheck T_Int) = Right $ TypeCheck T_Int
 _succ_t (TypeCheck T_Double) = Right $ TypeCheck T_Double
@@ -231,8 +236,20 @@ _succ0 (Int x) = Right $ Int (x + 1)
 _succ0 (Double x) = Right $ Double (x + 1)
 _succ0 x = Left $ ValueError $ "succ: Illegal input value: " ++ (show x)
 
-_succ :: Op
-_succ = UnOp _succ0
+_tostr :: Op
+_tostr = UnOp _tostr0
+
+_tostr_t :: UnaryOp
+_tostr_t (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_tostr_t (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_tostr_t (TypeCheck t) = Left $ TypeError T_Num t $
+    "`$`: Illegal input type: Expected `Int` or `Double` or `Bool`, but got `" ++ show t ++ "`"
+
+_tostr0 :: UnaryOp
+_tostr0 (Int x) = Right $ Str $ show x
+_tostr0 (Double x) = Right $ Str $ show x
+_tostr0 (Bool x) = Right $ Str $ show x
+_tostr0 x = Left $ ValueError $ "`$`: Illegal input value: " ++ (show x)
 
 _eq_t :: Wrd -> Wrd -> Either Error Wrd
 _eq_t (TypeCheck t1) (TypeCheck t2) =

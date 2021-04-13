@@ -48,6 +48,10 @@ spec = do
             _eval M_Normal sqr_binds (toExp "1 + succ 3 #hogehoge") `shouldBe` Result (Int 5, sqr_binds)
         it "タプル" $
             _eval M_Normal  [] (toExp "print (pop [1,2,3])") `shouldBe` Result (Print "(1,[2,3])", [])
+        it "文字列" $
+            _eval M_Normal  [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+        it "文字列" $
+            _eval M_Normal  [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, [])
