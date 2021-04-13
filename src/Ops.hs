@@ -20,6 +20,7 @@ _opls = [
             ("-", _sub),
             ("*", _mul),
             ("/", _div),
+            ("%", _mod),
             ("succ", _succ),
             ("head", _head),
             ("tail", _tail),
@@ -40,6 +41,7 @@ _typeFunction op
     | op == "+" = BinOp _add_t
     | op == "-" = BinOp _sub_t
     | op == "/" = BinOp _div_t
+    | op == "%" = BinOp _mod_t
     | op == "||" = BinOp _or_t
     | op == "&&" = BinOp _and_t
     | op == "!" = UnOp _not_t
@@ -70,12 +72,30 @@ _print = UnOp _print0
 _print_t :: Wrd -> Either Error Wrd
 _print_t (TypeCheck _) = Right $ TypeCheck T_Print
 
+_mul :: Op
+
+_mul = BinOp _mul0
 _mul0 :: Wrd -> Wrd -> Either Error Wrd
 _mul0 (Double x) (Double y) = Right $ Double (x * y)
 _mul0 (Int x) (Int y) = Right $ Int (x * y)
 _mul0 (Int x) (Double y) = Right $ Double ((fromIntegral x) * y)
 _mul0 (Double x) (Int y) = Right $ Double (x * (fromIntegral y))
 _mul0 x y = Left $ ValueError $ "`*`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+
+_mul_t :: Wrd -> Wrd -> Either Error Wrd
+_mul_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_mul_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_mul_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_mul_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
+_mul_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_mul_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_mul_t (TypeCheck t) _ = Left $ TypeError T_Num t $
+    "`*`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+
+_div :: Op
+_div = BinOp _div0
 
 _div0 :: Wrd -> Wrd -> Either Error Wrd
 _div0 _ (Int 0) = Left $ ValueError "Zero division error."
@@ -86,6 +106,21 @@ _div0 (Int x) (Double y) = Right $ Double ((fromIntegral x) / y)
 _div0 (Double x) (Int y) = Right $ Double (x / (fromIntegral y))
 _div0 x y = Left $ ValueError $ "`/`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
+_div_t :: Wrd -> Wrd -> Either Error Wrd
+_div_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_div_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Double
+_div_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_div_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
+_div_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_div_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_div_t (TypeCheck t) _ = Left $ TypeError T_Num t $
+    "`/`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+
+_add :: Op
+_add = BinOp _add0
+
 _add0 :: Wrd -> Wrd -> Either Error Wrd
 _add0 (Double x) (Double y) = Right $ Double (x + y)
 _add0 (Int x) (Int y) = Right $ Int (x + y)
@@ -94,46 +129,6 @@ _add0 (Double x) (Int y) = Right $ Double (x + (fromIntegral y))
 _add0 (Str s1) (Str s2) = Right $ Str (s1 ++ s2)
 _add0 (List l1) (List l2) = toList (l1 ++ l2)
 _add0 x y = Left $ ValueError $ "`+`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
-
-_sub0 :: Wrd -> Wrd -> Either Error Wrd
-_sub0 (Double x) (Double y) = Right $ Double (x - y)
-_sub0 (Int x) (Int y) = Right $ Int (x - y)
-_sub0 (Int x) (Double y) = Right $ Double ((fromIntegral x) - y)
-_sub0 (Double x) (Int y) = Right $ Double (x - (fromIntegral y))
-_sub0 x y = Left $ ValueError $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
-
-_mul :: Op
-_mul = BinOp _mul0
-
-_mul_t :: Wrd -> Wrd -> Either Error Wrd
-_mul_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_mul_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_mul_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_mul_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-        "`*`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
-_div :: Op
-_div = BinOp _div0
-
-_div_t :: Wrd -> Wrd -> Either Error Wrd
-_div_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_div_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_div_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-        "`/`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
-_add :: Op
-_add = BinOp _add0
 
 _add_t :: Wrd -> Wrd -> Either Error Wrd
 _add_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
@@ -170,17 +165,41 @@ _add_t (TypeCheck t) _ = Left $ TypeError T_Additive t $
 _sub :: Op
 _sub = BinOp _sub0
 
+_sub0 :: Wrd -> Wrd -> Either Error Wrd
+_sub0 (Double x) (Double y) = Right $ Double (x - y)
+_sub0 (Int x) (Int y) = Right $ Int (x - y)
+_sub0 (Int x) (Double y) = Right $ Double ((fromIntegral x) - y)
+_sub0 (Double x) (Int y) = Right $ Double (x - (fromIntegral y))
+_sub0 x y = Left $ ValueError $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
+
 _sub_t :: Wrd -> Wrd -> Either Error Wrd
 _sub_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
 _sub_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+    "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
 _sub_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-        "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+    "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
 _sub_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-        "`-`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+    "`-`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+
+_mod :: Op
+_mod = BinOp _mod0
+
+_mod0 :: BinaryOp
+_mod0 (Int x) (Int y) = Right $ Int $ div x y
+_mod0 (Int _) y = Left $ TypeError T_Int (_getType y) $
+    "`%`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
+_mod0 x _ = Left $ TypeError T_Int (_getType x) $
+    "`%`: Illegal input type in the first argument: Expected `Int` but got `" ++ show (_getType x) ++ "`"
+
+_mod_t :: BinaryOp
+_mod_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_mod_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
+        "`%`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
+_mod_t (TypeCheck t) _ = Left $ TypeError T_Num t $
+        "`%`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
 _succ_t :: Wrd -> Either Error Wrd
 _succ_t (TypeCheck T_Int) = Right $ TypeCheck T_Int
