@@ -1,4 +1,4 @@
-name:                Topos
+name:                topos
 version:             0.1.0.0
 github:              "YouTakaoka/Topos"
 license:             BSD3
@@ -26,7 +26,7 @@ library:
   source-dirs: src
 
 executables:
-  Topos:
+  topos:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -34,7 +34,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - Topos
+    - topos
     - hspec
 
 tests:
@@ -46,5 +46,5 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - Topos
+    - topos
     - hspec
