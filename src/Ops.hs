@@ -190,7 +190,7 @@ _mod :: Op
 _mod = BinOp _mod0
 
 _mod0 :: BinaryOp
-_mod0 (Int x) (Int y) = Right $ Int $ div x y
+_mod0 (Int x) (Int y) = Right $ Int $ mod x y
 _mod0 (Int _) y = Left $ TypeError T_Int (_getType y) $
     "`%`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
 _mod0 x _ = Left $ TypeError T_Int (_getType x) $
@@ -204,10 +204,10 @@ _mod_t (TypeCheck t) _ = Left $ TypeError T_Num t $
     "`%`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
 _quot :: Op
-_quot = BinOp _mod0
+_quot = BinOp _quot0
 
 _quot0 :: BinaryOp
-_quot0 (Int x) (Int y) = Right $ Int $ mod x y
+_quot0 (Int x) (Int y) = Right $ Int $ div x y
 _quot0 (Int _) y = Left $ TypeError T_Int (_getType y) $
     "`//`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
 _quot0 x _ = Left $ TypeError T_Int (_getType x) $
