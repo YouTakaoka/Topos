@@ -306,33 +306,29 @@ _eval mode binds (Tobe "if" : rest) =
                                 | otherwise -> Error $ SyntaxError $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`"
                     Result (w, _) -> Error $ InternalError $ "Unexpected return type: " ++ show (_getType w)
 _eval mode binds expr =
-    case divListBy (Tobe "#") expr of --コメント探し
-    Just (_, expr1, expr2) ->
-        _eval mode binds expr1
-    Nothing ->
-        case findParenthesis expr "(" ")" of
+    case findParenthesis expr "(" ")" of
+    ParError s -> Error $ ParseError s
+    ParFound (expr1, expr2, expr3) ->
+        case _eval mode binds expr2 of
+            Result (Contents ls, _) -> _eval mode binds $ expr1 ++ [Tuple ls] ++ expr3
+            Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+            Error e -> Error e
+    ParNotFound ->
+        case findParenthesis expr "[" "]" of
         ParError s -> Error $ ParseError s
         ParFound (expr1, expr2, expr3) ->
             case _eval mode binds expr2 of
-                Result (Contents ls, _) -> _eval mode binds $ expr1 ++ [Tuple ls] ++ expr3
-                Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
-                Error e -> Error e
-        ParNotFound ->
-            case findParenthesis expr "[" "]" of
-            ParError s -> Error $ ParseError s
-            ParFound (expr1, expr2, expr3) ->
-                case _eval mode binds expr2 of
-                Result (Contents ls, _) ->
-                    case toList ls of
-                        Left e -> Error e
-                        Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr3
-                Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
-                Error e -> Error e
-            ParNotFound ->
-                case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
+            Result (Contents ls, _) ->
+                case toList ls of
                     Left e -> Error e
-                    Right [w] -> Result (w, binds)
-                    Right ls -> Result (Contents ls, binds)
+                    Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr3
+            Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+            Error e -> Error e
+        ParNotFound ->
+            case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
+                Left e -> Error e
+                Right [w] -> Result (w, binds)
+                Right ls -> Result (Contents ls, binds)
 
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
