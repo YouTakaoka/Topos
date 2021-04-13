@@ -27,3 +27,24 @@ print "Hello, world!"
 ```
 
 Then run ```topos hello.top``` in the same directry to see the expected output.
+
+In script mode, error occurence stops the execution of script.
+
+# Basic concepts
+## Types
+Topos has following basic types.
+
+|Type Name|Formal Expression|    Example    |
+|---------|-----------------|---------------|
+|   Int   |       Int       |       5       |
+| Double  |      Double     |     3.14      |
+| String  |      String     |"Hello, world!"|
+| Bool    |       Bool      |     True      |
+|Function |Function <t1,..., tn -> t>|Function <Int -> Int>: x -> x * x|
+|  List   |      List t     |    [2,3,5]    |
+|  Tuple  |   (t1,..., tn)  |("Takaoka", 31)|
+
+## Operators, functions and function operators
+
+
+You may also check ```test.top``` file to see some example of Topos code.
