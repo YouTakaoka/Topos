@@ -36,7 +36,8 @@ print ( swap ( 4 , "takaoka" ) )
 let ls = seq 1 10
 print ( pop ls )
 print "-------------------------------"
-define sum as Function < List Int -> Int > : ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
+define sum as Function < List Int -> Int >:\ #複数行の確認
+    ls -> if isEmpty ls then 0 else sum ( tail ls ) + head ls
 print ( sum ls == 55 )
 print ( take 3 ls == [ 1 , 2 , 3 ] )
 print ( map succ ls )
@@ -46,5 +47,4 @@ print ("hoge" + "fuga" + "piyo")
 print ([1, 2, 3] + [4, 5])
 print ([1, 2, 3] + map succ ls)
 
-
-print hoge
+print hoge # エラー時に行番号を正しく出力するかの確認。

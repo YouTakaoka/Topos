@@ -6,8 +6,10 @@ import System.Environment (getArgs)
 import System.IO
 
 interpret :: Int -> [String] -> [Bind] -> IO ()
-interpret cnt (str: rest) binds =
-    case _eval M_Normal binds (toExp str) of
+interpret _ [] _ = return ()
+interpret cnt strs binds =
+    let (expr, rest) = getExpression strs
+    in case _eval M_Normal binds expr of
         Error e -> do
             hPutStrLn stderr $ "Line " ++ show cnt ++ ": " ++ show e
         Result (Print res, binds2) -> do
@@ -15,7 +17,6 @@ interpret cnt (str: rest) binds =
             interpret (cnt + 1) rest binds2
         Result (_, binds2) -> do
             interpret (cnt + 1) rest binds2
-interpret _ [] _ = return ()
 
 main = do
     args <- getArgs
