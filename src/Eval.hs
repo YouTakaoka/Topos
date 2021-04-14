@@ -114,12 +114,17 @@ _examineInputList expr =
 _applyOp :: String -> Op -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
 _applyOp opName op ws1 (y : rest2) =
     case op of
-    BinOp binop -> 
-        let x = last ws1
-            rest1 = init ws1
-        in case binop x y of
-            Left e -> Left e
-            Right w -> Right $ rest1 ++ [w] ++ rest2
+    BinOp binop
+        | null ws1 ->
+            case binop Null y of
+                Left e -> Left e
+                Right w -> Right $ w: rest2
+        | otherwise ->
+            let x = last ws1
+                rest1 = init ws1
+            in case binop x y of
+                Left e -> Left e
+                Right w -> Right $ rest1 ++ [w] ++ rest2
     UnOp unop ->
         case unop y of
             Left e -> Left e

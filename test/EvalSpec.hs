@@ -24,6 +24,8 @@ spec = do
             _eval M_Normal [] (toExp "10 % 3") `shouldBe` Result (Int 1, [])
         it "ただの計算5" $
             _eval M_Normal [] (toExp "10 // 3") `shouldBe` Result (Int 3, [])
+        it "ただの計算6" $
+            _eval M_Normal [] (toExp "(-5) * 3") `shouldBe` Result (Int (-15), [])
         it "関数リテラル1" $
             _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> x * x) 3") `shouldBe` Result (Int 9, [])
         it "if条件分岐1" $

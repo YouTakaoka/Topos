@@ -170,6 +170,8 @@ _sub :: Op
 _sub = BinOp _sub0
 
 _sub0 :: Wrd -> Wrd -> Either Error Wrd
+_sub0 Null (Int y) = Right $ Int (-y)
+_sub0 Null (Double y) = Right $ Double (-y)
 _sub0 (Double x) (Double y) = Right $ Double (x - y)
 _sub0 (Int x) (Int y) = Right $ Int (x - y)
 _sub0 (Int x) (Double y) = Right $ Double ((fromIntegral x) - y)
@@ -177,10 +179,14 @@ _sub0 (Double x) (Int y) = Right $ Double (x - (fromIntegral y))
 _sub0 x y = Left $ ValueError $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub_t :: Wrd -> Wrd -> Either Error Wrd
+_sub_t (TypeCheck T_Null) (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_sub_t (TypeCheck T_Null) (TypeCheck T_Double) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
 _sub_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
 _sub_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
+_sub_t (TypeCheck T_Null) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`-`: Illegal input type: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
 _sub_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
     "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
 _sub_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
