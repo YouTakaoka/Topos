@@ -44,7 +44,4 @@ Topos has following basic types.
 |  List   |      List t     |    [2,3,5]    |
 |  Tuple  |   (t1,..., tn)  |("Takaoka", 31)|
 
-## Operators, functions and function operators
-
-
-You may also check ```test.top``` file to see some example of Topos code.
+You may also check ```test.top``` file to see some examples of Topos code.
