@@ -5,6 +5,7 @@ import Ops
 import Utils
 import Text.Read
 import Debug.Trace
+import Data.Maybe
 
 _findParenthesis :: Exp -> Integer -> Wrd -> Wrd -> Parenthesis
 _findParenthesis ws cnt b e = -- cnt は初期値 -1
@@ -26,37 +27,27 @@ _findParenthesis ws cnt b e = -- cnt は初期値 -1
 findParenthesis :: Exp -> String -> String -> Parenthesis
 findParenthesis ws b e = _findParenthesis ws (-1) (Tobe b) (Tobe e)
 
-_iterOps :: EvalMode -> [StrOp] -> Exp -> Maybe (StrOp, Exp, Exp)
-_iterOps mode strops expr =
-    let f = case mode of
-                M_Normal -> Func . Operator
-                M_TypeCheck -> TypeCheck . T_Func . T_Operator
-    in case dropWhile (\ sop -> divListBy (f sop) expr == Nothing) strops of
-        [] -> Nothing
-        (sop: _) -> 
-            let Just (_, ws1, ws2) = divListBy (f sop) expr
-            in case mode of
-                M_Normal -> Just (sop, ws1, ws2)
-                M_TypeCheck ->
-                    let opName = fst sop
-                        op_t = _typeFunction opName
-                    in Just ((opName, op_t), ws1, ws2)
+_opLvMatch :: EvalMode -> Int -> Wrd -> Bool
+_opLvMatch M_Normal lv (Func Operator { priority=prt }) = prt == lv
+_opLvMatch M_TypeCheck lv (TypeCheck (T_Func T_Operator { priority_t=prt })) = prt == lv
+_opLvMatch _ _ _ = False
 
-_numIn :: Wrd -> Exp -> Integer
-_numIn w ex = sum $ map (\ v -> if v == w then 1 else 0) ex 
-
-_isReplaceable :: [Bind] -> Exp -> Bool
-_isReplaceable binds ex = (<) 0 $ sum $ map (\ bind -> _numIn (Tobe $ identifier bind) ex) binds
+_iterOps :: EvalMode -> Int -> Exp -> Maybe (Wrd, Exp, Exp)
+_iterOps _ (-1) _ = Nothing
+_iterOps mode lv expr = -- lv: 初期値9
+    case divList (_opLvMatch mode lv) expr of
+        Nothing -> _iterOps mode (lv - 1) expr
+        Just (fw, expr1, expr2) -> Just (fw, expr1, expr2)
 
 _isFunction :: EvalMode -> Wrd -> Bool
-_isFunction M_Normal (Func Fun {}) = True
-_isFunction M_Normal (Func (Operator (_, FuncOp _))) = True
+_isFunction M_Normal (Func Function {}) = True
+_isFunction M_Normal (Func Operator { operator=FuncOp _}) = True
 _isFunction M_TypeCheck (TypeCheck (T_Func T_Function {})) = True
-_isFunction M_TypeCheck (TypeCheck (T_Func (T_Operator (_, FuncOp _)))) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func T_Operator { operator_t=FuncOp _})) = True
 _isFunction _ _ = False
 
 _isOp :: Wrd -> Bool
-_isOp (Func (Operator _)) = True
+_isOp (Func Operator {}) = True
 _isOp _ = False
 
 myReadDouble :: Either String Wrd -> Either String Wrd
@@ -91,19 +82,22 @@ _evalWrd mode (Tobe s) =
 _evalWrd M_TypeCheck (Str s) = TypeCheck T_String
 _evalWrd _ w = w
     
-_subOp :: EvalMode -> StrOp -> Exp -> Exp
-_subOp mode (opName, op) expr =
-    case divListBy (Tobe opName) expr of
+_subOp :: EvalMode -> Function -> Exp -> Exp
+_subOp mode op expr =
+    case divListBy (Tobe $ opName op) expr of
         Nothing -> expr
         Just (_, ws1, ws2) ->
             case mode of
-                M_Normal -> _subOp mode (opName, op) $ ws1 ++ [Func (Operator (opName, op))] ++ ws2
+                M_Normal -> _subOp mode op $ ws1 ++ [Func op] ++ ws2
                 M_TypeCheck ->
-                    let op_t = _typeFunction opName 
-                    in _subOp mode (opName, op) $ ws1 ++ [TypeCheck $ T_Func (T_Operator (opName, op_t))] ++ ws2
+                    let name = opName op
+                        op_t = _typeFunction name
+                        prt = priority op
+                        op2 = T_Operator { opName_t=name, operator_t=op_t, priority_t=prt }
+                    in _subOp mode op $ ws1 ++ [TypeCheck $ T_Func op2] ++ ws2
 
-_mulSubOp :: EvalMode -> [StrOp] -> Exp -> Exp
-_mulSubOp mode (strop: []) expr = _subOp mode strop expr
+_mulSubOp :: EvalMode -> [Function] -> Exp -> Exp
+_mulSubOp mode [strop] expr = _subOp mode strop expr
 _mulSubOp mode (strop: strops) expr = _mulSubOp mode strops $ _subOp mode strop expr
 
 _examineInput :: Wrd -> Maybe Error
@@ -117,8 +111,8 @@ _examineInputList expr =
         Just (Just e, _, _) -> Just e
         Nothing -> Nothing
 
-_applyOp :: StrOp -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
-_applyOp (opName, op) ws1 (y : rest2) =
+_applyOp :: String -> Op -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
+_applyOp opName op ws1 (y : rest2) =
     case op of
     BinOp binop -> 
         let x = last ws1
@@ -143,7 +137,7 @@ _applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
     case mode of
         M_Normal ->
-            let (Func (Fun f)) = f_w
+            let Func f = f_w
                 l = length $ args f
                 as = take l expr2
                 rest = drop l expr2
@@ -260,7 +254,7 @@ _eval mode binds (Tobe "Function" : rest) =
                                     Left e -> Error e
                                     Right t ->
                                         if t == rt
-                                            then Result (Func $ Fun f, binds)
+                                            then Result (Func f, binds)
                                             else Error $ TypeError rt t $
                                                 "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
                                                     ++ "` but Topos predicts `" ++ show t ++ "`"
@@ -352,26 +346,30 @@ _evalFunctions mode binds expr =
                                 Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
                 Nothing ->
                     case divList (_isFunction mode) ws of -- 関数探し
-                    Just (Func (Fun f), expr1, expr2) -> -- 関数
-                        case _applyFunction mode (Func (Fun f)) expr1 expr2 of
+                    Just (Func Function { args=as, ret_t=rt, ret=r }, expr1, expr2) -> -- 関数
+                        case _applyFunction mode (Func Function { args=as, ret_t=rt, ret=r }) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
-                    Just (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })), expr1, expr2) ->
+                    Just (TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }), expr1, expr2) ->
                         case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
-                    Just (Func (Operator (opName, FuncOp fnop)), ws1, ws2) -> -- 関数オペレータ
-                        case _applyOp (opName, FuncOp fnop) ws1 ws2 of
+                    Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- 関数オペレータ
+                        case _applyOp name op ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
-                    Just (TypeCheck(T_Func (T_Operator (opName, FuncOp fnop))), ws1, ws2) ->
-                        case _applyOp (opName, FuncOp fnop) ws1 ws2 of
+                    Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
+                        case _applyOp name op ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
                     Nothing ->
-                        case _iterOps mode _opls_dec ws of -- オペレータ探し
-                        Just (sop, ws1, ws2) -> -- オペレータが見つかった
-                            case _applyOp sop ws1 ws2 of
+                        case _iterOps mode 9 ws of -- オペレータ探し
+                        Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- オペレータが見つかった
+                            case _applyOp name op ws1 ws2 of
+                                Left e -> Error e
+                                Right ex -> _eval mode binds ex
+                        Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
+                            case _applyOp name op ws1 ws2 of
                                 Left e -> Error e
                                 Right ex -> _eval mode binds ex
                         Nothing -> -- オペレータ見つからなかった

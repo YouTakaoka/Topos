@@ -12,6 +12,8 @@ spec = do
         Result (_, sqr_binds) = _eval M_Normal  [] $ toExp "define sqr as Function < Int -> Int >: x -> x * x"
         Result (_, sqr_binds2) = _eval M_Normal  [] $ toExp "let sqr = Function < Int -> Int >: x -> x * x"
     describe "_eval（ノーマルモード）" $ do
+        it "ただの計算0" $
+            _eval M_Normal [] (toExp "4 * 2") `shouldBe` Result (Int 8, [])
         it "ただの計算1" $
             _eval M_Normal [] (toExp "4 * ( 2 + 3 )") `shouldBe` Result (Int 20, [])
         it "ただの計算2" $
@@ -56,9 +58,9 @@ spec = do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, [])
         it "_mulSubOp" $
-            _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t)))]
+            _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 }))]
         it "無理やり置き換え" $
-            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator ("*", BinOp _mul_t))), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
+            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 })), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
         it "Strが変換されない件1" $
             _eval M_TypeCheck [] [Str "hoge"] `shouldBe` Result (TypeCheck T_String, [])
         it "Strが変換されない件2" $

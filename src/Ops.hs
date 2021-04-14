@@ -4,35 +4,35 @@ import Types
 import Data.List
 import Debug.Trace
 
-_opls :: [StrOp]  -- 優先順位の低い順に並べる
+_opls :: [Function]  -- 0:優先順位低 -> 9:高
 _opls = [
-            ("print", _print),
-            ("||", _or),
-            ("&&", _and),
-            ("!", _not),
-            ("==", _eq),
-            ("!=", _neq),
-            (">", _gt),
-            (">=", _geq),
-            ("<", _lt),
-            ("<=", _leq),
-            ("+", _add),
-            ("-", _sub),
-            ("*", _mul),
-            ("/", _div),
-            ("//", _quot),
-            ("%", _mod),
-            ("$", _tostr),
-            ("succ", _succ),
-            ("head", _head),
-            ("tail", _tail),
-            ("pop", _pop),
-            ("isEmpty", _isEmpty),
-            ("take", _take),
-            ("seq", _seq),
-            ("map", _map),
-            ("fst", _fst),
-            ("snd", _snd)
+            Operator { opName="print", operator=_print, priority=0 },
+            Operator { opName="||", operator=_or, priority=1 },
+            Operator { opName="&&", operator=_and, priority=2 },
+            Operator { opName="!", operator=_not, priority=3 },
+            Operator { opName="==", operator=_eq, priority=4 },
+            Operator { opName="!=", operator=_neq, priority=4 },
+            Operator { opName=">", operator=_gt, priority=4 },
+            Operator { opName=">=", operator=_geq, priority=4 },
+            Operator { opName="<", operator=_lt, priority=4 },
+            Operator { opName="<=", operator=_leq, priority=4 },
+            Operator { opName="+", operator=_add, priority=5 },
+            Operator { opName="-", operator=_sub, priority=5 },
+            Operator { opName="*", operator=_mul, priority=6 },
+            Operator { opName="/", operator=_div, priority=6 },
+            Operator { opName="//", operator=_quot, priority=6 },
+            Operator { opName="%", operator=_mod, priority=6 },
+            Operator { opName="$", operator=_tostr, priority=7 },
+            Operator { opName="succ", operator=_succ, priority=9 },
+            Operator { opName="head", operator=_head, priority=9 },
+            Operator { opName="tail", operator=_tail, priority=9 },
+            Operator { opName="pop", operator=_pop, priority=9 },
+            Operator { opName="isEmpty", operator=_isEmpty, priority=9 },
+            Operator { opName="take", operator=_take, priority=9 },
+            Operator { opName="seq", operator=_seq, priority=9 },
+            Operator { opName="map", operator=_map, priority=9 },
+            Operator { opName="fst", operator=_fst, priority=9 },
+            Operator { opName="snd", operator=_snd, priority=9 }
         ]
 
 _opls_dec = reverse _opls
@@ -521,10 +521,9 @@ _getType (Tobe _) = T_Unknown
 _getType (List (w: _)) = T_List $ _getType w
 _getType (List []) = T_EmptyList
 _getType (Tuple tp) = T_Tuple $ map _getType tp
-_getType (Func (Operator (opName, _))) = T_Func (T_Operator (opName, _typeFunction opName))
-_getType (Func (Fun (Function { args = as, ret_t = rt, ret = _ }))) =
-    let ast = map (\ (t, a) -> t) as
-    in T_Func (T_Function { args_t = ast, return_t = rt })
+_getType (Func Operator { opName=name, priority=prt }) =
+    T_Func (T_Operator {opName_t=name, operator_t=_typeFunction name, priority_t=prt})
+_getType (Func f) = T_Func $ getFunctionSignature f
 _getType (Type _) = T_Type
 
 _isConsistentType :: Exp -> Either (Type, Type) Type

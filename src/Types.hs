@@ -2,7 +2,7 @@ module Types where
 
 import Data.List
 
-data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Func | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck | T_ToEval | T_Num | T_Additive | T_Ord | T_Any deriving (Eq, Show)
+data Type = T_Int | T_Double | T_Bool | T_String | T_Func T_Function | T_UnaryOp | T_BinaryOp | T_FunctionOp | T_PreList | T_List Type | T_EmptyList | T_Tuple [Type] | T_Print | T_Unknown | T_Type | T_Error | T_TypeCheck | T_ToEval | T_Num | T_Additive | T_Ord | T_Any deriving (Eq, Show)
 
 typeEq :: Type -> Type -> Bool
 typeEq T_Unknown _ = False
@@ -21,20 +21,37 @@ instance Show Op where
     show (BinOp _) = "[BinOp]"
     show (UnOp _) = "[UnOp]"
     show (FuncOp _) = "[FuncOp]"
-type StrOp = (String, Op)
 
-data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp } deriving (Show, Eq)
-data Func = Fun Function | Operator StrOp deriving Show
-data T_Func = T_Function { args_t :: [Type], return_t :: Type } | T_Operator (String, Op) deriving Show
-instance Eq T_Func where
-    (==) (T_Function { args_t = at1, return_t = rt1 }) (T_Function { args_t = at2, return_t = rt2}) = at1 == at2 && rt1 == rt2
-    (==) (T_Operator (s1, _)) (T_Operator (s2, _)) = s1 == s2
+data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp }
+            | Operator { opName :: String, operator :: Op, priority :: Int } deriving Show
+data T_Function = T_Function { args_t :: [Type], return_t :: Type } 
+            | T_Operator { opName_t :: String, operator_t :: Op, priority_t :: Int } deriving Show
+instance Eq T_Function where
+    (==) T_Function { args_t = at1, return_t = rt1 } T_Function { args_t = at2, return_t = rt2} = at1 == at2 && rt1 == rt2
+    (==) T_Operator { opName_t=s1 } T_Operator { opName_t = s2 } = s1 == s2
     (==) _ _ = False
 data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
-data Wrd = Str String | Func Func | Bnd Bind | Print String | Tobe String | Double Double | Int Int | Bool Bool | Null | List Exp | ToEval Exp | Err String | Pair (Wrd, Wrd) | PreList [Exp] | Type Type | Contents Exp | Tuple Exp | TypeCheck Type -- TODO: Error型を作る: UnknownKeywordErrorなど
+data Wrd = Str String 
+        | Func Function 
+        | Bnd Bind 
+        | Print String 
+        | Tobe String 
+        | Double Double 
+        | Int Int 
+        | Bool Bool 
+        | Null 
+        | List Exp 
+        | ToEval Exp 
+        | Err String 
+        | Pair (Wrd, Wrd) 
+        | PreList [Exp] 
+        | Type Type 
+        | Contents Exp 
+        | Tuple Exp 
+        | TypeCheck Type
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
-    (==) (Func (Operator (a, _))) (Func (Operator (b, _))) = a == b
+    (==) (Func Operator { opName=a }) (Func Operator { opName=b }) = a == b
     (==) (Bnd bind1) (Bnd bind2) = bind1 == bind2
     (==) (Tobe a) (Tobe b) = a == b
     (==) (Double a) (Double b) = a == b
@@ -48,8 +65,8 @@ instance Eq Wrd where
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
-    show (Func (Operator (s, _))) = "[Operator:" ++ s ++ "]"
-    show (Func (Fun f)) = show f 
+    show (Func (Operator { opName = s })) = "[Operator:" ++ s ++ "]"
+    show (Func f) = show $ getFunctionSignature f
     show (Bnd bind) = show bind
     show (Print p) = p
     show (Tobe s) = s
@@ -91,3 +108,8 @@ instance Eq Result where
     (==) _ _ = False
 
 data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける
+
+getFunctionSignature :: Function -> T_Function
+getFunctionSignature Function { args = as, ret_t = rt, ret = _ } =
+    let ast = map (\ (t, a) -> t) as
+    in T_Function { args_t = ast, return_t = rt }
