@@ -48,7 +48,7 @@ Topos has following basic types.
 ## Operators
 Here's a list of basic topos operators.
 
-|Operator|  Description  | Class |Priority|Example of Use|
+|Operator|  Description  | Class |Priority|Example Usage|
 |--------|---------------|-------|--------|-----------|
 |```\|\|```|Logical "or"|BinaryOp|1|```4 < 2 \|\| 4 > 5``` => ```False```|
 |```&&```|Logical "and"|BinaryOp|2|```4 >= 2 && 4 <= 5``` => ```True```|
@@ -68,4 +68,24 @@ Here's a list of basic topos operators.
 |```$```|Converts input to string|UnaryOp|7|```"I'm " + $(25 + 6) + " years old."``` => ```"I'm 31 years old."```|
 
 All operators in Topos are left associative.
-Priority 9 is the most high priority.
+Priority 7 is the highest priority.
+
+## Functions
+In Topos, functions have the same priority, which is higher than that of operators (except for ```print``` function).
+That is, ```print``` function has priority 0 (lowest), and other functions (predefined and user defined) have priority 9 (highest).
+
+Basic predefined functions are follows:
+
+| Function name | Signature |Description | Example Usage |
+|---------------|-----------|------------|---------------|
+|```print```|```Int/Double/Bool/String -> Print```|Evaluate given expression and print result to the display|```print (3 + 5)``` => ```8```|
+|```succ```|```Int -> Int``` / ```Double -> Double```|Add one to the given number and return it|```succ 5``` => ```6```|
+|```head```|```List a -> a```|Return the first element of given list|```head [1,2,3]``` => ```1```|
+|```tail```|```List a -> List a```|Omit the first element of given list and return it|```tail [1,2,3]``` => ```[2,3]```|
+|```pop```|```List a -> (a, List a)```|Return the tuple composed of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
+|```isEmpty```|```List a -> Bool```|Return ```True``` if the given list is empty and ```False``` otherwise|```isEmpty []``` => ```True```|
+|```take```|```List a -> List a```|||
+|```seq```|```Int, Int -> List a```|||
+|```map```|```Function <a -> b>, List a -> List b```|||
+|```fst```|```fst (a, b) -> a```|||
+|```snd```|```fst (a, b) -> b```|||
