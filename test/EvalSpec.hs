@@ -46,6 +46,10 @@ spec = do
             _eval M_Normal sqr_binds2 (toExp "1 + sqr 3") `shouldBe` Result (Int 10, sqr_binds2)
         it "計算の順序5" $
             _eval M_Normal [] (toExp "1 + (Function <Int -> Int>: x -> x * x) 3") `shouldBe` Result (Int 10, [])
+        it "計算の順序6" $
+            _eval M_Normal [] (toExp "2 ^ 4") `shouldBe` Result (Int 16, [])
+        it "計算の順序7" $
+            _eval M_Normal [] (toExp "4 ^ 0.5") `shouldBe` Result (Double 2.0, [])
         it "リスト処理（PreList）のバグ" $
             _eval M_Normal [] (toExp "[1,2,3] + map succ [4,5]") `shouldBe` Result (List [Int 1, Int 2, Int 3, Int 5, Int 6], [])
         it "isEmpty 1" $
@@ -85,3 +89,5 @@ spec = do
             _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError T_Int T_Double "")
         it "関数の型エラー3" $
             _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError T_Int T_Double "")
+        it "関数の型エラー4" $
+            _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError T_Num T_String "")

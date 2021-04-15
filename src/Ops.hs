@@ -22,7 +22,8 @@ _opls = [
             Operator { opName="/", operator=_div, priority=6 },
             Operator { opName="//", operator=_quot, priority=6 },
             Operator { opName="%", operator=_mod, priority=6 },
-            Operator { opName="$", operator=_tostr, priority=7 },
+            Operator { opName="^", operator=_pow, priority=7 },
+            Operator { opName="$", operator=_tostr, priority=8 },
             Operator { opName="succ", operator=_succ, priority=9 },
             Operator { opName="head", operator=_head, priority=9 },
             Operator { opName="tail", operator=_tail, priority=9 },
@@ -55,6 +56,7 @@ _typeFunction op
     | op == ">=" = BinOp _geq_t
     | op == "<" = BinOp _lt_t
     | op == "<=" = BinOp _leq_t
+    | op == "^" = BinOp _pow_t
     | op == "print" = UnOp _print_t
     | op == "succ" = UnOp _succ_t
     | op == "head" = UnOp _head_t
@@ -200,9 +202,9 @@ _mod = BinOp _mod0
 _mod0 :: BinaryOp
 _mod0 (Int x) (Int y) = Right $ Int $ mod x y
 _mod0 (Int _) y = Left $ TypeError T_Int (_getType y) $
-    "`%`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
+    "`%`: Illegal input value in the second argument: Expected `Int` but got `" ++ show y ++ "`"
 _mod0 x _ = Left $ TypeError T_Int (_getType x) $
-    "`%`: Illegal input type in the first argument: Expected `Int` but got `" ++ show (_getType x) ++ "`"
+    "`%`: Illegal input value in the first argument: Expected `Int` but got `" ++ show x ++ "`"
 
 _mod_t :: BinaryOp
 _mod_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
@@ -217,9 +219,9 @@ _quot = BinOp _quot0
 _quot0 :: BinaryOp
 _quot0 (Int x) (Int y) = Right $ Int $ div x y
 _quot0 (Int _) y = Left $ TypeError T_Int (_getType y) $
-    "`//`: Illegal input type in the second argument: Expected `Int` but got `" ++ show (_getType y) ++ "`"
+    "`//`: Illegal input value in the second argument: Expected `Int` but got `" ++ show y ++ "`"
 _quot0 x _ = Left $ TypeError T_Int (_getType x) $
-    "`//`: Illegal input type in the first argument: Expected `Int` but got `" ++ show (_getType x) ++ "`"
+    "`//`: Illegal input value in the first argument: Expected `Int` but got `" ++ show x ++ "`"
 
 _quot_t :: BinaryOp
 _quot_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
@@ -241,6 +243,30 @@ _succ0 :: Wrd -> Either Error Wrd
 _succ0 (Int x) = Right $ Int (x + 1)
 _succ0 (Double x) = Right $ Double (x + 1)
 _succ0 x = Left $ ValueError $ "succ: Illegal input value: " ++ (show x)
+
+_pow :: Op
+_pow = BinOp _pow0
+
+_pow0 :: BinaryOp
+_pow0 (Int x) (Int y) = Right $ Int $ x ^ y
+_pow0 (Int x) (Double y) = Right $ Double $ (fromIntegral x) ** y
+_pow0 (Double x) (Int y) = Right $ Double $ x ^ y
+_pow0 (Double x) (Double y) = Right $ Double $ x ** y
+_pow0 x (Int y) = Left $ ValueError $ "`^`: Illegal input value in the first argument: " ++ show x
+_pow0 x (Double y) = Left $ ValueError $ "`^`: Illegal input value in the first argument: " ++ show x
+_pow0 _ y = Left $ ValueError $ "`^`: Illegal input value in the second argument: " ++ show y
+
+_pow_t :: BinaryOp 
+_pow_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_pow_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
+_pow_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
+_pow_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
+_pow_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`^`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_pow_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
+    "`^`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_pow_t (TypeCheck t) _ = Left $ TypeError T_Num t $
+    "`^`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
 
 _tostr :: Op
 _tostr = UnOp _tostr0
