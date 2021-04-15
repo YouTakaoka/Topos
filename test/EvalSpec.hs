@@ -48,6 +48,10 @@ spec = do
             _eval M_Normal [] (toExp "1 + (Function <Int -> Int>: x -> x * x) 3") `shouldBe` Result (Int 10, [])
         it "リスト処理（PreList）のバグ" $
             _eval M_Normal [] (toExp "[1,2,3] + map succ [4,5]") `shouldBe` Result (List [Int 1, Int 2, Int 3, Int 5, Int 6], [])
+        it "isEmpty 1" $
+            _eval M_Normal [] (toExp "isEmpty []") `shouldBe` Result (Bool True, [])
+        it "isEmpty 2" $
+            _eval M_Normal [] (toExp "isEmpty [1]") `shouldBe` Result (Bool False, [])
         it "コメント" $
             _eval M_Normal sqr_binds (toExp "1 + succ 3 #hogehoge") `shouldBe` Result (Int 5, sqr_binds)
         it "タプル" $

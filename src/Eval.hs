@@ -321,11 +321,13 @@ _eval mode binds expr =
                 case toList ls of
                     Left e -> Error e
                     Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr3
-            Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+            Result (Null, _) -> _eval mode binds $ expr1 ++ [List []] ++ expr3
+            Result (w, _) -> _eval mode binds $ expr1 ++ [List [w]] ++ expr3
             Error e -> Error e
         ParNotFound ->
             case _evalFunctionsEach mode binds $ divListInto (Tobe ",") expr of
                 Left e -> Error e
+                Right [] -> Result (Null, binds)
                 Right [w] -> Result (w, binds)
                 Right ls -> Result (Contents ls, binds)
 
