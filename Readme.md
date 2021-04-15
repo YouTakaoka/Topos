@@ -12,7 +12,7 @@ To install Topos, you need [Haskell Stack](https://docs.haskellstack.org/en/stab
 # How to use
 ## Interactive mode
 You can simply type ```topos``` on terminal to start the interactive shell of Topos.
-In the interactive mode, you may directly input expressions like ```(3 + 5) / 2``` and ```3 * succ 4```, then Topos evaluate and display them.
+In the interactive mode, you may directly input expressions like ```(3 + 5) / 2``` and ```3 * succ 4```, then Topos evaluate them and display results.
 
 To quit the interactive mode, press ```Ctrl-D```.
 
@@ -27,6 +27,7 @@ print "Hello, world!"
 ```
 
 Then run ```topos hello.top``` in the same directry to see the expected output.
+You may also check ```test.top``` file to see some examples of Topos code.
 
 In script mode, error occurence stops the execution of script.
 
@@ -68,5 +69,3 @@ Here's a list of basic topos operators.
 
 All operators in Topos are left associative.
 Priority 9 is the most high priority.
-
-You may also check ```test.top``` file to see some examples of Topos code.
