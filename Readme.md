@@ -45,6 +45,8 @@ Topos has following basic types.
 |  List   |      List t     |    [2,3,5]    |
 |  Tuple  |   (t1,..., tn)  |("Takaoka", 31)|
 
+Number without decimal point will be automatically interpreted as integer type.
+
 ## Operators
 Here's a list of basic topos operators.
 
@@ -82,10 +84,10 @@ Basic predefined functions are follows:
 |```succ```|```Int -> Int``` / ```Double -> Double```|Add one to the given number and return it|```succ 5``` => ```6```|
 |```head```|```List a -> a```|Return the first element of given list|```head [1,2,3]``` => ```1```|
 |```tail```|```List a -> List a```|Omit the first element of given list and return it|```tail [1,2,3]``` => ```[2,3]```|
-|```pop```|```List a -> (a, List a)```|Return the tuple composed of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
+|```pop```|```List a -> (a, List a)```|Return the tuple compsists of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
 |```isEmpty```|```List a -> Bool```|Return ```True``` if the given list is empty and ```False``` otherwise|```isEmpty []``` => ```True```|
-|```take```|```List a -> List a```|||
-|```seq```|```Int, Int -> List a```|||
-|```map```|```Function <a -> b>, List a -> List b```|||
-|```fst```|```fst (a, b) -> a```|||
-|```snd```|```fst (a, b) -> b```|||
+|```take```|```Int, List a -> List a```|Return list consists of first ```n``` elements of the list given in the second argument, where ```n``` is integer specified in the first argument|```take 2 ["foo", "bar", "baz"]``` => ```["foo", "bar"]```|
+|```seq```|```Int, Int -> List a```|Return integer list starts with number specified in the first argument, ends with the second argument|```seq 1 3``` => ```[1,2,3]```|
+|```map```|```Function <a -> b>, List a -> List b```|Apply function given in the first argument to each element of list given in the second argument and return it|```map succ [1,2,3]``` => ```[2,3,4]```|
+|```fst```|```fst (a, b) -> a```|Return the first element of given tuple|```fst ("Takaoka", 31)``` => ```"Takaoka"```|
+|```snd```|```snd (a, b) -> b```|Return the second element of given tuple|```snd ("Takaoka", 31)``` => ```31```|
