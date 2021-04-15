@@ -44,4 +44,29 @@ Topos has following basic types.
 |  List   |      List t     |    [2,3,5]    |
 |  Tuple  |   (t1,..., tn)  |("Takaoka", 31)|
 
+## Operators
+Here's a list of basic topos operators.
+
+|Operator|  Description  | Class |Priority|Example of Use|
+|--------|---------------|-------|--------|-----------|
+|```\|\|```|Logical "or"|BinaryOp|1|```4 < 2 \|\| 4 > 5``` => ```False```|
+|```&&```|Logical "and"|BinaryOp|2|```4 >= 2 && 4 <= 5``` => ```True```|
+|```!```|Logical "not"|UnaryOp|3|```!(3 > 0)``` => ```False```|
+|```==```|Return ```True``` if both sides are equal, otherwise ```False```|BinaryOp|4|```2 + 3 == 5``` => ```True```|
+|```!=```|Return ```True``` if both sides are not equal, otherwise ```False```|BinaryOp|4|```2 + 3 != 5``` => ```False```|
+|```>```|Return ```True``` if LHS is greater than RHS, otherwise ```False```|BinaryOp|4|```4 > 5``` => ```False```|
+|```>=```|Return ```True``` if LHS is greater than or equal to RHS, otherwise ```False```|BinaryOp|4|```2 + 3 >= 5``` => ```True```|
+|```<```|Return ```True``` if LHS is less than RHS, otherwise ```False```|BinaryOp|4|```4 < 5``` => ```True```|
+|```<=```|Return ```True``` if LHS is less than or equal to RHS, otherwise ```False```|BinaryOp|4|```2 + 3 <= 5``` => ```True```|
+|```+```|Add two numbers / Concatenate two lists or strings|BinaryOp|5|```2 + 3``` => ```5``` / ```"foo" + "bar"``` => ```foobar```|
+|```-```|Subtract the right number from the left number / Change sign of number|BinaryOp/UnaryOp|5|```5 - 2``` => ```3``` / ```4 * (-2)``` => ```-8```|
+|```*```|Multiply two numbers|BinaryOp|6|```3 * 5``` => ```15```|
+|```/```|Divide the left number by the right number (the result is a floating point number)|BinaryOp|6|```5 / 2``` => ```2.5```|
+|```//```|Divide the left number by the right number and omit the part after decimal point|BinaryOp|6|```5 // 2``` => ```2```|
+|```%```|Yields the remainder from the division of the left number by the right number|BinaryOp|6|```8 % 3``` => ```2```|
+|```$```|Converts input to string|UnaryOp|7|```"I'm " + $(25 + 6) + " years old."``` => ```"I'm 31 years old."```|
+
+All operators in Topos are left associative.
+Priority 9 is the most high priority.
+
 You may also check ```test.top``` file to see some examples of Topos code.
