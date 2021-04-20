@@ -1,5 +1,6 @@
 module Types where
 
+import Parser
 import Data.List
 
 data Type = T_Int 
@@ -34,24 +35,57 @@ typeEq T_Unknown _ = False
 typeEq _ T_Unknown = False
 typeEq t1 t2 = t1 == t2
 
-(@=) :: Type -> Type -> Bool
-(@=) T_EmptyList (T_List _) = True
-(@=) _ T_Any = True
-(@=) T_Int T_Num = True
-(@=) T_Double T_Num = True
-(@=) T_Int T_Additive = True
-(@=) T_Double T_Additive = True
-(@=) T_String T_Additive = True
-(@=) (T_List _) T_Additive = True
-(@=) T_Int T_Ord = True
-(@=) T_Double T_Ord = True
-(@=) T_Int T_Eq = True
-(@=) T_Double T_Eq = True
-(@=) T_Bool T_Eq = True
-(@=) T_String T_Eq = True
-(@=) (T_List t) T_Eq = t @= T_Eq
-(@=) (T_Tuple ls) T_Eq = all (@= T_Eq) ls
-(@=) t1 t2 = typeEq t1 t2
+_typeCheck :: [Bind] -> Type -> Type -> Maybe [Bind]
+_typeCheck binds T_EmptyList (T_List _) = Just binds
+_typeCheck binds _ T_Any = Just binds
+_typeCheck binds T_Int T_Num = Just binds
+_typeCheck binds T_Double T_Num = Just binds
+_typeCheck binds T_Int T_Additive = Just binds
+_typeCheck binds T_Double T_Additive = Just binds
+_typeCheck binds T_String T_Additive = Just binds
+_typeCheck binds (T_List _) T_Additive = Just binds
+_typeCheck binds T_Int T_Ord = Just binds
+_typeCheck binds T_Double T_Ord = Just binds
+_typeCheck binds T_Int T_Eq = Just binds
+_typeCheck binds T_Double T_Eq = Just binds
+_typeCheck binds T_Bool T_Eq = Just binds
+_typeCheck binds T_String T_Eq = Just binds
+_typeCheck binds T_Num T_Eq = Just binds
+_typeCheck binds (T_List t) T_Eq = _typeCheck binds t T_Eq
+_typeCheck binds (T_Tuple ls) T_Eq = foldl (\ x y ->
+    case x of
+        Nothing -> Nothing
+        Just bs1 ->
+            case y of
+                Nothing -> Nothing
+                Just bs2 -> Just $ bs1 ++ bs2)
+    (Just []) $ map (\ x -> _typeCheck binds x T_Eq) ls
+_typeCheck binds t1 (T_TypeVar t2 str) =
+    case divList (\ b -> identifier b == str) binds of
+        Nothing ->
+            case _typeCheck binds t1 t2 of
+                Nothing -> Nothing
+                Just _ -> Just (Bind { identifier=str, vtype=T_Type, value=Type t1 } : binds)
+        Just (b, _, _) ->
+            _typeCheck binds t1 $ (\ (Type x) -> x) $ value b
+_typeCheck binds (T_List t1) (T_List t2) = _typeCheck binds t1 t2
+_typeCheck binds (T_Tuple []) (T_Tuple []) = Just binds
+_typeCheck binds (T_Tuple []) _ = Nothing
+_typeCheck binds _ (T_Tuple []) = Nothing
+_typeCheck binds (T_Tuple (t1: ls1)) (T_Tuple (t2: ls2)) =
+    case _typeCheck binds t1 t2 of
+        Nothing -> Nothing
+        Just binds2 -> _typeCheck binds2 (T_Tuple ls1) (T_Tuple ls2)
+_typeCheck binds t1 t2 = if typeEq t1 t2 then Just binds else Nothing
+
+_typeSub :: [Bind] -> Type -> Type
+_typeSub binds (T_TypeVar t str) =
+    case divList (\ b -> identifier b == str) binds of
+        Nothing -> T_TypeVar t str
+        Just (b, _, _) -> (\ (Type x) -> x) $ value b
+_typeSub binds (T_List t) = T_List $ _typeSub binds t
+_typeSub binds (T_Tuple ls) = T_Tuple $ map (_typeSub binds) ls
+_typeSub _ t = t
 
 type BinaryOp = Wrd -> Wrd -> Either Error Wrd
 type UnaryOp = Wrd -> Either Error Wrd

@@ -167,9 +167,9 @@ validateOp name op_sig ws1 (TypeCheck y_t: rest2) =
                     Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
                 else
                     let ts2 = map (\ (TypeCheck x) -> x) ws2
-                    in case validateFuncSig ts2 ts of
-                        Nothing -> Right $ ws1 ++ [TypeCheck t_r] ++ drop l ws2
-                        Just te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+                    in case validateFuncSig ts2 ts t_r of
+                        Right t -> Right $ ws1 ++ [TypeCheck t] ++ drop l ws2
+                        Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
 
 _applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
@@ -185,12 +185,15 @@ _applyFunction mode f_w expr1 expr2 =
         M_TypeCheck ->
             let TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }) = f_w
                 l = length as_t
-                as = take l expr2
-                rest = drop l expr2
-                binds_tc = map (\ (t, a) -> Bind { identifier = "", value = a, vtype = t }) $ zip as_t as
-            in case _typeCheck mode binds_tc of
-                    Just e -> Left e
-                    Nothing -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
+            in if length expr2 < l
+                then Left $ ParseError $
+                        "Function: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+                else let
+                        as = take l expr2
+                        rest = drop l expr2
+                    in case validateFuncSig (map (\ (TypeCheck x) -> x) as) as_t rt of
+                            Left te -> Left $ addToTypeErrorMessage te "Function: "
+                            Right t -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck t] ++ [Tobe ")"] ++ rest
 
 _evalNewBinds :: EvalMode -> [Bind] -> [Bind] -> Exp -> Result
 _evalNewBinds mode binds_new binds_old expr =
@@ -335,7 +338,9 @@ _eval mode binds (Tobe "if" : rest) =
                             Error e -> Error e
                             Result (TypeCheck t2, binds)
                                 | typeEq t1 t2 -> Result (TypeCheck t1, binds)
-                                | otherwise -> Error $ SyntaxError $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`"
+                                | otherwise -> Error $ TypeError { expected_types=[t1], got_type=t2,
+                                    message_TE="Mismatch of return type in `if` statement: Return type of `then` part is `"
+                                        ++ show t1 ++ "`, but that of `else` part is `" ++ show t2 ++ "`" }
                     Result (w, _) -> Error $ InternalError $ "Unexpected return type: " ++ show (_getType w)
 _eval mode binds expr =
     case findParenthesis expr "(" ")" of

@@ -88,8 +88,10 @@ spec = do
         it "関数の型エラー2" $
             _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError { expected_types=[T_Int], got_type=T_Double, message_TE="" })
         it "関数の型エラー3" $
-            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError { expected_types=[T_Int], got_type=T_Double, message_TE="" })
+            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError { expected_types=[T_List T_Int], got_type=T_List T_Double, message_TE="" })
         it "関数の型エラー3.5(成功例)" $
             _eval M_Normal [] (toExp "(Function <List Int, List Int -> List Int>: ls1 ls2 -> ls1 + ls2) [1,2] [3,4,5]") `shouldBe` Result (List [Int 1,Int 2,Int 3,Int 4,Int 5], [])
         it "関数の型エラー4" $
             _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" } )
+        it "_typeSub" $
+            _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` (T_List T_Int)
