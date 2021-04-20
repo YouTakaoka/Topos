@@ -36,51 +36,18 @@ _opls = [
             Operator { opName="snd", operator=_snd, priority=9 }
         ]
 
-_opls_dec = reverse _opls
-
-_typeFunction :: String -> Op
-_typeFunction op
-    | op == "*" = BinOp _mul_t
-    | op == "+" = BinOp _add_t
-    | op == "-" = BinOp _sub_t
-    | op == "/" = BinOp _div_t
-    | op == "%" = BinOp _mod_t
-    | op == "//" = BinOp _quot_t
-    | op == "$" = UnOp _tostr_t
-    | op == "||" = BinOp _or_t
-    | op == "&&" = BinOp _and_t
-    | op == "!" = UnOp _not_t
-    | op == "==" = BinOp _eq_t
-    | op == "!=" = BinOp _neq_t
-    | op == ">" = BinOp _gt_t
-    | op == ">=" = BinOp _geq_t
-    | op == "<" = BinOp _lt_t
-    | op == "<=" = BinOp _leq_t
-    | op == "^" = BinOp _pow_t
-    | op == "print" = UnOp _print_t
-    | op == "succ" = UnOp _succ_t
-    | op == "head" = UnOp _head_t
-    | op == "tail" = UnOp _tail_t
-    | op == "pop" = UnOp _pop_t
-    | op == "isEmpty" = UnOp _isEmpty_t
-    | op == "take" = FuncOp (2, _take_t)
-    | op == "seq" = FuncOp (2, _seq_t)
-    | op == "map" = FuncOp (2, _map_t)
-    | op == "fst" = UnOp _fst_t
-    | op == "snd" = UnOp _snd_t
-
 _print0 :: Wrd -> Either Error Wrd
 _print0 w = Right $ Print (show w)
 
 _print :: Op
-_print = UnOp _print0
-
-_print_t :: Wrd -> Either Error Wrd
-_print_t (TypeCheck _) = Right $ TypeCheck T_Print
+_print = UnOp (_print0, [(T_String, T_Print), (T_Int, T_Print), (T_Double, T_Print), (T_Bool, T_Print)])
 
 _mul :: Op
+_mul = BinOp (_mul0, _mulSigs)
 
-_mul = BinOp _mul0
+_mulSigs :: [(Type, Type, Type)]
+_mulSigs = [(T_Int, T_Int, T_Int), (T_Int, T_Double, T_Double), (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double)]
+
 _mul0 :: Wrd -> Wrd -> Either Error Wrd
 _mul0 (Double x) (Double y) = Right $ Double (x * y)
 _mul0 (Int x) (Int y) = Right $ Int (x * y)
@@ -88,20 +55,8 @@ _mul0 (Int x) (Double y) = Right $ Double ((fromIntegral x) * y)
 _mul0 (Double x) (Int y) = Right $ Double (x * (fromIntegral y))
 _mul0 x y = Left $ ValueError $ "`*`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
-_mul_t :: Wrd -> Wrd -> Either Error Wrd
-_mul_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_mul_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_mul_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_mul_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`*`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_mul_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`*`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
 _div :: Op
-_div = BinOp _div0
+_div = BinOp (_div0, [(T_Int, T_Int, T_Double), (T_Int, T_Double, T_Double), (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double)])
 
 _div0 :: Wrd -> Wrd -> Either Error Wrd
 _div0 _ (Int 0) = Left $ ValueError "Zero division error."
@@ -112,20 +67,13 @@ _div0 (Int x) (Double y) = Right $ Double ((fromIntegral x) / y)
 _div0 (Double x) (Int y) = Right $ Double (x / (fromIntegral y))
 _div0 x y = Left $ ValueError $ "`/`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
-_div_t :: Wrd -> Wrd -> Either Error Wrd
-_div_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_div_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_div_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`/`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_div_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`/`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
 _add :: Op
-_add = BinOp _add0
+_add = BinOp (_add0,
+            [(T_Int, T_Int, T_Int), (T_Int, T_Double, T_Double),
+            (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double),
+            (T_String, T_String, T_String),
+            (T_List (T_TypeVar T_Any "a"), T_List (T_TypeVar T_Any "a"), T_List (T_TypeVar T_Any "a"))
+            ])
 
 _add0 :: Wrd -> Wrd -> Either Error Wrd
 _add0 (Double x) (Double y) = Right $ Double (x + y)
@@ -136,40 +84,12 @@ _add0 (Str s1) (Str s2) = Right $ Str (s1 ++ s2)
 _add0 (List l1) (List l2) = toList (l1 ++ l2)
 _add0 x y = Left $ ValueError $ "`+`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
-_add_t :: Wrd -> Wrd -> Either Error Wrd
-_add_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_add_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_add_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_add_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_add_t (TypeCheck t) (TypeCheck T_Double) = Left $ TypeError T_Num t $
-    "`+`: Illegal input type: Type of second argumrnt is `Double` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_add_t (TypeCheck t) (TypeCheck T_Int) = Left $ TypeError T_Num t $
-    "`+`: Illegal input type: Type of second argumrnt is `Int` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_add_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`+`: Illegal input type: Type of first argumrnt is `Double` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_add_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`+`: Illegal input type: Type of first argumrnt is `Int` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_add_t (TypeCheck T_String) (TypeCheck T_String) = Right $ TypeCheck T_String
-_add_t (TypeCheck t) (TypeCheck T_String) = Left $ TypeError T_String t $
-    "`+`: Illegal input type: Type of second argument is `String` but that of first argument is `" ++ show t ++ "`"
-_add_t (TypeCheck T_String) (TypeCheck t) = Left $ TypeError T_String t $
-    "`+`: Illegal input type: Type of first argument is `String` but that of second argument is `" ++ show t ++ "`"
-_add_t (TypeCheck (T_List t1)) (TypeCheck (T_List t2)) =
-    if t1 == t2 then Right $ TypeCheck (T_List t1) else Left $
-        TypeError t1 t2 $ "`+`: Type mismatch of lists: `" ++ (show t1) ++ "` and `" ++ (show t2) ++ "`"
-_add_t (TypeCheck t) (TypeCheck (T_List t2)) = Left $ TypeError (T_List t2) t $
-    "`+`: Illegal input type: Type of second argument is `List " ++ show t2 ++ "` but that of first argument is `" ++ show t ++ "`"
-_add_t (TypeCheck (T_List t1)) (TypeCheck t) = Left $ TypeError (T_List t1) t $
-    "`+`: Illegal input type: Type of first argument is `List " ++ show t1 ++ "` but that of second argument is `" ++ show t ++ "`"
-_add_t (TypeCheck t) _ = Left $ TypeError T_Additive t $
-    "`+`: Illegal input type in the first argument: Expected `Additive` class type but got `" ++ show t ++ "`"
-
 _sub :: Op
-_sub = BinOp _sub0
+_sub = BinOp (_sub0, [
+        (T_Null, T_Int, T_Int), (T_Null, T_Double, T_Double),
+        (T_Int, T_Int, T_Int), (T_Int, T_Double, T_Double),
+        (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double)
+        ])
 
 _sub0 :: Wrd -> Wrd -> Either Error Wrd
 _sub0 Null (Int y) = Right $ Int (-y)
@@ -180,72 +100,30 @@ _sub0 (Int x) (Double y) = Right $ Double ((fromIntegral x) - y)
 _sub0 (Double x) (Int y) = Right $ Double (x - (fromIntegral y))
 _sub0 x y = Left $ ValueError $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
-_sub_t :: Wrd -> Wrd -> Either Error Wrd
-_sub_t (TypeCheck T_Null) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_sub_t (TypeCheck T_Null) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_sub_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_sub_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_sub_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_sub_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_sub_t (TypeCheck T_Null) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`-`: Illegal input type: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_sub_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_sub_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`-`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_sub_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`-`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
 _mod :: Op
-_mod = BinOp _mod0
+_mod = BinOp (_mod0, [(T_Int, T_Int, T_Int)])
 
 _mod0 :: BinaryOp
 _mod0 (Int x) (Int y) = Right $ Int $ mod x y
-_mod0 (Int _) y = Left $ TypeError T_Int (_getType y) $
-    "`%`: Illegal input value in the second argument: Expected `Int` but got `" ++ show y ++ "`"
-_mod0 x _ = Left $ TypeError T_Int (_getType x) $
-    "`%`: Illegal input value in the first argument: Expected `Int` but got `" ++ show x ++ "`"
-
-_mod_t :: BinaryOp
-_mod_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_mod_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
-    "`%`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
-_mod_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`%`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
 _quot :: Op
-_quot = BinOp _quot0
+_quot = BinOp (_quot0, [(T_Int, T_Int, T_Int)])
 
 _quot0 :: BinaryOp
 _quot0 (Int x) (Int y) = Right $ Int $ div x y
-_quot0 (Int _) y = Left $ TypeError T_Int (_getType y) $
-    "`//`: Illegal input value in the second argument: Expected `Int` but got `" ++ show y ++ "`"
-_quot0 x _ = Left $ TypeError T_Int (_getType x) $
-    "`//`: Illegal input value in the first argument: Expected `Int` but got `" ++ show x ++ "`"
-
-_quot_t :: BinaryOp
-_quot_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_quot_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Int t $
-    "`//`: Illegal input type in the second argument: Expected `Int`, but got `" ++ show t ++ "`"
-_quot_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`//`: Illegal input type in the first argument: Expected `Int`, but got `" ++ show t ++ "`"
 
 _succ :: Op
-_succ = UnOp _succ0
-
-_succ_t :: Wrd -> Either Error Wrd
-_succ_t (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_succ_t (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_succ_t (TypeCheck t) = Left $ TypeError T_Num t $
-    "succ: Illegal input type: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
+_succ = UnOp (_succ0, [(T_Int, T_Int)])
 
 _succ0 :: Wrd -> Either Error Wrd
 _succ0 (Int x) = Right $ Int (x + 1)
-_succ0 (Double x) = Right $ Double (x + 1)
 _succ0 x = Left $ ValueError $ "succ: Illegal input value: " ++ (show x)
 
 _pow :: Op
-_pow = BinOp _pow0
+_pow = BinOp (_pow0, [
+        (T_Int, T_Int, T_Int), (T_Int, T_Double, T_Double),
+        (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double)
+        ])
 
 _pow0 :: BinaryOp
 _pow0 (Int x) (Int y) = Right $ Int $ x ^ y
@@ -256,26 +134,8 @@ _pow0 x (Int y) = Left $ ValueError $ "`^`: Illegal input value in the first arg
 _pow0 x (Double y) = Left $ ValueError $ "`^`: Illegal input value in the first argument: " ++ show x
 _pow0 _ y = Left $ ValueError $ "`^`: Illegal input value in the second argument: " ++ show y
 
-_pow_t :: BinaryOp 
-_pow_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_pow_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_pow_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_pow_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Double
-_pow_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`^`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_pow_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`^`: Illegal input type in the second argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-_pow_t (TypeCheck t) _ = Left $ TypeError T_Num t $
-    "`^`: Illegal input type in the first argument: Expected `Int` or `Double`, but got `" ++ show t ++ "`"
-
 _tostr :: Op
-_tostr = UnOp _tostr0
-
-_tostr_t :: UnaryOp
-_tostr_t (TypeCheck T_Int) = Right $ TypeCheck T_Int
-_tostr_t (TypeCheck T_Double) = Right $ TypeCheck T_Double
-_tostr_t (TypeCheck t) = Left $ TypeError T_Num t $
-    "`$`: Illegal input type: Expected `Int` or `Double` or `Bool`, but got `" ++ show t ++ "`"
+_tostr = UnOp (_tostr0, [(T_Int, T_String), (T_Double, T_String), (T_Bool, T_String)])
 
 _tostr0 :: UnaryOp
 _tostr0 (Int x) = Right $ Str $ show x
@@ -283,41 +143,15 @@ _tostr0 (Double x) = Right $ Str $ show x
 _tostr0 (Bool x) = Right $ Str $ show x
 _tostr0 x = Left $ ValueError $ "`$`: Illegal input value: " ++ (show x)
 
-_eq_t :: Wrd -> Wrd -> Either Error Wrd
-_eq_t (TypeCheck t1) (TypeCheck t2) =
-    if t1 == t2 then Right $ TypeCheck T_Bool else Left $ TypeError t1 t2 $
-        "`=`: Type mismatch of both sides: LHS=" ++ (show t1) ++ ", RHS=" ++ (show t2)
-
 _eq :: Op
-_eq = BinOp (\ a b -> Right $ Bool (a == b))
-
-_neq_t :: Wrd -> Wrd -> Either Error Wrd
-_neq_t (TypeCheck t1) (TypeCheck t2) =
-    if t1 == t2 then Right $ TypeCheck T_Bool else Left $ TypeError t1 t2 $
-        "`!=`: Type mismatch of both sides: LHS=" ++ (show t1) ++ ", RHS=" ++ (show t2)
+_eq = BinOp ((\ a b -> Right $ Bool (a == b)), [
+        (T_TypeVar T_Eq "a", T_TypeVar T_Eq "a", T_Bool)
+    ])
 
 _neq :: Op
-_neq = BinOp (\ a b -> Right $ Bool (not (a == b)))
-
-_gt_t :: Wrd -> Wrd -> Either Error Wrd
-_gt_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_gt_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_gt_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_gt_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_gt_t (TypeCheck t) (TypeCheck T_Double) = Left $ TypeError T_Num t $
-    "`>`: Illegal input type: Type of second argumrnt is `Double` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_gt_t (TypeCheck t) (TypeCheck T_Int) = Left $ TypeError T_Num t $
-    "`>`: Illegal input type: Type of second argumrnt is `Int` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_gt_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`>`: Illegal input type: Type of first argumrnt is `Double` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_gt_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`>`: Illegal input type: Type of first argumrnt is `Int` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_gt_t (TypeCheck t) _ = Left $ TypeError T_Ord t $
-    "`>`: Illegal input type: Expected `Ord` class type but got `" ++ show t ++ "`"
+_neq = BinOp ((\ a b -> Right $ Bool (not (a == b))), [
+        (T_TypeVar T_Eq "a", T_TypeVar T_Eq "a", T_Bool)
+    ])
 
 _gt0 :: Wrd -> Wrd -> Either Error Wrd
 _gt0 (Double x) (Double y) = Right $ Bool (x > y)
@@ -326,27 +160,7 @@ _gt0 (Int x) (Double y) = Right $ Bool ((fromIntegral x) > y)
 _gt0 (Double x) (Int y) = Right $ Bool (x > (fromIntegral y))
 
 _gt :: Op
-_gt = BinOp _gt0
-
-_geq_t :: Wrd -> Wrd -> Either Error Wrd
-_geq_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_geq_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_geq_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_geq_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_geq_t (TypeCheck t) (TypeCheck T_Double) = Left $ TypeError T_Num t $
-    "`>=`: Illegal input type: Type of second argumrnt is `Double` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_geq_t (TypeCheck t) (TypeCheck T_Int) = Left $ TypeError T_Num t $
-    "`>=`: Illegal input type: Type of second argumrnt is `Int` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_geq_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`>=`: Illegal input type: Type of first argumrnt is `Double` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_geq_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`>=`: Illegal input type: Type of first argumrnt is `Int` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_geq_t (TypeCheck t) _ = Left $ TypeError T_Ord t $
-    "`>=`: Illegal input type: Expected `Ord` class type but got `" ++ show t ++ "`"
+_gt = BinOp (_gt0, [(T_TypeVar T_Ord "a", T_TypeVar T_Ord "a", T_Bool)])
 
 _geq0 :: Wrd -> Wrd -> Either Error Wrd
 _geq0 (Double x) (Double y) = Right $ Bool (x >= y)
@@ -355,27 +169,7 @@ _geq0 (Int x) (Double y) = Right $ Bool ((fromIntegral x) >= y)
 _geq0 (Double x) (Int y) = Right $ Bool (x >= (fromIntegral y))
 
 _geq :: Op
-_geq = BinOp _geq0
-
-_lt_t :: Wrd -> Wrd -> Either Error Wrd
-_lt_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_lt_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_lt_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_lt_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_lt_t (TypeCheck t) (TypeCheck T_Double) = Left $ TypeError T_Num t $
-    "`<`: Illegal input type: Type of second argumrnt is `Double` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_lt_t (TypeCheck t) (TypeCheck T_Int) = Left $ TypeError T_Num t $
-    "`<`: Illegal input type: Type of second argumrnt is `Int` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_lt_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`<`: Illegal input type: Type of first argumrnt is `Double` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_lt_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`<`: Illegal input type: Type of first argumrnt is `Int` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_lt_t (TypeCheck t) _ = Left $ TypeError T_Ord t $
-    "`<`: Illegal input type: Expected `Ord` class type but got `" ++ show t ++ "`"
+_geq = BinOp (_geq0, [(T_TypeVar T_Ord "a", T_TypeVar T_Ord "a", T_Bool)])
 
 _lt0 :: Wrd -> Wrd -> Either Error Wrd
 _lt0 (Double x) (Double y) = Right $ Bool (x < y)
@@ -384,27 +178,7 @@ _lt0 (Int x) (Double y) = Right $ Bool ((fromIntegral x) < y)
 _lt0 (Double x) (Int y) = Right $ Bool (x < (fromIntegral y))
 
 _lt :: Op
-_lt = BinOp _lt0
-
-_leq_t :: Wrd -> Wrd -> Either Error Wrd
-_leq_t (TypeCheck T_Double) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_leq_t (TypeCheck T_Int) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_leq_t (TypeCheck T_Double) (TypeCheck T_Int) = Right $ TypeCheck T_Bool
-_leq_t (TypeCheck T_Int) (TypeCheck T_Double) = Right $ TypeCheck T_Bool
-_leq_t (TypeCheck t) (TypeCheck T_Double) = Left $ TypeError T_Num t $
-    "`<=`: Illegal input type: Type of second argumrnt is `Double` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_leq_t (TypeCheck t) (TypeCheck T_Int) = Left $ TypeError T_Num t $
-    "`<=`: Illegal input type: Type of second argumrnt is `Int` but that of first argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_leq_t (TypeCheck T_Double) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`<=`: Illegal input type: Type of first argumrnt is `Double` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_leq_t (TypeCheck T_Int) (TypeCheck t) = Left $ TypeError T_Num t $
-    "`<=`: Illegal input type: Type of first argumrnt is `Int` but that of second argument is `" ++ show t ++
-    "` (expected `Double` or `Int`)"
-_leq_t (TypeCheck t) _ = Left $ TypeError T_Ord t $
-    "`<=`: Illegal input type: Expected `Ord` class type but got `" ++ show t ++ "`"
+_lt = BinOp (_lt0, [(T_TypeVar T_Ord "a", T_TypeVar T_Ord "a", T_Bool)])
 
 _leq0 :: Wrd -> Wrd -> Either Error Wrd
 _leq0 (Double x) (Double y) = Right $ Bool (x <= y)
@@ -413,136 +187,86 @@ _leq0 (Int x) (Double y) = Right $ Bool ((fromIntegral x) <= y)
 _leq0 (Double x) (Int y) = Right $ Bool (x <= (fromIntegral y))
 
 _leq :: Op
-_leq = BinOp _leq0
-
-_and_t :: Wrd -> Wrd -> Either Error Wrd
-_and_t (TypeCheck T_Bool) (TypeCheck T_Bool) = Right $ TypeCheck T_Bool
-_and_t (TypeCheck t) (TypeCheck T_Bool) = Left $ TypeError T_Bool t $
-    "`&&`: Illegal input type in the first argument: Expected `Bool` but got `" ++ show t ++ "`"
-_and_t _ (TypeCheck t) = Left $ TypeError T_Bool t $
-    "`&&`: Illegal input type in the second argument: Expected `Bool` but got `" ++ show t ++ "`"
+_leq = BinOp (_leq0, [(T_TypeVar T_Ord "a", T_TypeVar T_Ord "a", T_Bool)])
 
 _and :: Op
-_and = BinOp (\ (Bool a) (Bool b) -> Right $ Bool (a && b))
-
-_or_t :: Wrd -> Wrd -> Either Error Wrd
-_or_t (TypeCheck T_Bool) (TypeCheck T_Bool) = Right $ TypeCheck T_Bool
-_or_t (TypeCheck t) (TypeCheck T_Bool) = Left $ TypeError T_Bool t $
-    "`||`: Illegal input type in the first argument: Expected `Bool` but got `" ++ show t ++ "`"
-_or_t _ (TypeCheck t) = Left $ TypeError T_Bool t $
-    "`||`: Illegal input type in the second argument: Expected `Bool` but got `" ++ show t ++ "`"
+_and = BinOp ((\ (Bool a) (Bool b) -> Right $ Bool (a && b)), [(T_Bool, T_Bool, T_Bool)])
 
 _or :: Op
-_or = BinOp (\ (Bool a) (Bool b) -> Right $ Bool (a || b))
-
-_not_t :: Wrd -> Either Error Wrd
-_not_t (TypeCheck T_Bool) = Right $ TypeCheck T_Bool
-_not_t (TypeCheck t) = Left $ TypeError T_Bool t $ "`!`: Illegal input type: Expected `Bool` but got `" ++ show t ++ "`"
+_or = BinOp ((\ (Bool a) (Bool b) -> Right $ Bool (a || b)), [(T_Bool, T_Bool, T_Bool)])
 
 _not :: Op
-_not = UnOp (\ (Bool b) -> Right $ Bool (not b))
+_not = UnOp ((\ (Bool b) -> Right $ Bool (not b)), [(T_Bool, T_Bool)])
 
-_head_t :: Wrd -> Either Error Wrd
-_head_t (TypeCheck (T_List t)) = Right $ TypeCheck t
-_head_t (TypeCheck t) = Left $ TypeError (T_List T_Any) t $
-    "head: Illegal input type: Expected `List a` but got `" ++ show t ++ "`"
+_head :: Op
+_head = UnOp (_head0, [(T_List (T_TypeVar T_Any "a"), T_TypeVar T_Any "a")])
 
 _head0 :: Wrd -> Either Error Wrd
 _head0 (List []) = Left $ ValueError "head: Empty list."
 _head0 (List (x : _)) = Right x
 
-_head :: Op
-_head = UnOp _head0
-
-_tail_t :: Wrd -> Either Error Wrd
-_tail_t (TypeCheck (T_List t)) = Right $ TypeCheck (T_List t)
-_tail_t (TypeCheck t) = Left $ TypeError (T_List T_Any) t $
-    "tail: Illegal input type: Expected `List a` but got `" ++ show t ++ "`"
+_tail :: Op
+_tail = UnOp (_tail0, [(T_List (T_TypeVar T_Any "a"), T_List (T_TypeVar T_Any "a"))])
 
 _tail0 :: Wrd -> Either Error Wrd
 _tail0 (List (_ : xs)) = Right $ List xs
 _tail0 (List []) = Left $ ValueError "tail: Empty list."
-
-_tail :: Op
-_tail = UnOp _tail0
-
-_pop_t :: Wrd -> Either Error Wrd
-_pop_t (TypeCheck (T_List t)) = Right $ TypeCheck (T_Tuple [t, T_List t])
-_pop_t (TypeCheck t) = Left $ TypeError (T_List T_Any) t $
-    "pop: Illegal input type: Expected `List a` but got `" ++ show t ++ "`"
 
 _pop0 :: Wrd -> Either Error Wrd
 _pop0 (List (x : xs)) = Right $ Tuple [x, List xs]
 _pop0 (List []) = Left $ ValueError "pop: Empty list."
 
 _pop :: Op
-_pop = UnOp _pop0
-
-_isEmpty_t :: Wrd -> Either Error Wrd
-_isEmpty_t (TypeCheck (T_List _)) = Right $ TypeCheck T_Bool
-_isEmpty_t (TypeCheck t) = Left $ TypeError (T_List T_Any) t $
-    "isEmpty: Illegal input type: Expected `List a` but got `" ++ show t ++ "`"
+_pop = UnOp (_pop0, [(
+            T_List (T_TypeVar T_Any "a"),
+            T_Tuple [T_TypeVar T_Any "a", T_List (T_TypeVar T_Any "a")]
+        )])
 
 _isEmpty :: Op
-_isEmpty = UnOp (\ (List ls) -> Right $ Bool (ls == []))
+_isEmpty = UnOp ((\ (List ls) -> Right $ Bool (ls == [])), [(
+        T_List T_Any,
+        T_Bool
+    )])
 
-_take_t :: Exp -> Either Error Wrd
-_take_t [TypeCheck T_Int, TypeCheck (T_List t)] = Right $ TypeCheck (T_List t)
-_take_t [TypeCheck T_Int, TypeCheck t] = Left $ TypeError (T_List T_Any) t$
-    "take: Illegal input typein the second argument: Expected `List a` but got `" ++ show t ++ "`"
-_take_t [TypeCheck t, _] = Left $ TypeError (T_List T_Any) t$
-    "take: Illegal input typein the first argument: Expected `Int` but got `" ++ show t ++ "`"
+_take :: Op
+_take = FuncOp (_take0, (
+        [T_Int, T_List (T_TypeVar T_Any "a")],
+        T_List (T_TypeVar T_Any "a")
+    ))
 
 _take0 :: Exp -> Either Error Wrd
 _take0 [Int n, List ls] = Right $ List $ take n ls
 _take0 ex = Left $ ValueError $ "take: Illegal input value: " ++ (show ex)
-
-_take :: Op
-_take = FuncOp (2, _take0)
-
-_seq_t :: Exp -> Either Error Wrd
-_seq_t [TypeCheck T_Int, TypeCheck T_Int] = Right $ TypeCheck (T_List T_Int)
-_seq_t [TypeCheck t, TypeCheck T_Int] = Left $ TypeError T_Int t $
-    "seq: Illegal input type in the first argument: Expected `Int` but got `" ++ (show t) ++ "`"
-_seq_t [_, TypeCheck t] = Left $ TypeError T_Int t $
-    "seq: Illegal input type in the second argument: Expected `Int` but got `" ++ (show t) ++ "`"
 
 _seq0 :: Exp -> Either Error Wrd
 _seq0 (Int n : (Int m : [])) = Right $ List $ map (\ x -> Int x) [n .. m]
 _seq0 ex = Left $ ValueError $ "seq: Illegal input value: " ++ (show ex)
 
 _seq :: Op
-_seq = FuncOp (2, _seq0)
-
-_map_t :: Exp -> Either Error Wrd
-_map_t [TypeCheck (T_Func {}), TypeCheck (T_List t)] = Right $ TypeCheck T_PreList
-_map_t [TypeCheck t, TypeCheck (T_List _)] = Left $ TypeError (T_Func T_Function { args_t = [], return_t = T_Any }) t $
-    "map: Illegal input type in the first argument: Expected `Function` but got `" ++ show t ++ "`"
-_map_t [_, TypeCheck t] = Left $ TypeError (T_List T_Any) t $
-    "map: Illegal input type in the second argument: Expected `Function` but got `" ++ show t ++ "`"
-
-_map0 :: Exp -> Either Error Wrd
-_map0 (Func f : (List ls : [])) = Right $ PreList $ map (\ w -> [Func f, w]) ls
-_map0 ex = Left $ ValueError $ "map: Illegal input value: " ++ (show ex)
+_seq = FuncOp (_seq0, (
+        [T_Int, T_Int],
+        T_List T_Int
+    ))
 
 _map :: Op
-_map = FuncOp (2, _map0)
+_map = FuncOp (_map0, (
+        [T_Func T_Function { args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b" }, T_List (T_TypeVar T_Any "a")],
+        T_List (T_TypeVar T_Any "b")
+    ))
 
-_fst_t :: Wrd -> Either Error Wrd
-_fst_t (TypeCheck (T_Tuple (t : _))) = Right $ TypeCheck t
-_fst_t (TypeCheck t) = Left $ TypeError (T_Tuple []) t $
-    "fst: Illegal input type: Expected `Tuple` but got `" ++ show t ++ "`"
+_map0 :: Exp -> Either Error Wrd
+_map0 [Func f, List ls] = Right $ PreList $ map (\ w -> [Func f, w]) ls
+_map0 ex = Left $ ValueError $ "map: Illegal input value: " ++ (show ex)
 
 _fst :: Op
-_fst = UnOp (\ (Tuple (w1 : _)) -> Right $ w1)
-
-_snd_t :: Wrd -> Either Error Wrd
-_snd_t (TypeCheck (T_Tuple (_ : (t : _)))) = Right $ TypeCheck t
-_snd_t (TypeCheck t) = Left $ TypeError (T_Tuple []) t $
-    "snd: Illegal input type: Expected `Tuple` but got `" ++ show t ++ "`"
+_fst = UnOp (\ (Tuple [w1, _]) -> Right w1, [
+        (T_Tuple [T_TypeVar T_Any "a", T_Any], T_TypeVar T_Any "a")
+    ])
 
 _snd :: Op
-_snd = UnOp (\ (Tuple (_ : (w2 : _))) -> Right $ w2)
+_snd = UnOp (\ (Tuple [_, w2]) -> Right w2, [
+        (T_Tuple [T_Any, T_TypeVar T_Any "a"], T_TypeVar T_Any "a")
+    ])
 
 _getType :: Wrd -> Type
 _getType (Str _) = T_String
@@ -553,8 +277,12 @@ _getType (Tobe _) = T_Unknown
 _getType (List (w: _)) = T_List $ _getType w
 _getType (List []) = T_EmptyList
 _getType (Tuple tp) = T_Tuple $ map _getType tp
-_getType (Func Operator { opName=name, priority=prt }) =
-    T_Func (T_Operator {opName_t=name, operator_t=_typeFunction name, priority_t=prt})
+_getType (Func Operator { opName=name, operator=BinOp (_, sigs), priority=prt }) =
+    T_Func (T_Operator {opName_t=name, operator_sig=BinSig sigs, priority_t=prt})
+_getType (Func Operator { opName=name, operator=UnOp (_, sigs), priority=prt }) =
+    T_Func (T_Operator {opName_t=name, operator_sig=UnSig sigs, priority_t=prt})
+_getType (Func Operator { opName=name, operator=FuncOp (_, sig), priority=prt }) =
+    T_Func (T_Operator {opName_t=name, operator_sig=FuncSig sig, priority_t=prt})
 _getType (Func f) = T_Func $ getFunctionSignature f
 _getType (Type _) = T_Type
 
@@ -571,5 +299,5 @@ toList :: Exp -> Either Error Wrd
 toList expr =
     case _isConsistentType expr of
         Right _ -> Right $ List expr
-        Left (t1, t2) -> Left $ TypeError t1 t2 $
-            "[]: Inconsistent type: Found type `" ++ show t1 ++ "` and `" ++ show t2 ++ "`"
+        Left (t1, t2) -> Left $ TypeError { expected_types=[t1], got_type=t2,
+            message_TE="List: Inconsistent type of elements: Found type `" ++ show t1 ++ "` and `" ++ show t2 ++ "`" }

@@ -43,7 +43,7 @@ _isFunction :: EvalMode -> Wrd -> Bool
 _isFunction M_Normal (Func Function {}) = True
 _isFunction M_Normal (Func Operator { operator=FuncOp _}) = True
 _isFunction M_TypeCheck (TypeCheck (T_Func T_Function {})) = True
-_isFunction M_TypeCheck (TypeCheck (T_Func T_Operator { operator_t=FuncOp _})) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func T_Operator { operator_sig=FuncSig _})) = True
 _isFunction _ _ = False
 
 _isOp :: Wrd -> Bool
@@ -89,12 +89,7 @@ _subOp mode op expr =
         Just (_, ws1, ws2) ->
             case mode of
                 M_Normal -> _subOp mode op $ ws1 ++ [Func op] ++ ws2
-                M_TypeCheck ->
-                    let name = opName op
-                        op_t = _typeFunction name
-                        prt = priority op
-                        op2 = T_Operator { opName_t=name, operator_t=op_t, priority_t=prt }
-                    in _subOp mode op $ ws1 ++ [TypeCheck $ T_Func op2] ++ ws2
+                M_TypeCheck -> _subOp mode op $ ws1 ++ [TypeCheck $ _getType $ Func op] ++ ws2
 
 _mulSubOp :: EvalMode -> [Function] -> Exp -> Exp
 _mulSubOp mode [strop] expr = _subOp mode strop expr
@@ -112,9 +107,9 @@ _examineInputList expr =
         Nothing -> Nothing
 
 _applyOp :: String -> Op -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
-_applyOp opName op ws1 (y : rest2) =
+_applyOp name op ws1 (y : rest2) =
     case op of
-    BinOp binop
+    BinOp (binop, sigs)
         | null ws1 ->
             case binop Null y of
                 Left e -> Left e
@@ -125,18 +120,56 @@ _applyOp opName op ws1 (y : rest2) =
             in case binop x y of
                 Left e -> Left e
                 Right w -> Right $ rest1 ++ [w] ++ rest2
-    UnOp unop ->
+    UnOp (unop, sigs) ->
         case unop y of
             Left e -> Left e
             Right w -> Right $ ws1 ++ [w] ++ rest2
-    FuncOp (nargs, fnop)
-        | length (y : rest2) < nargs -> Left $ ParseError $ "Supplied too few arguments to function operator `" ++ opName ++ "`"
+    FuncOp (fnop, sig)
+        | length (y : rest2) < nargs ->
+            Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
         | otherwise ->
             let args = take nargs (y : rest2)
                 rest = drop nargs (y : rest2)
             in case fnop args of
                 Left e -> Left e
                 Right w -> Right $ ws1 ++ [w] ++ rest
+        where
+            nargs = length $ fst sig
+_applyOp name op _ [] =
+    case op of
+        BinOp _ -> Left $ ParseError $ "Missing second argument for binary operator `" ++ name ++ "`"
+        UnOp _ -> Left $ ParseError $ "Missing argument for Unary operator `" ++ name ++ "`"
+        FuncOp _ -> Left $ ParseError $ "Missing arguments for function `" ++ name ++ "`"
+
+validateOp :: String -> OperatorSig -> Exp -> Exp -> Either Error Exp
+validateOp name op_sig ws1 (TypeCheck y_t: rest2) =
+    case op_sig of
+        BinSig binsigs ->
+            if null ws1 then
+                case validateBinSig (T_Null, y_t) binsigs of
+                    Right t -> Right $ TypeCheck t : rest2
+                    Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+            else
+                let TypeCheck x_t = last ws1
+                    rest1 = init ws1
+                in case validateBinSig (x_t, y_t) binsigs of
+                    Right t -> Right $ rest1 ++ [TypeCheck t] ++ rest2
+                    Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        UnSig unsigs ->
+            case validateUnSig y_t unsigs of
+                Right t -> Right $ ws1 ++ [TypeCheck t] ++ rest2
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        FuncSig (ts, t_r) ->
+            let l = length ts
+                ws2 = TypeCheck y_t: rest2
+            in if length ws2 < l
+                then
+                    Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
+                else
+                    let ts2 = map (\ (TypeCheck x) -> x) ws2
+                    in case validateFuncSig ts2 ts of
+                        Nothing -> Right $ ws1 ++ [TypeCheck t_r] ++ drop l ws2
+                        Just te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
 
 _applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
 _applyFunction mode f_w expr1 expr2 =
@@ -150,7 +183,7 @@ _applyFunction mode f_w expr1 expr2 =
                 Left e -> Left e
                 Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
         M_TypeCheck ->
-            let TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })) = f_w
+            let TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }) = f_w
                 l = length as_t
                 as = take l expr2
                 rest = drop l expr2
@@ -260,9 +293,9 @@ _eval mode binds (Tobe "Function" : rest) =
                                     Right t ->
                                         if t == rt
                                             then Result (Func f, binds)
-                                            else Error $ TypeError rt t $
-                                                "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
-                                                    ++ "` but Topos predicts `" ++ show t ++ "`"
+                                            else Error $ TypeError { expected_types=[rt], got_type=t,
+                                                    message_TE="TypeError: Return type of function mismatch. Specified type is `" ++ show rt
+                                                    ++ "` but Topos predicts `" ++ show t ++ "`" }
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 _eval mode binds (Tobe "define" : rest) =
     case mode of
@@ -333,7 +366,7 @@ _eval mode binds expr =
 
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
-    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
+    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls $ _mulSubst expr binds
     in case _examineInputList ws of
         Just e -> Error e
         Nothing ->
@@ -365,8 +398,8 @@ _evalFunctions mode binds expr =
                         case _applyOp name op ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
-                    Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
-                        case _applyOp name op ws1 ws2 of
+                    Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_sig=sig }), ws1, ws2) ->
+                        case validateOp name sig ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
                     Nothing ->
@@ -375,14 +408,14 @@ _evalFunctions mode binds expr =
                             case _applyOp name op ws1 ws2 of
                                 Left e -> Error e
                                 Right ex -> _eval mode binds ex
-                        Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
-                            case _applyOp name op ws1 ws2 of
+                        Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_sig=sig }), ws1, ws2) ->
+                            case validateOp name sig ws1 ws2 of
                                 Left e -> Error e
                                 Right ex -> _eval mode binds ex
                         Nothing -> -- オペレータ見つからなかった
                             case ws of
                                 [] -> Result (Null, binds)
-                                (Tobe s: []) -> Error $ UnknownKeywordError s
+                                [Tobe s] -> Error $ UnknownKeywordError s
                                 [w] -> Result (w, binds)
                                 _ -> Error $ InternalError $ "Evaluation failed: " ++ show ws
 

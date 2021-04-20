@@ -68,9 +68,9 @@ spec = do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, [])
         it "_mulSubOp" $
-            _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 }))]
+            _mulSubOp M_TypeCheck _opls [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator { opName_t="*", operator_sig=BinSig _mulSigs, priority_t=6 }))]
         it "無理やり置き換え" $
-            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 })), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
+            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator { opName_t="*", operator_sig=BinSig _mulSigs, priority_t=6 })), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
         it "Strが変換されない件1" $
             _eval M_TypeCheck [] [Str "hoge"] `shouldBe` Result (TypeCheck T_String, [])
         it "Strが変換されない件2" $
@@ -84,10 +84,12 @@ spec = do
             _eval M_Normal [] (toExp "let g = Function <UnaryOp, Int -> Int > : op x -> op ( op x )")
                 `shouldBe` Error (UnknownKeywordError "UnaryOp")
         it "関数の型エラー1" $
-            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError T_Double T_Int "")
+            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError { expected_types=[T_Double], got_type=T_Int, message_TE="" })
         it "関数の型エラー2" $
-            _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError T_Int T_Double "")
+            _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError { expected_types=[T_Int], got_type=T_Double, message_TE="" })
         it "関数の型エラー3" $
-            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError T_Int T_Double "")
+            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError { expected_types=[T_Int], got_type=T_Double, message_TE="" })
+        it "関数の型エラー3.5(成功例)" $
+            _eval M_Normal [] (toExp "(Function <List Int, List Int -> List Int>: ls1 ls2 -> ls1 + ls2) [1,2] [3,4,5]") `shouldBe` Result (List [Int 1,Int 2,Int 3,Int 4,Int 5], [])
         it "関数の型エラー4" $
-            _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError T_Num T_String "")
+            _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" } )

@@ -23,8 +23,10 @@ data Type = T_Int
         | T_Num 
         | T_Additive 
         | T_Ord 
+        | T_Eq
         | T_Null 
         | T_Any
+        | T_TypeVar Type String
         deriving (Eq, Show)
 
 typeEq :: Type -> Type -> Bool
@@ -32,14 +34,37 @@ typeEq T_Unknown _ = False
 typeEq _ T_Unknown = False
 typeEq t1 t2 = t1 == t2
 
-instance Ord Type where
-    (<=) T_EmptyList (T_List _) = True
-    (<=) t1 t2 = typeEq t1 t2
+(@=) :: Type -> Type -> Bool
+(@=) T_EmptyList (T_List _) = True
+(@=) _ T_Any = True
+(@=) T_Int T_Num = True
+(@=) T_Double T_Num = True
+(@=) T_Int T_Additive = True
+(@=) T_Double T_Additive = True
+(@=) T_String T_Additive = True
+(@=) (T_List _) T_Additive = True
+(@=) T_Int T_Ord = True
+(@=) T_Double T_Ord = True
+(@=) T_Int T_Eq = True
+(@=) T_Double T_Eq = True
+(@=) T_Bool T_Eq = True
+(@=) T_String T_Eq = True
+(@=) (T_List t) T_Eq = t @= T_Eq
+(@=) (T_Tuple ls) T_Eq = all (@= T_Eq) ls
+(@=) t1 t2 = typeEq t1 t2
 
 type BinaryOp = Wrd -> Wrd -> Either Error Wrd
 type UnaryOp = Wrd -> Either Error Wrd
-type FunctionOp = (Int, Exp -> Either Error Wrd)
-data Op = BinOp BinaryOp | UnOp UnaryOp | FuncOp FunctionOp
+type FunctionOp = (Exp -> Either Error Wrd)
+
+type BinSig = (Type, Type, Type)
+type UnSig = (Type, Type)
+type FuncSig = ([Type], Type)
+data OperatorSig = BinSig [BinSig] | UnSig [UnSig] | FuncSig FuncSig deriving Show
+
+data Op = BinOp (BinaryOp, [BinSig])
+        | UnOp (UnaryOp, [UnSig])
+        | FuncOp (FunctionOp, FuncSig)
 instance Show Op where
     show (BinOp _) = "[BinOp]"
     show (UnOp _) = "[UnOp]"
@@ -48,11 +73,12 @@ instance Show Op where
 data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp }
             | Operator { opName :: String, operator :: Op, priority :: Int } deriving Show
 data T_Function = T_Function { args_t :: [Type], return_t :: Type } 
-            | T_Operator { opName_t :: String, operator_t :: Op, priority_t :: Int } deriving Show
+            | T_Operator { opName_t :: String, operator_sig :: OperatorSig, priority_t :: Int } deriving Show
 instance Eq T_Function where
     (==) T_Function { args_t = at1, return_t = rt1 } T_Function { args_t = at2, return_t = rt2} = at1 == at2 && rt1 == rt2
     (==) T_Operator { opName_t=s1 } T_Operator { opName_t = s2 } = s1 == s2
     (==) _ _ = False
+
 data Bind = Bind { identifier :: String, value :: Wrd, vtype :: Type } deriving (Eq, Show)
 data Wrd = Str String 
         | Func Function 
@@ -107,7 +133,13 @@ instance Show Wrd where
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck
 
-data Error = UnknownKeywordError String | ParseError String | TypeError Type Type String | SyntaxError String | ValueError String | InternalError String
+data Error = 
+        UnknownKeywordError String
+        | ParseError String 
+        | TypeError { expected_types :: [Type], got_type :: Type, message_TE :: String }
+        | SyntaxError String 
+        | ValueError String 
+        | InternalError String
 
 instance Eq Error where
     (==) (UnknownKeywordError s1) (UnknownKeywordError s2) = s1 == s2
@@ -130,9 +162,9 @@ instance Eq Result where
     (==) (Error e1) (Error e2) = e1 == e2
     (==) _ _ = False
 
-data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String -- TODO: 型構築子名にParをつける
+data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String
 
 getFunctionSignature :: Function -> T_Function
 getFunctionSignature Function { args = as, ret_t = rt, ret = _ } =
-    let ast = map (\ (t, a) -> t) as
+    let ast = map fst as
     in T_Function { args_t = ast, return_t = rt }
