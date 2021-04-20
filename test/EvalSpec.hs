@@ -59,11 +59,13 @@ spec = do
         it "コメント" $
             _eval M_Normal sqr_binds (toExp "1 + succ 3 #hogehoge") `shouldBe` Result (Int 5, sqr_binds)
         it "タプル" $
-            _eval M_Normal  [] (toExp "print (pop [1,2,3])") `shouldBe` Result (Print "(1,[2,3])", [])
+            _eval M_Normal [] (toExp "print (pop [1,2,3])") `shouldBe` Result (Print "(1,[2,3])", [])
         it "文字列" $
-            _eval M_Normal  [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+            _eval M_Normal [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
         it "文字列" $
-            _eval M_Normal  [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+            _eval M_Normal [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+        it "関数の中でmap" $
+            _eval M_Normal [] (toExp "(Function <Int -> List Int>: n -> map succ (seq 1 n)) 3") `shouldBe` Result (List [Int 2,Int 3,Int 4], [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, [])
@@ -93,5 +95,7 @@ spec = do
             _eval M_Normal [] (toExp "(Function <List Int, List Int -> List Int>: ls1 ls2 -> ls1 + ls2) [1,2] [3,4,5]") `shouldBe` Result (List [Int 1,Int 2,Int 3,Int 4,Int 5], [])
         it "関数の型エラー4" $
             _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" } )
+        it "mapの型エラー" $
+            _eval M_Normal [] (toExp "Function <List String -> List String>: ls -> map succ ls") `shouldBe` Error (TypeError { expected_types=[T_List T_Int, T_List T_Double], got_type=T_List T_String, message_TE="" } )
         it "_typeSub" $
             _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` (T_List T_Int)

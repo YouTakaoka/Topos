@@ -121,10 +121,10 @@ validateBinSig (t1, t2) binsigs =
         Left [] ->
             let ts = selectBinSigFirstUnique binsigs
             in Left TypeError { expected_types=ts, got_type=t1,
-                    message_TE="Type mismatch in the first argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
+                    message_TE="Type mismatch at the first argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
         Left ts ->
             Left TypeError { expected_types=ts, got_type=t2,
-                message_TE="Type mismatch in the second argument. Expected: " ++ show ts ++ ", but got: " ++ show t2 }
+                message_TE="Type mismatch at the second argument. Expected: " ++ show ts ++ ", but got: " ++ show t2 }
         Right t -> Right t
 
 matchUnSig :: Type -> [UnSig] -> Either [Type] Type
@@ -142,14 +142,22 @@ validateUnSig t1 unsigs =
     case matchUnSig t1 unsigs of
         Right t -> Right t
         Left ts -> Left TypeError { expected_types=ts, got_type=t1,
-                        message_TE="Type mismatch in the argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
+                        message_TE="Type mismatch at the argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
 
 matchFuncSig :: [Bind] -> [(Type, Type)] -> Either (Type, Type, Int) [Bind] -- Intは残りのリストの長さ
 matchFuncSig _ [] = Right []
 matchFuncSig binds ((t1, t2): tps) =
     case _typeCheck binds t1 t2 of
-        Nothing -> Left (t1, t2, length tps)
+        Nothing -> Left (t1, _typeSub binds t2, length tps)
         Just binds2 -> matchFuncSig binds2 tps
+
+baseNum :: Int -> String
+baseNum 1 = "first"
+baseNum 2 = "second"
+baseNum 3 = "third"
+baseNum 4 = "fourth"
+baseNum 5 = "fifth"
+baseNum n = show n ++ "th"
 
 validateFuncSig :: [Type] -> [Type] -> Type -> Either Error Type
 validateFuncSig ts1 ts2 t =
@@ -158,7 +166,7 @@ validateFuncSig ts1 ts2 t =
         Left (t1, t2, n_rest) ->
             let n = length ts1 - n_rest
             in Left $ TypeError { expected_types=[t2], got_type=t1,
-                message_TE="Type mismatch in the " ++ show n ++ "-th argument. Expected: " ++ show t2 ++ ", but got: " ++ show t1 }
+                message_TE="Type mismatch at the " ++ baseNum n ++ " argument. Expected: " ++ show t2 ++ ", but got: " ++ show t1 }
 
 addToTypeErrorMessage :: Error -> String -> Error
 addToTypeErrorMessage te str =
