@@ -403,10 +403,6 @@ _evalFunctions mode binds expr =
                         case _applyOp name op ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
-                    Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_sig=sig }), ws1, ws2) ->
-                        case validateOp name sig ws1 ws2 of
-                            Left e -> Error e
-                            Right ex -> _eval mode binds ex
                     Nothing ->
                         case _iterOps mode 9 ws of -- オペレータ探し
                         Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- オペレータが見つかった

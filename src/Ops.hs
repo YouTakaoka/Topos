@@ -280,7 +280,7 @@ _getType (Func Operator { opName=name, operator=BinOp (_, sigs), priority=prt })
 _getType (Func Operator { opName=name, operator=UnOp (_, sigs), priority=prt }) =
     T_Func (T_Operator {opName_t=name, operator_sig=UnSig sigs, priority_t=prt})
 _getType (Func Operator { opName=name, operator=FuncOp (_, sig), priority=prt }) =
-    T_Func (T_Operator {opName_t=name, operator_sig=FuncSig sig, priority_t=prt})
+    T_Func T_Function { args_t=fst sig, return_t=snd sig }
 _getType (Func f) = T_Func $ getFunctionSignature f
 _getType (Type _) = T_Type
 
