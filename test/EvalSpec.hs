@@ -100,8 +100,13 @@ spec = do
         it "mapの型エラー" $
             _eval M_Normal sqr_binds (toExp "Function <List String -> List String>: ls -> map sqr ls") `shouldBe` Error (TypeError { expected_types=[T_List T_Int], got_type=T_List T_String, message_TE="" } )
         it "_typeSub" $
-            _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` (T_List T_Int)
+            _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` T_List T_Int
         it "_typeCheck" $
             _typeCheck [] (T_Func T_Function { funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }) (T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }) `shouldBe` Just [Bind { identifier="b", vtype=T_Type, value=Type T_String }, Bind { identifier="a", vtype=T_Type, value=Type T_Int }]
         it "validateFuncSig" $
             validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function {  funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
+        it "演算子の型エラー1" $
+            _eval M_Normal [] (toExp "2 * \"hoge\"") `shouldBe` Error TypeError { expected_types=[T_Int], got_type=T_String, message_TE="" }
+        it "関数の型エラー(実行時) " $
+            _eval M_Normal [] (toExp "(Function <String -> String>: x -> x) 5") `shouldBe`
+                Error TypeError { expected_types=[T_String], got_type=T_Int, message_TE="" }

@@ -53,7 +53,6 @@ _mul0 (Double x) (Double y) = Right $ Double (x * y)
 _mul0 (Int x) (Int y) = Right $ Int (x * y)
 _mul0 (Int x) (Double y) = Right $ Double ((fromIntegral x) * y)
 _mul0 (Double x) (Int y) = Right $ Double (x * (fromIntegral y))
-_mul0 x y = Left $ ValueError $ "`*`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _div :: Op
 _div = BinOp (_div0, [(T_Int, T_Int, T_Double), (T_Int, T_Double, T_Double), (T_Double, T_Int, T_Double), (T_Double, T_Double, T_Double)])
@@ -65,7 +64,6 @@ _div0 (Double x) (Double y) = Right $ Double (x / y)
 _div0 (Int x) (Int y) = Right $ Double ((fromIntegral x) / (fromIntegral y))
 _div0 (Int x) (Double y) = Right $ Double ((fromIntegral x) / y)
 _div0 (Double x) (Int y) = Right $ Double (x / (fromIntegral y))
-_div0 x y = Left $ ValueError $ "`/`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _add :: Op
 _add = BinOp (_add0,
@@ -82,7 +80,6 @@ _add0 (Int x) (Double y) = Right $ Double ((fromIntegral x) + y)
 _add0 (Double x) (Int y) = Right $ Double (x + (fromIntegral y))
 _add0 (Str s1) (Str s2) = Right $ Str (s1 ++ s2)
 _add0 (List l1) (List l2) = toList (l1 ++ l2)
-_add0 x y = Left $ ValueError $ "`+`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _sub :: Op
 _sub = BinOp (_sub0, [
@@ -98,7 +95,6 @@ _sub0 (Double x) (Double y) = Right $ Double (x - y)
 _sub0 (Int x) (Int y) = Right $ Int (x - y)
 _sub0 (Int x) (Double y) = Right $ Double ((fromIntegral x) - y)
 _sub0 (Double x) (Int y) = Right $ Double (x - (fromIntegral y))
-_sub0 x y = Left $ ValueError $ "`-`: Illegal input value: x=" ++ (show x) ++ ", y=" ++ (show y)
 
 _mod :: Op
 _mod = BinOp (_mod0, [(T_Int, T_Int, T_Int)])
@@ -129,9 +125,6 @@ _pow0 (Int x) (Int y) = Right $ Int $ x ^ y
 _pow0 (Int x) (Double y) = Right $ Double $ (fromIntegral x) ** y
 _pow0 (Double x) (Int y) = Right $ Double $ x ^ y
 _pow0 (Double x) (Double y) = Right $ Double $ x ** y
-_pow0 x (Int y) = Left $ ValueError $ "`^`: Illegal input value in the first argument: " ++ show x
-_pow0 x (Double y) = Left $ ValueError $ "`^`: Illegal input value in the first argument: " ++ show x
-_pow0 _ y = Left $ ValueError $ "`^`: Illegal input value in the second argument: " ++ show y
 
 _tostr :: Op
 _tostr = UnOp (_tostr0, [(T_Int, T_String), (T_Double, T_String), (T_Bool, T_String)])
@@ -140,7 +133,6 @@ _tostr0 :: UnaryOp
 _tostr0 (Int x) = Right $ Str $ show x
 _tostr0 (Double x) = Right $ Str $ show x
 _tostr0 (Bool x) = Right $ Str $ show x
-_tostr0 x = Left $ ValueError $ "`$`: Illegal input value: " ++ (show x)
 
 _eq :: Op
 _eq = BinOp ((\ a b -> Right $ Bool (a == b)), [
@@ -235,11 +227,9 @@ _take = FuncOp (_take0, (
 
 _take0 :: Exp -> Either Error Wrd
 _take0 [Int n, List ls] = Right $ List $ take n ls
-_take0 ex = Left $ ValueError $ "take: Illegal input value: " ++ (show ex)
 
 _seq0 :: Exp -> Either Error Wrd
 _seq0 (Int n : (Int m : [])) = Right $ List $ map (\ x -> Int x) [n .. m]
-_seq0 ex = Left $ ValueError $ "seq: Illegal input value: " ++ (show ex)
 
 _seq :: Op
 _seq = FuncOp (_seq0, (
