@@ -76,6 +76,10 @@ _typeCheck binds (T_Tuple (t1: ls1)) (T_Tuple (t2: ls2)) =
     case _typeCheck binds t1 t2 of
         Nothing -> Nothing
         Just binds2 -> _typeCheck binds2 (T_Tuple ls1) (T_Tuple ls2)
+_typeCheck binds (T_Func T_Function { args_t=as1, return_t=rt1 }) (T_Func T_Function { args_t=as2, return_t=rt2 }) =
+    case _typeCheck binds (T_Tuple as1) (T_Tuple as2) of
+        Nothing -> Nothing
+        Just binds2 -> _typeCheck binds2 rt1 rt2
 _typeCheck binds t1 t2 = if typeEq t1 t2 then Just binds else Nothing
 
 _typeSub :: [Bind] -> Type -> Type
@@ -85,6 +89,8 @@ _typeSub binds (T_TypeVar t str) =
         Just (b, _, _) -> (\ (Type x) -> x) $ value b
 _typeSub binds (T_List t) = T_List $ _typeSub binds t
 _typeSub binds (T_Tuple ls) = T_Tuple $ map (_typeSub binds) ls
+_typeSub binds (T_Func T_Function { args_t=as, return_t=rt }) =
+    T_Func T_Function { args_t=map (_typeSub binds) as, return_t=_typeSub binds rt }
 _typeSub _ t = t
 
 type BinaryOp = Wrd -> Wrd -> Either Error Wrd
@@ -145,6 +151,7 @@ instance Eq Wrd where
     (==) (TypeCheck t1) (TypeCheck t2) = t1 == t2
     (==) (ToEval te1) (ToEval te2) = te1 == te2
     (==) (Print a) (Print b) = a == b
+    (==) (Type a) (Type b) = a == b
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
@@ -163,6 +170,7 @@ instance Show Wrd where
     show (ToEval _) = "[ToEval]"
     show (TypeCheck t) = show t
     show (PreList ls) = "(Prelist: " ++ show ls ++ ")"
+    show (Type t) = show t
 
 type Exp = [Wrd]
 data EvalMode = M_Normal | M_TypeCheck

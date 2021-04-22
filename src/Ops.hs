@@ -255,7 +255,6 @@ _map = FuncOp (_map0, (
 
 _map0 :: Exp -> Either Error Wrd
 _map0 [Func f, List ls] = Right $ PreList $ map (\ w -> [Func f, w]) ls
-_map0 ex = Left $ ValueError $ "map: Illegal input value: " ++ (show ex)
 
 _fst :: Op
 _fst = UnOp (\ (Tuple [w1, _]) -> Right w1, [

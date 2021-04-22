@@ -145,7 +145,7 @@ validateUnSig t1 unsigs =
                         message_TE="Type mismatch at the argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
 
 matchFuncSig :: [Bind] -> [(Type, Type)] -> Either (Type, Type, Int) [Bind] -- Intは残りのリストの長さ
-matchFuncSig _ [] = Right []
+matchFuncSig binds [] = Right binds
 matchFuncSig binds ((t1, t2): tps) =
     case _typeCheck binds t1 t2 of
         Nothing -> Left (t1, _typeSub binds t2, length tps)
