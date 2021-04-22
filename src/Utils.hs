@@ -173,7 +173,7 @@ addToTypeErrorMessage te str =
     TypeError { expected_types=expected_types te, got_type=got_type te,
                             message_TE=str ++ message_TE te }
 
-_macroGen :: Function -> (Exp -> Either Error Exp)
+_macroGen :: Function -> Exp -> Exp
 _macroGen Function { args = as, ret_t = _, ret = expr } arguments =
     let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
-    in Right $ _mulSubst expr binds
+    in _mulSubst expr binds

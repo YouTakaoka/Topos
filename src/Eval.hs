@@ -177,17 +177,20 @@ _applyFunction mode f_w expr1 expr2 =
         M_Normal ->
             let Func f = f_w
                 l = length $ args f
-                as = take l expr2
-                rest = drop l expr2
-            in case _macroGen f as of
-                Left e -> Left e
-                Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
+            in if length expr2 < l
+                then Left $ ParseError $
+                        "Function `" ++ funcName f ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+                else let
+                        as = take l expr2
+                        rest = drop l expr2
+                    in case _macroGen f as of
+                        rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
         M_TypeCheck ->
-            let TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }) = f_w
+            let TypeCheck (T_Func T_Function { funcName_t=name, args_t = as_t, return_t = rt }) = f_w
                 l = length as_t
             in if length expr2 < l
                 then Left $ ParseError $
-                        "Function: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+                        "Function `" ++ name ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
                 else let
                         as = take l expr2
                         rest = drop l expr2
