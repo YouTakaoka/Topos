@@ -89,8 +89,8 @@ _typeSub binds (T_TypeVar t str) =
         Just (b, _, _) -> (\ (Type x) -> x) $ value b
 _typeSub binds (T_List t) = T_List $ _typeSub binds t
 _typeSub binds (T_Tuple ls) = T_Tuple $ map (_typeSub binds) ls
-_typeSub binds (T_Func T_Function { args_t=as, return_t=rt }) =
-    T_Func T_Function { args_t=map (_typeSub binds) as, return_t=_typeSub binds rt }
+_typeSub binds (T_Func T_Function { funcName_t=fname, args_t=as, return_t=rt, priority_ft=prt }) =
+    T_Func T_Function { funcName_t=fname, args_t=map (_typeSub binds) as, return_t=_typeSub binds rt, priority_ft=prt }
 _typeSub _ t = t
 
 type BinaryOp = Wrd -> Wrd -> Either Error Wrd
@@ -110,9 +110,9 @@ instance Show Op where
     show (UnOp _) = "[UnOp]"
     show (FuncOp _) = "[FuncOp]"
 
-data Function = Function { args :: [(Type, String)], ret_t :: Type, ret :: Exp }
+data Function = Function { funcName :: String, args :: [(Type, String)], ret_t :: Type, ret :: Exp, priority_f :: Int }
             | Operator { opName :: String, operator :: Op, priority :: Int } deriving Show
-data T_Function = T_Function { args_t :: [Type], return_t :: Type } 
+data T_Function = T_Function { funcName_t :: String, args_t :: [Type], return_t :: Type, priority_ft :: Int } 
             | T_Operator { opName_t :: String, operator_sig :: OperatorSig, priority_t :: Int } deriving Show
 instance Eq T_Function where
     (==) T_Function { args_t = at1, return_t = rt1 } T_Function { args_t = at2, return_t = rt2} = at1 == at2 && rt1 == rt2
@@ -207,6 +207,6 @@ instance Eq Result where
 data Parenthesis = ParFound (Exp, Exp, Exp) | ParNotFound | ParError String
 
 getFunctionSignature :: Function -> T_Function
-getFunctionSignature Function { args = as, ret_t = rt, ret = _ } =
+getFunctionSignature Function { funcName=name, args = as, ret_t = rt, ret = _, priority_f=prt } =
     let ast = map fst as
-    in T_Function { args_t = ast, return_t = rt }
+    in T_Function { funcName_t=name, args_t = ast, return_t = rt, priority_ft=prt }

@@ -249,7 +249,7 @@ _seq = FuncOp (_seq0, (
 
 _map :: Op
 _map = FuncOp (_map0, (
-        [T_Func T_Function { args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b" }, T_List (T_TypeVar T_Any "a")],
+        [T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_List (T_TypeVar T_Any "a")],
         T_List (T_TypeVar T_Any "b")
     ))
 
@@ -280,7 +280,7 @@ _getType (Func Operator { opName=name, operator=BinOp (_, sigs), priority=prt })
 _getType (Func Operator { opName=name, operator=UnOp (_, sigs), priority=prt }) =
     T_Func (T_Operator {opName_t=name, operator_sig=UnSig sigs, priority_t=prt})
 _getType (Func Operator { opName=name, operator=FuncOp (_, sig), priority=prt }) =
-    T_Func T_Function { args_t=fst sig, return_t=snd sig }
+    T_Func T_Function { funcName_t=name, args_t=fst sig, return_t=snd sig, priority_ft=prt }
 _getType (Func f) = T_Func $ getFunctionSignature f
 _getType (Type _) = T_Type
 

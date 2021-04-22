@@ -102,6 +102,6 @@ spec = do
         it "_typeSub" $
             _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` (T_List T_Int)
         it "_typeCheck" $
-            _typeCheck [] (T_Func T_Function { args_t=[T_Int], return_t=T_String }) (T_Func T_Function { args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b" }) `shouldBe` Just [Bind { identifier="b", vtype=T_Type, value=Type T_String }, Bind { identifier="a", vtype=T_Type, value=Type T_Int }]
+            _typeCheck [] (T_Func T_Function { funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }) (T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }) `shouldBe` Just [Bind { identifier="b", vtype=T_Type, value=Type T_String }, Bind { identifier="a", vtype=T_Type, value=Type T_Int }]
         it "validateFuncSig" $
-            validateFuncSig [T_Func T_Function { args_t=[T_Int], return_t=T_String }, T_Int] [T_Func T_Function { args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b" }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
+            validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function {  funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String

@@ -239,7 +239,7 @@ _evalFunctionSignature expr = -- exprは<>の中身
                                 Nothing ->
                                     let as_t = map (\ (Right t) -> t) ls
                                     in case toType t_r of
-                                        Right rt -> Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = rt }
+                                        Right rt -> Right $ TP $ T_Func $ T_Function { funcName_t="", args_t = as_t, return_t = rt, priority_ft=9 }
                                         Left e -> Left e
                                 Just (Left e, _, _) -> Left e
         Just (_, expr1, expr2) ->
@@ -267,8 +267,8 @@ _evalFunctionsEach mode binds ls =
         Nothing -> Right $ map (\ (Result (w, _)) -> w) res_l
         Just (Error e, _, _) -> Left e
 
-_eval :: EvalMode -> [Bind] -> Exp -> Result
-_eval mode binds (Tobe "Function" : rest) =
+compileFunction :: EvalMode -> [Bind] -> Exp -> String -> Result
+compileFunction mode binds rest name =
     case divListBy (Tobe ":") rest of
     Nothing -> Error $ SyntaxError "Missing `:` in `Function` statement."
     Just (_, rest1, rest2) ->
@@ -287,7 +287,7 @@ _eval mode binds (Tobe "Function" : rest) =
                         | length ts /= length as -> Error $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
                         | otherwise ->
                             let ass = map (\ (Tobe a) -> a) as
-                                f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
+                                f = Function { funcName=name, args = zip ts ass, ret_t = rt, ret = expr2, priority_f=9 }
                             in case mode of
                                 M_TypeCheck -> Result (TypeCheck (T_Func f_t), binds)
                                 M_Normal ->
@@ -300,6 +300,10 @@ _eval mode binds (Tobe "Function" : rest) =
                                                     message_TE="TypeError: Return type of function mismatch. Specified type is `" ++ show rt
                                                     ++ "` but Topos predicts `" ++ show t ++ "`" }
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
+
+_eval :: EvalMode -> [Bind] -> Exp -> Result
+_eval mode binds (Tobe "Function" : rest) =
+    compileFunction mode binds rest ""
 _eval mode binds (Tobe "define" : rest) =
     case mode of
         M_TypeCheck -> Error $ SyntaxError "Cannot use `define` statement in function literal."
@@ -309,7 +313,7 @@ _eval mode binds (Tobe "define" : rest) =
                 Just (_, [Tobe id], Tobe "Function" : rest2) ->
                     let rest2' = (Tobe "Function" : rest2)
                         bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
-                    in _eval mode (bind : binds) rest2'
+                    in compileFunction mode (bind : binds) rest2 id
                 _ -> Error $ SyntaxError "`Function` statement must follow just after `as` keyword."
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
@@ -391,12 +395,12 @@ _evalFunctions mode binds expr =
                                 Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
                 Nothing ->
                     case divList (_isFunction mode) ws of -- 関数探し
-                    Just (Func Function { args=as, ret_t=rt, ret=r }, expr1, expr2) -> -- 関数
-                        case _applyFunction mode (Func Function { args=as, ret_t=rt, ret=r }) expr1 expr2 of
+                    Just (Func Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }, expr1, expr2) -> -- 関数
+                        case _applyFunction mode (Func Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
-                    Just (TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }), expr1, expr2) ->
-                        case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
+                    Just (TypeCheck (T_Func tfunc), expr1, expr2) ->
+                        case _applyFunction mode (TypeCheck (T_Func tfunc)) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
                     Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- 関数オペレータ
