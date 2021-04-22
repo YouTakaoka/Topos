@@ -113,11 +113,10 @@ _quot0 :: BinaryOp
 _quot0 (Int x) (Int y) = Right $ Int $ div x y
 
 _succ :: Op
-_succ = UnOp (_succ0, [(T_Int, T_Int)])
+_succ = FuncOp (_succ0, ([T_Int], T_Int))
 
-_succ0 :: Wrd -> Either Error Wrd
-_succ0 (Int x) = Right $ Int (x + 1)
-_succ0 x = Left $ ValueError $ "succ: Illegal input value: " ++ (show x)
+_succ0 :: FunctionOp
+_succ0 [Int x] = Right $ Int (x + 1)
 
 _pow :: Op
 _pow = BinOp (_pow0, [

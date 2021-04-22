@@ -64,7 +64,9 @@ spec = do
             _eval M_Normal [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
         it "文字列" $
             _eval M_Normal [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
-        it "関数の中でmap" $
+        it "関数の中でmap 1" $
+            _eval M_Normal sqr_binds (toExp "(Function <Int -> List Int>: n -> map sqr (seq 1 n)) 3") `shouldBe` Result (List [Int 1,Int 4,Int 9], [])
+        it "関数の中でmap 2" $
             _eval M_Normal [] (toExp "(Function <Int -> List Int>: n -> map succ (seq 1 n)) 3") `shouldBe` Result (List [Int 2,Int 3,Int 4], [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
@@ -96,6 +98,6 @@ spec = do
         it "関数の型エラー4" $
             _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" } )
         it "mapの型エラー" $
-            _eval M_Normal [] (toExp "Function <List String -> List String>: ls -> map succ ls") `shouldBe` Error (TypeError { expected_types=[T_List T_Int, T_List T_Double], got_type=T_List T_String, message_TE="" } )
+            _eval M_Normal sqr_binds (toExp "Function <List String -> List String>: ls -> map sqr ls") `shouldBe` Error (TypeError { expected_types=[T_List T_Int, T_List T_Double], got_type=T_List T_String, message_TE="" } )
         it "_typeSub" $
             _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` (T_List T_Int)
