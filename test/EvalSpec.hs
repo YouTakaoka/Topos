@@ -106,7 +106,7 @@ spec = do
         it "validateFuncSig" $
             validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function {  funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
         it "演算子の型エラー1" $
-            _eval M_Normal [] (toExp "2 * \"hoge\"") `shouldBe` Error TypeError { expected_types=[T_Int], got_type=T_String, message_TE="" }
+            _eval M_Normal [] (toExp "2 * \"hoge\"") `shouldBe` Error TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" }
         it "関数の型エラー(実行時) " $
             _eval M_Normal [] (toExp "(Function <String -> String>: x -> x) 5") `shouldBe`
                 Error TypeError { expected_types=[T_String], got_type=T_Int, message_TE="" }

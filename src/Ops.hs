@@ -40,7 +40,7 @@ _print0 :: Wrd -> Either Error Wrd
 _print0 w = Right $ Print (show w)
 
 _print :: Op
-_print = UnOp (_print0, [(T_String, T_Print), (T_Int, T_Print), (T_Double, T_Print), (T_Bool, T_Print)])
+_print = UnOp (_print0, [(T_Printable, T_Print)])
 
 _mul :: Op
 _mul = BinOp (_mul0, _mulSigs)

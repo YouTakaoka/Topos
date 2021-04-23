@@ -27,6 +27,7 @@ data Type = T_Int
         | T_Eq
         | T_Null 
         | T_Any
+        | T_Printable
         | T_TypeVar Type String
         deriving (Eq, Show)
 
@@ -38,6 +39,16 @@ typeEq t1 t2 = t1 == t2
 _typeCheck :: [Bind] -> Type -> Type -> Maybe [Bind]
 _typeCheck binds T_EmptyList (T_List _) = Just binds
 _typeCheck binds _ T_Any = Just binds
+_typeCheck binds T_Int T_Printable = Just binds
+_typeCheck binds T_Bool T_Printable = Just binds
+_typeCheck binds T_Double T_Printable = Just binds
+_typeCheck binds T_String T_Printable = Just binds
+_typeCheck binds (T_List a) T_Printable = _typeCheck binds a T_Printable
+_typeCheck binds (T_Tuple []) T_Printable = Just binds
+_typeCheck binds (T_Tuple (w: ws)) T_Printable =
+    case _typeCheck binds w T_Printable of
+        Just binds2 -> _typeCheck binds2 (T_Tuple ws) T_Printable
+        Nothing -> Nothing
 _typeCheck binds T_Int T_Num = Just binds
 _typeCheck binds T_Double T_Num = Just binds
 _typeCheck binds T_Int T_Additive = Just binds

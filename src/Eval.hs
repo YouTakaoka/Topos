@@ -111,28 +111,40 @@ _applyOp name op ws1 (y : rest2) =
     case op of
     BinOp (binop, sigs)
         | null ws1 ->
-            case binop Null y of
-                Left e -> Left e
-                Right w -> Right $ w: rest2
+            case validateBinSig (T_Null, _getType y) sigs of
+            Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+            Right _ ->
+                case binop Null y of
+                    Left e -> Left e
+                    Right w -> Right $ w: rest2
         | otherwise ->
             let x = last ws1
                 rest1 = init ws1
-            in case binop x y of
-                Left e -> Left e
-                Right w -> Right $ rest1 ++ [w] ++ rest2
+            in case validateBinSig (_getType x, _getType y) sigs of
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+                Right _ ->
+                    case binop x y of
+                    Left e -> Left e
+                    Right w -> Right $ rest1 ++ [w] ++ rest2
     UnOp (unop, sigs) ->
-        case unop y of
-            Left e -> Left e
-            Right w -> Right $ ws1 ++ [w] ++ rest2
+        case validateUnSig (_getType y) sigs of
+        Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        Right _ ->
+            case unop y of
+                Left e -> Left e
+                Right w -> Right $ ws1 ++ [w] ++ rest2
     FuncOp (fnop, sig)
         | length (y : rest2) < nargs ->
             Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
         | otherwise ->
             let args = take nargs (y : rest2)
                 rest = drop nargs (y : rest2)
-            in case fnop args of
-                Left e -> Left e
-                Right w -> Right $ ws1 ++ [w] ++ rest
+            in case validateFuncSig (map _getType args) (fst sig) (snd sig) of
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+                Right _ ->
+                    case fnop args of
+                    Left e -> Left e
+                    Right w -> Right $ ws1 ++ [w] ++ rest
         where
             nargs = length $ fst sig
 _applyOp name op _ [] =
