@@ -171,32 +171,32 @@ validateOp name op_sig ws1 (TypeCheck y_t: rest2) =
                         Right t -> Right $ ws1 ++ [TypeCheck t] ++ drop l ws2
                         Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
 
-_applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
-_applyFunction mode f_w expr1 expr2 =
-    case mode of
-        M_Normal ->
-            let Func f = f_w
-                l = length $ args f
-            in if length expr2 < l
-                then Left $ ParseError $
-                        "Function `" ++ funcName f ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
-                else let
-                        as = take l expr2
-                        rest = drop l expr2
-                    in case _macroGen f as of
-                        rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
-        M_TypeCheck ->
-            let TypeCheck (T_Func T_Function { funcName_t=name, args_t = as_t, return_t = rt }) = f_w
-                l = length as_t
-            in if length expr2 < l
-                then Left $ ParseError $
-                        "Function `" ++ name ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
-                else let
-                        as = take l expr2
-                        rest = drop l expr2
-                    in case validateFuncSig (map (\ (TypeCheck x) -> x) as) as_t rt of
-                            Left te -> Left $ addToTypeErrorMessage te "Function: "
-                            Right t -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck t] ++ [Tobe ")"] ++ rest
+_applyFunction :: Function -> Exp -> Exp -> Either Error Exp
+_applyFunction f expr1 expr2 =
+    let l = length $ args f
+    in if length expr2 < l
+        then Left $ ParseError $
+                "Function `" ++ funcName f ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+        else let
+                as = take l expr2
+                rest = drop l expr2
+                T_Func T_Function { funcName_t=name, args_t = as_t, return_t = rt } = _getType $ Func f
+            in case validateFuncSig (map _getType as) as_t rt of
+                Right _ -> Right $ expr1 ++ [Tobe "("] ++ _macroGen f as ++ [Tobe ")"] ++ rest
+                Left te -> Left $ addToTypeErrorMessage te $ "Function `" ++ name ++ "`: "
+
+_validateFunction :: T_Function -> Exp -> Exp -> Either Error Exp
+_validateFunction T_Function { funcName_t=name, args_t = as_t, return_t = rt } expr1 expr2 =
+    let l = length as_t
+    in if length expr2 < l
+        then Left $ ParseError $
+                "Function `" ++ name ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+        else let
+                as = take l expr2
+                rest = drop l expr2
+            in case validateFuncSig (map (\ (TypeCheck x) -> x) as) as_t rt of
+                    Left te -> Left $ addToTypeErrorMessage te $ "Function `" ++ name ++ "`: "
+                    Right t -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck t] ++ [Tobe ")"] ++ rest
 
 _evalNewBinds :: EvalMode -> [Bind] -> [Bind] -> Exp -> Result
 _evalNewBinds mode binds_new binds_old expr =
@@ -399,11 +399,11 @@ _evalFunctions mode binds expr =
                 Nothing ->
                     case divList (_isFunction mode) ws of -- 関数探し
                     Just (Func Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }, expr1, expr2) -> -- 関数
-                        case _applyFunction mode (Func Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }) expr1 expr2 of
+                        case _applyFunction (Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
                     Just (TypeCheck (T_Func tfunc), expr1, expr2) ->
-                        case _applyFunction mode (TypeCheck (T_Func tfunc)) expr1 expr2 of
+                        case _validateFunction tfunc expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
                     Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- 関数オペレータ
@@ -441,7 +441,7 @@ functionTypeCheck binds f =
         Result (w, _) -> Right $ unveilTypeCheck w
 
 _typeExprGen :: Function -> Exp
-_typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =
+_typeExprGen Function { args = as, ret_t = rt, ret = expr } =
     let 
         binds = map (\ (t, id) -> Bind {identifier = id, value = TypeCheck t, vtype = T_TypeCheck }) as
     in _mulSubst expr binds
