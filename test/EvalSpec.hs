@@ -110,3 +110,5 @@ spec = do
         it "関数の型エラー(実行時) " $
             _eval M_Normal [] (toExp "(Function <String -> String>: x -> x) 5") `shouldBe`
                 Error TypeError { expected_types=[T_String], got_type=T_Int, message_TE="" }
+        it "関数の型エラー時に関数名を表示" $
+            (message_TE $ (\ (Error x) -> x) $ _eval M_Normal sqr_binds (toExp "sqr \"hoge\"")) `shouldBe` "Function `sqr`: Type mismatch at the first argument. Expected: T_Int, but got: T_String"

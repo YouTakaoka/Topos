@@ -230,17 +230,17 @@ _bind mode binds rest =
 
 data TypeOrTypeContents = TP Type | TContents [Type]
 
-_evalFunctionSignature :: Exp -> Either Error TypeOrTypeContents
-_evalFunctionSignature expr = -- exprは<>の中身
+_evalFunctionSignature :: String -> Exp -> Either Error TypeOrTypeContents
+_evalFunctionSignature name expr = -- exprは<>の中身
     case divListBy (Tobe "Function") expr of
         Nothing ->
             case findParenthesis expr "(" ")" of
                 ParError s -> Left $ ParseError s
                 ParFound (expr2, expr3, expr4) ->
-                    case _evalFunctionSignature expr3 of
+                    case _evalFunctionSignature name expr3 of
                         Left s -> Left s
                         Right (TContents ts) ->
-                            _evalFunctionSignature $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
+                            _evalFunctionSignature name $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
                 ParNotFound ->
                     case divListBy (Tobe "->") expr of
                         Nothing ->
@@ -254,7 +254,7 @@ _evalFunctionSignature expr = -- exprは<>の中身
                                 Nothing ->
                                     let as_t = map (\ (Right t) -> t) ls
                                     in case toType t_r of
-                                        Right rt -> Right $ TP $ T_Func $ T_Function { funcName_t="", args_t = as_t, return_t = rt, priority_ft=9 }
+                                        Right rt -> Right $ TP $ T_Func $ T_Function { funcName_t=name, args_t = as_t, return_t = rt, priority_ft=9 }
                                         Left e -> Left e
                                 Just (Left e, _, _) -> Left e
         Just (_, expr1, expr2) ->
@@ -262,9 +262,9 @@ _evalFunctionSignature expr = -- exprは<>の中身
                 ParError s -> Left $ ParseError s
                 ParNotFound -> Left $ SyntaxError "`<` not found after `Function`"
                 ParFound ([], expr3, expr4) ->
-                    case _evalFunctionSignature expr3 of
+                    case _evalFunctionSignature name expr3 of
                         Left s -> Left s
-                        Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                        Right (TP t) -> _evalFunctionSignature name $ expr1 ++ [Type t] ++ expr4
                         _ -> Left $ SyntaxError "Missing `->` in `Function` statement"
                 _ -> Left $ SyntaxError "`<` must follow just after `Function`"
 
@@ -291,7 +291,7 @@ compileFunction mode binds rest name =
         ParError s -> Error $ ParseError s
         ParNotFound -> Error $ SyntaxError "`<` must follow just after `Function`"
         ParFound ([], expr1, []) ->
-            case _evalFunctionSignature expr1 of
+            case _evalFunctionSignature name expr1 of
             Left e -> Error e
             Right (TP (T_Func f_t)) ->
                 let ts = args_t f_t
@@ -312,7 +312,7 @@ compileFunction mode binds rest name =
                                         if t == rt
                                             then Result (Func f, binds)
                                             else Error $ TypeError { expected_types=[rt], got_type=t,
-                                                    message_TE="TypeError: Return type of function mismatch. Specified type is `" ++ show rt
+                                                    message_TE="Function `" ++ name ++ "`: Return type of function mismatch. Specified type is `" ++ show rt
                                                     ++ "` but Topos predicts `" ++ show t ++ "`" }
         _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
 
