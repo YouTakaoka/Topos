@@ -43,7 +43,7 @@ _isFunction :: EvalMode -> Wrd -> Bool
 _isFunction M_Normal (Func Function {}) = True
 _isFunction M_Normal (Func Operator { operator=FuncOp _}) = True
 _isFunction M_TypeCheck (TypeCheck (T_Func T_Function {})) = True
-_isFunction M_TypeCheck (TypeCheck (T_Func T_Operator { operator_t=FuncOp _})) = True
+_isFunction M_TypeCheck (TypeCheck (T_Func T_Operator { operator_sig=FuncSig _})) = True
 _isFunction _ _ = False
 
 _isOp :: Wrd -> Bool
@@ -80,6 +80,7 @@ _evalWrd mode (Tobe s) =
                 M_Normal -> w
                 M_TypeCheck -> TypeCheck $ _getType w
 _evalWrd M_TypeCheck (Str s) = TypeCheck T_String
+_evalWrd M_TypeCheck (Func f) = TypeCheck $ _getType $ Func f
 _evalWrd _ w = w
     
 _subOp :: EvalMode -> Function -> Exp -> Exp
@@ -89,12 +90,7 @@ _subOp mode op expr =
         Just (_, ws1, ws2) ->
             case mode of
                 M_Normal -> _subOp mode op $ ws1 ++ [Func op] ++ ws2
-                M_TypeCheck ->
-                    let name = opName op
-                        op_t = _typeFunction name
-                        prt = priority op
-                        op2 = T_Operator { opName_t=name, operator_t=op_t, priority_t=prt }
-                    in _subOp mode op $ ws1 ++ [TypeCheck $ T_Func op2] ++ ws2
+                M_TypeCheck -> _subOp mode op $ ws1 ++ [TypeCheck $ _getType $ Func op] ++ ws2
 
 _mulSubOp :: EvalMode -> [Function] -> Exp -> Exp
 _mulSubOp mode [strop] expr = _subOp mode strop expr
@@ -112,52 +108,108 @@ _examineInputList expr =
         Nothing -> Nothing
 
 _applyOp :: String -> Op -> Exp -> Exp -> Either Error Exp -- TODO: 引数の型がTobe型でないかチェック
-_applyOp opName op ws1 (y : rest2) =
+_applyOp name op ws1 (y : rest2) =
     case op of
-    BinOp binop
+    BinOp (binop, sigs)
         | null ws1 ->
-            case binop Null y of
-                Left e -> Left e
-                Right w -> Right $ w: rest2
+            case validateBinSig (T_Null, _getType y) sigs of
+            Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+            Right _ ->
+                case binop Null y of
+                    Left e -> Left e
+                    Right w -> Right $ w: rest2
         | otherwise ->
             let x = last ws1
                 rest1 = init ws1
-            in case binop x y of
+            in case validateBinSig (_getType x, _getType y) sigs of
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+                Right _ ->
+                    case binop x y of
+                    Left e -> Left e
+                    Right w -> Right $ rest1 ++ [w] ++ rest2
+    UnOp (unop, sigs) ->
+        case validateUnSig (_getType y) sigs of
+        Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        Right _ ->
+            case unop y of
                 Left e -> Left e
-                Right w -> Right $ rest1 ++ [w] ++ rest2
-    UnOp unop ->
-        case unop y of
-            Left e -> Left e
-            Right w -> Right $ ws1 ++ [w] ++ rest2
-    FuncOp (nargs, fnop)
-        | length (y : rest2) < nargs -> Left $ ParseError $ "Supplied too few arguments to function operator `" ++ opName ++ "`"
+                Right w -> Right $ ws1 ++ [w] ++ rest2
+    FuncOp (fnop, sig)
+        | length (y : rest2) < nargs ->
+            Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
         | otherwise ->
             let args = take nargs (y : rest2)
                 rest = drop nargs (y : rest2)
-            in case fnop args of
-                Left e -> Left e
-                Right w -> Right $ ws1 ++ [w] ++ rest
+            in case validateFuncSig (map _getType args) (fst sig) (snd sig) of
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+                Right _ ->
+                    case fnop args of
+                    Left e -> Left e
+                    Right w -> Right $ ws1 ++ [w] ++ rest
+        where
+            nargs = length $ fst sig
+_applyOp name op _ [] =
+    case op of
+        BinOp _ -> Left $ ParseError $ "Missing second argument for binary operator `" ++ name ++ "`"
+        UnOp _ -> Left $ ParseError $ "Missing argument for Unary operator `" ++ name ++ "`"
+        FuncOp _ -> Left $ ParseError $ "Missing arguments for function `" ++ name ++ "`"
 
-_applyFunction :: EvalMode -> Wrd -> Exp -> Exp -> Either Error Exp
-_applyFunction mode f_w expr1 expr2 =
-    case mode of
-        M_Normal ->
-            let Func f = f_w
-                l = length $ args f
+validateOp :: String -> OperatorSig -> Exp -> Exp -> Either Error Exp
+validateOp name op_sig ws1 (TypeCheck y_t: rest2) =
+    case op_sig of
+        BinSig binsigs ->
+            if null ws1 then
+                case validateBinSig (T_Null, y_t) binsigs of
+                    Right t -> Right $ TypeCheck t : rest2
+                    Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+            else
+                let TypeCheck x_t = last ws1
+                    rest1 = init ws1
+                in case validateBinSig (x_t, y_t) binsigs of
+                    Right t -> Right $ rest1 ++ [TypeCheck t] ++ rest2
+                    Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        UnSig unsigs ->
+            case validateUnSig y_t unsigs of
+                Right t -> Right $ ws1 ++ [TypeCheck t] ++ rest2
+                Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+        FuncSig (ts, t_r) ->
+            let l = length ts
+                ws2 = TypeCheck y_t: rest2
+            in if length ws2 < l
+                then
+                    Left $ ParseError $ "Supplied too few arguments to function `" ++ name ++ "`"
+                else
+                    let ts2 = map (\ (TypeCheck x) -> x) ws2
+                    in case validateFuncSig ts2 ts t_r of
+                        Right t -> Right $ ws1 ++ [TypeCheck t] ++ drop l ws2
+                        Left te -> Left $ addToTypeErrorMessage te $ "`" ++ name ++ "`: "
+
+_applyFunction :: Function -> Exp -> Exp -> Either Error Exp
+_applyFunction f expr1 expr2 =
+    let l = length $ args f
+    in if length expr2 < l
+        then Left $ ParseError $
+                "Function `" ++ funcName f ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+        else let
                 as = take l expr2
                 rest = drop l expr2
-            in case _macroGen f as of
-                Left e -> Left e
-                Right rslt -> Right $ expr1 ++ [Tobe "("] ++ rslt ++ [Tobe ")"] ++ rest
-        M_TypeCheck ->
-            let TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt })) = f_w
-                l = length as_t
+                T_Func T_Function { funcName_t=name, args_t = as_t, return_t = rt } = _getType $ Func f
+            in case validateFuncSig (map _getType as) as_t rt of
+                Right _ -> Right $ expr1 ++ [Tobe "("] ++ _macroGen f as ++ [Tobe ")"] ++ rest
+                Left te -> Left $ addToTypeErrorMessage te $ "Function `" ++ name ++ "`: "
+
+_validateFunction :: T_Function -> Exp -> Exp -> Either Error Exp
+_validateFunction T_Function { funcName_t=name, args_t = as_t, return_t = rt } expr1 expr2 =
+    let l = length as_t
+    in if length expr2 < l
+        then Left $ ParseError $
+                "Function `" ++ name ++ "`: Too few arguments supplied. Expected " ++ show l ++ ", but given only " ++ show (length expr2) ++ "."
+        else let
                 as = take l expr2
                 rest = drop l expr2
-                binds_tc = map (\ (t, a) -> Bind { identifier = "", value = a, vtype = t }) $ zip as_t as
-            in case _typeCheck mode binds_tc of
-                    Just e -> Left e
-                    Nothing -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck rt] ++ [Tobe ")"] ++ rest
+            in case validateFuncSig (map unveilTypeCheck as) as_t rt of
+                    Left te -> Left $ addToTypeErrorMessage te $ "Function `" ++ name ++ "`: "
+                    Right t -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck t] ++ [Tobe ")"] ++ rest
 
 _evalNewBinds :: EvalMode -> [Bind] -> [Bind] -> Exp -> Result
 _evalNewBinds mode binds_new binds_old expr =
@@ -179,17 +231,17 @@ _bind mode binds rest =
 
 data TypeOrTypeContents = TP Type | TContents [Type]
 
-_evalFunctionSignature :: Exp -> Either Error TypeOrTypeContents
-_evalFunctionSignature expr = -- exprは<>の中身
+_evalFunctionSignature :: String -> Exp -> Either Error TypeOrTypeContents
+_evalFunctionSignature name expr = -- exprは<>の中身
     case divListBy (Tobe "Function") expr of
         Nothing ->
             case findParenthesis expr "(" ")" of
                 ParError s -> Left $ ParseError s
                 ParFound (expr2, expr3, expr4) ->
-                    case _evalFunctionSignature expr3 of
+                    case _evalFunctionSignature name expr3 of
                         Left s -> Left s
                         Right (TContents ts) ->
-                            _evalFunctionSignature $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
+                            _evalFunctionSignature name $ expr2 ++ [Type (T_Tuple ts)] ++ expr4
                 ParNotFound ->
                     case divListBy (Tobe "->") expr of
                         Nothing ->
@@ -203,7 +255,7 @@ _evalFunctionSignature expr = -- exprは<>の中身
                                 Nothing ->
                                     let as_t = map (\ (Right t) -> t) ls
                                     in case toType t_r of
-                                        Right rt -> Right $ TP $ T_Func $ T_Function { args_t = as_t, return_t = rt }
+                                        Right rt -> Right $ TP $ T_Func $ T_Function { funcName_t=name, args_t = as_t, return_t = rt, priority_ft=9 }
                                         Left e -> Left e
                                 Just (Left e, _, _) -> Left e
         Just (_, expr1, expr2) ->
@@ -211,9 +263,9 @@ _evalFunctionSignature expr = -- exprは<>の中身
                 ParError s -> Left $ ParseError s
                 ParNotFound -> Left $ SyntaxError "`<` not found after `Function`"
                 ParFound ([], expr3, expr4) ->
-                    case _evalFunctionSignature expr3 of
+                    case _evalFunctionSignature name expr3 of
                         Left s -> Left s
-                        Right (TP t) -> _evalFunctionSignature $ expr1 ++ [Type t] ++ expr4
+                        Right (TP t) -> _evalFunctionSignature name $ expr1 ++ [Type t] ++ expr4
                         _ -> Left $ SyntaxError "Missing `->` in `Function` statement"
                 _ -> Left $ SyntaxError "`<` must follow just after `Function`"
 
@@ -231,39 +283,35 @@ _evalFunctionsEach mode binds ls =
         Nothing -> Right $ map (\ (Result (w, _)) -> w) res_l
         Just (Error e, _, _) -> Left e
 
-_eval :: EvalMode -> [Bind] -> Exp -> Result
-_eval mode binds (Tobe "Function" : rest) =
+compileFunction :: EvalMode -> [Bind] -> Exp -> String -> Either Error Function
+compileFunction mode binds rest name =
     case divListBy (Tobe ":") rest of
-    Nothing -> Error $ SyntaxError "Missing `:` in `Function` statement."
+    Nothing -> Left $ SyntaxError "Missing `:` in `Function` statement."
     Just (_, rest1, rest2) ->
         case findParenthesis rest1 "<" ">" of
-        ParError s -> Error $ ParseError s
-        ParNotFound -> Error $ SyntaxError "`<` must follow just after `Function`"
+        ParError s -> Left $ ParseError s
+        ParNotFound -> Left $ SyntaxError "`<` must follow just after `Function`"
         ParFound ([], expr1, []) ->
-            case _evalFunctionSignature expr1 of
-            Left e -> Error e
+            case _evalFunctionSignature name expr1 of
+            Left e -> Left e
             Right (TP (T_Func f_t)) ->
                 let ts = args_t f_t
                     rt = return_t f_t
                 in case divListBy (Tobe "->") rest2 of
-                    Nothing -> Error $ SyntaxError "Missing `->` in `Function` statement."
+                    Nothing -> Left $ SyntaxError "Missing `->` in `Function` statement."
                     Just (_, as, expr2)
-                        | length ts /= length as -> Error $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
+                        | length ts /= length as -> Left $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
                         | otherwise ->
                             let ass = map (\ (Tobe a) -> a) as
-                                f = Function { args = zip ts ass, ret_t = rt, ret = expr2 }
-                            in case mode of
-                                M_TypeCheck -> Result (TypeCheck (T_Func f_t), binds)
-                                M_Normal ->
-                                    case functionTypeCheck binds f of
-                                    Left e -> Error e
-                                    Right t ->
-                                        if t == rt
-                                            then Result (Func f, binds)
-                                            else Error $ TypeError rt t $
-                                                "TypeError: Return type of function mismatch. Specified type is `" ++ show rt
-                                                    ++ "` but Topos predicts `" ++ show t ++ "`"
-        _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
+                                f = Function { funcName=name, args = zip ts ass, ret_t = rt, ret = expr2, priority_f=9 }
+                            in Right f
+        _ -> Left $ SyntaxError "Parhaps needless words got into `Function` statement."
+
+_eval :: EvalMode -> [Bind] -> Exp -> Result
+_eval mode binds (Tobe "Function" : rest) =
+    case compileFunction mode binds rest "(anonymous)" of
+        Left e -> Error e
+        Right f -> functionTypeCheck mode binds f
 _eval mode binds (Tobe "define" : rest) =
     case mode of
         M_TypeCheck -> Error $ SyntaxError "Cannot use `define` statement in function literal."
@@ -271,9 +319,11 @@ _eval mode binds (Tobe "define" : rest) =
             case divListBy (Tobe "as") rest of
                 Nothing -> Error $ SyntaxError "Keyword `as` not found in `define` statement."
                 Just (_, [Tobe id], Tobe "Function" : rest2) ->
-                    let rest2' = (Tobe "Function" : rest2)
-                        bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
-                    in _eval mode (bind : binds) rest2'
+                    case compileFunction mode binds rest2 id of
+                        Left e -> Error e
+                        Right f ->
+                            let b = Bind { identifier=id, vtype=_getType $ Func f, value=Func f }
+                            in functionTypeCheck mode (b:binds) f
                 _ -> Error $ SyntaxError "`Function` statement must follow just after `as` keyword."
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
@@ -291,7 +341,7 @@ _eval mode binds (Tobe "if" : rest) =
             M_Normal ->
                 case _eval mode binds cond of
                 Result (Bool truth, binds2) ->
-                    _evalNewBinds mode binds2 binds $ if truth then  thn else els
+                    _evalNewBinds mode binds2 binds $ if truth then thn else els
                 Result (w, _) -> Error $ SyntaxError $ "Entered a non-boolean value into `if` statement: " ++ show w
                 Error e -> Error e
             M_TypeCheck ->
@@ -302,7 +352,9 @@ _eval mode binds (Tobe "if" : rest) =
                             Error e -> Error e
                             Result (TypeCheck t2, binds)
                                 | typeEq t1 t2 -> Result (TypeCheck t1, binds)
-                                | otherwise -> Error $ SyntaxError $ "Mismatch of return type in `if` statement: Return type of `then` part is `" ++ (show t1) ++ "`, but that of `else` part is `" ++ (show t2) ++ "`"
+                                | otherwise -> Error $ TypeError { expected_types=[t1], got_type=t2,
+                                    message_TE="Mismatch of return type in `if` statement: Return type of `then` part is `"
+                                        ++ show t1 ++ "`, but that of `else` part is `" ++ show t2 ++ "`" }
                     Result (w, _) -> Error $ InternalError $ "Unexpected return type: " ++ show (_getType w)
 _eval mode binds expr =
     case findParenthesis expr "(" ")" of
@@ -310,7 +362,7 @@ _eval mode binds expr =
     ParFound (expr1, expr2, expr3) ->
         case _eval mode binds expr2 of
             Result (Contents ls, _) -> _eval mode binds $ expr1 ++ [Tuple ls] ++ expr3
-            Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+            Result (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr3
             Error e -> Error e
     ParNotFound ->
         case findParenthesis expr "[" "]" of
@@ -333,7 +385,7 @@ _eval mode binds expr =
 
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
-    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls_dec $ _mulSubst expr binds
+    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls $ _mulSubst expr binds
     in case _examineInputList ws of
         Just e -> Error e
         Nothing ->
@@ -353,19 +405,18 @@ _evalFunctions mode binds expr =
                                 Right wls -> _eval mode binds $ expr1 ++ [wls] ++ expr2
                 Nothing ->
                     case divList (_isFunction mode) ws of -- 関数探し
-                    Just (Func Function { args=as, ret_t=rt, ret=r }, expr1, expr2) -> -- 関数
-                        case _applyFunction mode (Func Function { args=as, ret_t=rt, ret=r }) expr1 expr2 of
+                    Just (Func Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }, expr1, expr2) -> -- 関数
+                        case _applyFunction (Function { funcName=name, args=as, ret_t=rt, ret=r, priority_f=prt }) expr1 expr2 of
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
-                    Just (TypeCheck (T_Func T_Function { args_t = as_t, return_t = rt }), expr1, expr2) ->
-                        case _applyFunction mode (TypeCheck (T_Func (T_Function { args_t = as_t, return_t = rt }))) expr1 expr2 of
-                            Right rslt -> _eval mode binds rslt
-                            Left e -> Error e
+                    Just (TypeCheck (T_Func tfunc), expr1, expr2) ->
+                        case mode of
+                            M_Normal -> Error $ InternalError "`TypeCheck` found in Normal mode."
+                            M_TypeCheck ->
+                                case _validateFunction tfunc expr1 expr2 of
+                                    Right rslt -> _eval mode binds rslt
+                                    Left e -> Error e
                     Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- 関数オペレータ
-                        case _applyOp name op ws1 ws2 of
-                            Left e -> Error e
-                            Right ex -> _eval mode binds ex
-                    Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
                         case _applyOp name op ws1 ws2 of
                             Left e -> Error e
                             Right ex -> _eval mode binds ex
@@ -375,14 +426,14 @@ _evalFunctions mode binds expr =
                             case _applyOp name op ws1 ws2 of
                                 Left e -> Error e
                                 Right ex -> _eval mode binds ex
-                        Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_t=op }), ws1, ws2) ->
-                            case _applyOp name op ws1 ws2 of
+                        Just (TypeCheck (T_Func T_Operator { opName_t=name, operator_sig=sig }), ws1, ws2) ->
+                            case validateOp name sig ws1 ws2 of
                                 Left e -> Error e
                                 Right ex -> _eval mode binds ex
                         Nothing -> -- オペレータ見つからなかった
                             case ws of
                                 [] -> Result (Null, binds)
-                                (Tobe s: []) -> Error $ UnknownKeywordError s
+                                [Tobe s] -> Error $ UnknownKeywordError s
                                 [w] -> Result (w, binds)
                                 _ -> Error $ InternalError $ "Evaluation failed: " ++ show ws
 
@@ -392,15 +443,27 @@ unveilTypeCheck w =
         TypeCheck t -> t
         List ls -> T_List (unveilTypeCheck $ head ls)
         Tuple ls -> T_Tuple (map unveilTypeCheck ls)
+        _ -> _getType w
 
-functionTypeCheck :: [Bind] -> Function -> Either Error Type
-functionTypeCheck binds f = 
-    case _eval M_TypeCheck binds $ _typeExprGen f of
-        Error e -> Left e
-        Result (w, _) -> Right $ unveilTypeCheck w
+functionTypeCheck :: EvalMode -> [Bind] -> Function -> Result
+functionTypeCheck mode binds f = 
+    case mode of
+        M_TypeCheck -> Result (TypeCheck (_getType $ Func f), binds)
+        M_Normal ->
+            case _eval M_TypeCheck binds $ _typeExprGen f of
+            Error e -> Error e
+            Result (w, _) ->
+                let t = unveilTypeCheck w
+                in if t == rt
+                    then Result (Func f, binds)
+                    else Error $ TypeError { expected_types=[rt], got_type=t,
+                            message_TE="Function `" ++ funcName f ++ "`: Return type of function mismatch. Specified type is `" ++ show rt
+                            ++ "` but Topos predicts `" ++ show t ++ "`" }
+    where
+        rt = ret_t f
 
 _typeExprGen :: Function -> Exp
-_typeExprGen (Function { args = as, ret_t = rt, ret = expr }) =
+_typeExprGen Function { args = as, ret_t = rt, ret = expr } =
     let 
         binds = map (\ (t, id) -> Bind {identifier = id, value = TypeCheck t, vtype = T_TypeCheck }) as
     in _mulSubst expr binds

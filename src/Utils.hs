@@ -3,6 +3,7 @@ import Parser
 import Types
 import Ops
 import Debug.Trace
+import Data.List
 
 _traceShow :: Show a => a -> a
 _traceShow x = trace (show x) x
@@ -14,7 +15,7 @@ smbls = ["(", ")", "[", "]", "{", "}", "->", "<", ">", ",", ":", "==", "!=", "&&
 
 _isInitialSym :: String -> String -> Maybe String
 _isInitialSym str sym
-    | (take l str) == sym = Just (drop l str)
+    | take l str == sym = Just (drop l str)
     | otherwise = Nothing
     where l = length sym
 
@@ -34,11 +35,11 @@ _divStrBySyms syms wrk inp =  --wrkの初期値は空
                 [c] -> [Tobe (wrk ++ [c])]
                 (c : rest) -> _divStrBySyms syms (wrk ++ [c]) rest
         Just (sym, rest) ->
-            (if wrk == "" then [] else [Tobe wrk])
+            ([Tobe wrk | not (wrk == "")])
                 ++ [Tobe sym] ++ _divStrBySyms syms [] rest
 
 _toExp0 :: String -> Exp
-_toExp0 str = concat $ map (_divStrBySyms smbls []) $ words str
+_toExp0 str = concatMap (_divStrBySyms smbls []) (words str)
 
 _toExp :: Char -> String -> Bool -> Exp -> Exp
 _toExp q str inq expr =  -- inq: 引用符の中にいるかどうかのフラグ．初期状態でfalse
@@ -81,33 +82,98 @@ _toType (Type t) = Right t
 
 toType :: Exp -> Either Error Type
 toType [w] = _toType w
-toType [Tobe "List", w] = 
+toType [Tobe "List", w] =
     case _toType w of
         Left e -> Left e
         Right t -> Right $ T_List t
 
 _isListType :: Type -> Bool
-_isListType (T_List _) = True 
+_isListType (T_List _) = True
 _isListType _ = False
 
-_typeCheck :: EvalMode -> [Bind] -> Maybe Error -- NothingならOK，Justはエラー
-_typeCheck mode [] = Nothing
-_typeCheck mode (Bind { identifier = id, value = v, vtype = t } : binds)
-    | actype <= t = _typeCheck mode binds
-    | otherwise = Just $ TypeError t actype $
-                    "Type mismatch of variable `" ++ id ++ "`. Expected type is `" ++ (show t) ++ "` but input type is `" ++ (show actype) ++ "`."
-    where
-        actype = case mode of
-                    M_Normal -> _getType v
-                    M_TypeCheck -> (\ (TypeCheck tp) -> tp) v
+checkBinSig :: (Type, Type) -> BinSig -> Maybe (Either Type Type)
+checkBinSig (t1, t2) (t1', t2', t3') =
+    case _typeCheck [] t1 t1' of
+        Nothing -> Nothing
+        Just binds ->
+            case _typeCheck binds t2 t2' of
+                Nothing -> Just $ Left $ _typeSub binds t2'
+                Just binds2 -> Just $ Right $ _typeSub binds2 t3'
 
-_macroGen :: Function -> (Exp -> Either Error Exp)
-_macroGen (Function { args = as, ret_t = _, ret = expr }) =
-    \ arguments ->
-        case length as == length arguments of
-            False -> Left $ InternalError "Number of arguments of function does not match."
-            True ->
-                let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
-                in case _typeCheck M_Normal binds of
-                    Nothing -> Right $ _mulSubst expr binds
-                    Just e -> Left e
+matchBinSig :: (Type, Type) -> [BinSig] -> Either [Type] Type
+matchBinSig _ [] = Left []
+matchBinSig (t1, t2) ((t1', t2', t3'): binsigs) =
+    case checkBinSig (t1, t2) (t1', t2', t3') of
+        Nothing -> matchBinSig (t1, t2) binsigs
+        Just (Right t) -> Right t
+        Just (Left t) ->
+            case matchBinSig (t1, t2) binsigs of
+                Right t' -> Right t'
+                Left ts -> Left (t:ts)
+
+selectBinSigFirstUnique :: [BinSig] -> [Type]
+selectBinSigFirstUnique binsigs =
+    delete T_Null $ nub $ map (\ (x, _, _) -> x) binsigs
+
+validateBinSig :: (Type, Type) -> [BinSig] -> Either Error Type
+validateBinSig (t1, t2) binsigs =
+    case matchBinSig (t1, t2) binsigs of
+        Left [] ->
+            let ts = selectBinSigFirstUnique binsigs
+            in Left TypeError { expected_types=ts, got_type=t1,
+                    message_TE="Type mismatch at the first argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
+        Left ts ->
+            Left TypeError { expected_types=ts, got_type=t2,
+                message_TE="Type mismatch at the second argument. Expected: " ++ show ts ++ ", but got: " ++ show t2 }
+        Right t -> Right t
+
+matchUnSig :: Type -> [UnSig] -> Either [Type] Type
+matchUnSig _ [] = Left []
+matchUnSig t1 ((t1', t2'): unsigs) =
+    case _typeCheck [] t1 t1' of
+        Nothing -> 
+            case matchUnSig t1 unsigs of
+                Right t -> Right t
+                Left ts -> Left (t1':ts)
+        Just binds -> Right $ _typeSub binds t2'
+
+validateUnSig :: Type -> [UnSig] -> Either Error Type
+validateUnSig t1 unsigs =
+    case matchUnSig t1 unsigs of
+        Right t -> Right t
+        Left ts -> Left TypeError { expected_types=ts, got_type=t1,
+                        message_TE="Type mismatch at the argument. Expected: " ++ show ts ++ ", but got: " ++ show t1 }
+
+matchFuncSig :: [Bind] -> [(Type, Type)] -> Either (Type, Type, Int) [Bind] -- Intは残りのリストの長さ
+matchFuncSig binds [] = Right binds
+matchFuncSig binds ((t1, t2): tps) =
+    case _typeCheck binds t1 t2 of
+        Nothing -> Left (t1, _typeSub binds t2, length tps)
+        Just binds2 -> matchFuncSig binds2 tps
+
+baseNum :: Int -> String
+baseNum 1 = "first"
+baseNum 2 = "second"
+baseNum 3 = "third"
+baseNum 4 = "fourth"
+baseNum 5 = "fifth"
+baseNum n = show n ++ "th"
+
+validateFuncSig :: [Type] -> [Type] -> Type -> Either Error Type
+validateFuncSig ts1 ts2 t =
+    case matchFuncSig [] (zip ts1 ts2) of
+        Right binds -> Right $ _typeSub binds t
+        Left (t1, t2, n_rest) ->
+            let n = length ts1 - n_rest
+            in Left $ TypeError { expected_types=[t2], got_type=t1,
+                message_TE="Type mismatch at the " ++ baseNum n ++ " argument. Expected: " ++ show t2 ++ ", but got: " ++ show t1 }
+
+addToTypeErrorMessage :: Error -> String -> Error
+addToTypeErrorMessage te str =
+    TypeError { expected_types=expected_types te, got_type=got_type te,
+                            message_TE=str ++ message_TE te }
+
+_macroGen :: Function -> Exp -> Exp
+_macroGen Function { args = as, ret_t = _, ret = expr } arguments =
+    let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
+    in _mulSubst expr binds

@@ -67,10 +67,11 @@ Here's a list of basic topos operators.
 |```/```|Divide the left number by the right number (the result is a floating point number)|BinaryOp|6|```5 / 2``` => ```2.5```|
 |```//```|Divide the left number by the right number and omit the part after decimal point|BinaryOp|6|```5 // 2``` => ```2```|
 |```%```|Yields the remainder from the division of the left number by the right number|BinaryOp|6|```8 % 3``` => ```2```|
-|```$```|Converts input to string|UnaryOp|7|```"I'm " + $(25 + 6) + " years old."``` => ```"I'm 31 years old."```|
+|```^```|Returns ```x``` to the power of ```y```, where ```x``` and ```y``` are the first and second argument, respectively|BinaryOp|7|```4 ^ 0.5``` => ```2.0```|
+|```$```|Converts the input to string|UnaryOp|8|```"I'm " + $(25 + 6) + " years old."``` => ```"I'm 31 years old."```|
 
 All operators in Topos are left associative.
-Priority 7 is the highest priority.
+Priority 8 is the highest priority.
 
 ## Functions
 In Topos, functions have the same priority, which is higher than that of operators (except for ```print``` function).

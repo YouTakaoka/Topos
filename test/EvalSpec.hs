@@ -32,6 +32,8 @@ spec = do
             _eval M_Normal [] (toExp "if 4 > 5 then \"hoge\" else \"fuga\"") `shouldBe` Result (Str "fuga", [])
         it "if条件分岐2" $
             _eval M_Normal [Bind {identifier="x", value=Int 5, vtype=T_Int}] (toExp "if x > 0 then \"hoge\" else \"fuga\"") `shouldBe` Result (Str "hoge", [Bind {identifier="x", value=Int 5, vtype=T_Int}])
+        it "ifの中でlet" $
+            _eval M_Normal [] (toExp "if (let a = 4) > 3 then 2 * a else a - 2") `shouldBe` Result (Int 8, [])
         it "関数の中でif" $
             _eval M_Normal [] (toExp "(Function < Int -> String >: x -> if x > 3 then \"hoge\" else \"fuga\") 4") `shouldBe` Result (Str "hoge", [])
         it "再帰関数" $
@@ -46,6 +48,10 @@ spec = do
             _eval M_Normal sqr_binds2 (toExp "1 + sqr 3") `shouldBe` Result (Int 10, sqr_binds2)
         it "計算の順序5" $
             _eval M_Normal [] (toExp "1 + (Function <Int -> Int>: x -> x * x) 3") `shouldBe` Result (Int 10, [])
+        it "計算の順序6" $
+            _eval M_Normal [] (toExp "2 ^ 4") `shouldBe` Result (Int 16, [])
+        it "計算の順序7" $
+            _eval M_Normal [] (toExp "4 ^ 0.5") `shouldBe` Result (Double 2.0, [])
         it "リスト処理（PreList）のバグ" $
             _eval M_Normal [] (toExp "[1,2,3] + map succ [4,5]") `shouldBe` Result (List [Int 1, Int 2, Int 3, Int 5, Int 6], [])
         it "isEmpty 1" $
@@ -55,18 +61,22 @@ spec = do
         it "コメント" $
             _eval M_Normal sqr_binds (toExp "1 + succ 3 #hogehoge") `shouldBe` Result (Int 5, sqr_binds)
         it "タプル" $
-            _eval M_Normal  [] (toExp "print (pop [1,2,3])") `shouldBe` Result (Print "(1,[2,3])", [])
+            _eval M_Normal [] (toExp "print (pop [1,2,3])") `shouldBe` Result (Print "(1,[2,3])", [])
         it "文字列" $
-            _eval M_Normal  [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+            _eval M_Normal [] (toExp "\"I'm \" + $30 + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
         it "文字列" $
-            _eval M_Normal  [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+            _eval M_Normal [] (toExp "\"I'm \" + $(25 + 5) + \" years old.\"") `shouldBe` Result (Str "I'm 30 years old.", [])
+        it "関数の中でmap 1" $
+            _eval M_Normal sqr_binds (toExp "(Function <Int -> List Int>: n -> map sqr (seq 1 n)) 3") `shouldBe` Result (List [Int 1,Int 4,Int 9], [])
+        it "関数の中でmap 2" $
+            _eval M_Normal [] (toExp "(Function <Int -> List Int>: n -> map succ (seq 1 n)) 3") `shouldBe` Result (List [Int 2,Int 3,Int 4], [])
     describe "_evalFunctions（タイプチェックモード）" $ do
         it "関数タイプチェック" $
             _evalFunctions M_TypeCheck [] [TypeCheck T_Int, Tobe "*", TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, [])
         it "_mulSubOp" $
-            _mulSubOp M_TypeCheck _opls_dec [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 }))]
+            _mulSubOp M_TypeCheck _opls [Tobe "*"] `shouldBe` [TypeCheck (T_Func (T_Operator { opName_t="*", operator_sig=BinSig _mulSigs, priority_t=6 }))]
         it "無理やり置き換え" $
-            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator { opName_t="*", operator_t=BinOp _mul_t, priority_t=6 })), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
+            _evalFunctions M_TypeCheck [] [TypeCheck T_Int, TypeCheck (T_Func (T_Operator { opName_t="*", operator_sig=BinSig _mulSigs, priority_t=6 })), TypeCheck T_Int] `shouldBe` Result (TypeCheck T_Int, []) 
         it "Strが変換されない件1" $
             _eval M_TypeCheck [] [Str "hoge"] `shouldBe` Result (TypeCheck T_String, [])
         it "Strが変換されない件2" $
@@ -80,8 +90,27 @@ spec = do
             _eval M_Normal [] (toExp "let g = Function <UnaryOp, Int -> Int > : op x -> op ( op x )")
                 `shouldBe` Error (UnknownKeywordError "UnaryOp")
         it "関数の型エラー1" $
-            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError T_Double T_Int "")
+            _eval M_Normal [] (toExp "Function <Int -> Double>: x -> x") `shouldBe` Error (TypeError { expected_types=[T_Double], got_type=T_Int, message_TE="" })
         it "関数の型エラー2" $
-            _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError T_Int T_Double "")
+            _eval M_Normal [] (toExp "Function <Int, Double -> Int>: x y -> x * y") `shouldBe` Error (TypeError { expected_types=[T_Int], got_type=T_Double, message_TE="" })
         it "関数の型エラー3" $
-            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError T_Int T_Double "")
+            _eval M_Normal [] (toExp "Function <List Int, List Double -> List Int>: ls1 ls2 -> ls1 + ls2") `shouldBe` Error (TypeError { expected_types=[T_List T_Int], got_type=T_List T_Double, message_TE="" })
+        it "関数の型エラー3.5(成功例)" $
+            _eval M_Normal [] (toExp "(Function <List Int, List Int -> List Int>: ls1 ls2 -> ls1 + ls2) [1,2] [3,4,5]") `shouldBe` Result (List [Int 1,Int 2,Int 3,Int 4,Int 5], [])
+        it "関数の型エラー4" $
+            _eval M_Normal [] (toExp "Function <Int, String -> Double>: x y -> x ^ y") `shouldBe` Error (TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" } )
+        it "mapの型エラー" $
+            _eval M_Normal sqr_binds (toExp "Function <List String -> List String>: ls -> map sqr ls") `shouldBe` Error (TypeError { expected_types=[T_List T_Int], got_type=T_List T_String, message_TE="" } )
+        it "_typeSub" $
+            _typeSub [Bind { identifier="a", vtype=T_Type, value=Type T_Int }] (T_List $ T_TypeVar T_Any "a") `shouldBe` T_List T_Int
+        it "_typeCheck" $
+            _typeCheck [] (T_Func T_Function { funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }) (T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }) `shouldBe` Just [Bind { identifier="b", vtype=T_Type, value=Type T_String }, Bind { identifier="a", vtype=T_Type, value=Type T_Int }]
+        it "validateFuncSig" $
+            validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function {  funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
+        it "演算子の型エラー1" $
+            _eval M_Normal [] (toExp "2 * \"hoge\"") `shouldBe` Error TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" }
+        it "関数の型エラー(実行時) " $
+            _eval M_Normal [] (toExp "(Function <String -> String>: x -> x) 5") `shouldBe`
+                Error TypeError { expected_types=[T_String], got_type=T_Int, message_TE="" }
+        it "関数の型エラー時に関数名を表示" $
+            (message_TE $ (\ (Error x) -> x) $ _eval M_Normal sqr_binds (toExp "sqr \"hoge\"")) `shouldBe` "Function `sqr`: Type mismatch at the first argument. Expected: T_Int, but got: T_String"
