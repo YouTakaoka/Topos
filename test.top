@@ -49,3 +49,8 @@ print ([1, 2, 3] + map succ ls) # => [1,2,3,2,3,4,5,6,7,8,9,10,11]
 print "-------------------------------------"
 print "hoge" + "fuga" + "piyo" # => hogefugapiyo
 print "I'm " + $(25 + 6) + " years old." # => I'm 31 years old.
+define localVar as Function <Double -> Double>: x ->\
+    (letn a = 0.5)\
+    (letn b = 2.5)\
+    a * x + b
+print (localVar 6.0) # => 5.5

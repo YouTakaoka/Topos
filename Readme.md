@@ -101,7 +101,7 @@ That is, you can set the value ```2.5``` to the variable ```a``` by
 let a = 2.5
 ```
 
-Variable identifiers can contain underscores, letters and digits, and must be start with a letter.
+Variable identifiers can contain underscores, letters and digits, and must start with a letter.
 
 A ```let``` statement returns a value. For example, the expression
 
@@ -111,4 +111,12 @@ if (let a = 4) > 3 then 2 * a else a - 2
 
 is evaludated to be ```8```.
 If you don't want it to return value, use ```letn```.
-For instance, 
+Like, 
+
+```
+define localVar as Function <Double -> Double>: x ->\
+    (letn a = 0.5)\
+    (letn b = 2.5)\
+    a * x + b
+print (localVar 6.0) # => 5.5
+```
