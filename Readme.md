@@ -80,14 +80,30 @@ Basic predefined functions are follows:
 
 | Function name | Signature |Description | Example Usage |
 |---------------|-----------|------------|---------------|
-|```print```|```Int/Double/Bool/String -> Print```|Evaluate given expression and print result to the display|```print (3 + 5)``` => ```8```|
-|```succ```|```Int -> Int``` / ```Double -> Double```|Add one to the given number and return it|```succ 5``` => ```6```|
-|```head```|```List a -> a```|Return the first element of given list|```head [1,2,3]``` => ```1```|
-|```tail```|```List a -> List a```|Omit the first element of given list and return it|```tail [1,2,3]``` => ```[2,3]```|
-|```pop```|```List a -> (a, List a)```|Return the tuple compsists of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
-|```isEmpty```|```List a -> Bool```|Return ```True``` if the given list is empty and ```False``` otherwise|```isEmpty []``` => ```True```|
-|```take```|```Int, List a -> List a```|Return list consists of first ```n``` elements of the list given in the second argument, where ```n``` is integer specified in the first argument|```take 2 ["foo", "bar", "baz"]``` => ```["foo", "bar"]```|
-|```seq```|```Int, Int -> List a```|Return integer list starts with number specified in the first argument, ends with the second argument|```seq 1 3``` => ```[1,2,3]```|
-|```map```|```Function <a -> b>, List a -> List b```|Apply function given in the first argument to each element of list given in the second argument and return it|```map succ [1,2,3]``` => ```[2,3,4]```|
-|```fst```|```fst (a, b) -> a```|Return the first element of given tuple|```fst ("Takaoka", 31)``` => ```"Takaoka"```|
-|```snd```|```snd (a, b) -> b```|Return the second element of given tuple|```snd ("Takaoka", 31)``` => ```31```|
+|```print```|```Int/Double/Bool/String -> Print```|Evaluates given expression and prints result to the display|```print (3 + 5)``` => ```8```|
+|```succ```|```Int -> Int``` |Adds one to the given integer and returns it|```succ 5``` => ```6```|
+|```head```|```List a -> a```|Returns the first element of given list|```head [1,2,3]``` => ```1```|
+|```tail```|```List a -> List a```|Omits the first element of given list and returns it|```tail [1,2,3]``` => ```[2,3]```|
+|```pop```|```List a -> (a, List a)```|Returns the tuple compsists of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
+|```isEmpty```|```List a -> Bool```|Returns ```True``` if the given list is empty and ```False``` otherwise|```isEmpty []``` => ```True```|
+|```take```|```Int, List a -> List a```|Returns list consists of first ```n``` elements of the list given in the second argument, where ```n``` is integer specified in the first argument|```take 2 ["foo", "bar", "baz"]``` => ```["foo", "bar"]```|
+|```seq```|```Int, Int -> List a```|Returns integer list starts with number specified in the first argument, ends with the second argument|```seq 1 3``` => ```[1,2,3]```|
+|```map```|```Function <a -> b>, List a -> List b```|Applies function given in the first argument to each element of list given in the second argument and returns it|```map succ [1,2,3]``` => ```[2,3,4]```|
+|```fst```|```fst (a, b) -> a```|Returns the first element of given 2-tuple|```fst ("Takaoka", 31)``` => ```"Takaoka"```|
+|```snd```|```snd (a, b) -> b```|Returns the second element of given 2-tuple|```snd ("Takaoka", 31)``` => ```31```|
+
+## Variables
+Any value can be bound to a variable by using ```let``` keyword.
+That is, you can set the value ```2.5``` to the variable ```a``` by
+
+```
+let a = 2.5
+```
+
+Variable identifiers can contain underscores, letters and digits, and must be start with a letter.
+
+A ```let``` statement returns a value. For example,
+
+```
+if (let a = 4) > 3 then 2 * a else a / 2
+```
