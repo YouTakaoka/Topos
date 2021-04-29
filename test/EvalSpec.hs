@@ -32,6 +32,8 @@ spec = do
             _eval M_Normal [] (toExp "if 4 > 5 then \"hoge\" else \"fuga\"") `shouldBe` Result (Str "fuga", [])
         it "if条件分岐2" $
             _eval M_Normal [Bind {identifier="x", value=Int 5, vtype=T_Int}] (toExp "if x > 0 then \"hoge\" else \"fuga\"") `shouldBe` Result (Str "hoge", [Bind {identifier="x", value=Int 5, vtype=T_Int}])
+        it "ifの中でlet" $
+            _eval M_Normal [] (toExp "if (let a = 4) > 3 then 2 * a else a - 2") `shouldBe` Result (Int 8, [])
         it "関数の中でif" $
             _eval M_Normal [] (toExp "(Function < Int -> String >: x -> if x > 3 then \"hoge\" else \"fuga\") 4") `shouldBe` Result (Str "hoge", [])
         it "再帰関数" $

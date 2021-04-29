@@ -341,7 +341,7 @@ _eval mode binds (Tobe "if" : rest) =
             M_Normal ->
                 case _eval mode binds cond of
                 Result (Bool truth, binds2) ->
-                    _evalNewBinds mode binds2 binds $ if truth then  thn else els
+                    _evalNewBinds mode binds2 binds $ if truth then thn else els
                 Result (w, _) -> Error $ SyntaxError $ "Entered a non-boolean value into `if` statement: " ++ show w
                 Error e -> Error e
             M_TypeCheck ->
@@ -362,7 +362,7 @@ _eval mode binds expr =
     ParFound (expr1, expr2, expr3) ->
         case _eval mode binds expr2 of
             Result (Contents ls, _) -> _eval mode binds $ expr1 ++ [Tuple ls] ++ expr3
-            Result (w, _) -> _eval mode binds $ expr1 ++ [w] ++ expr3
+            Result (w, binds2) -> _eval mode binds2 $ expr1 ++ [w] ++ expr3
             Error e -> Error e
     ParNotFound ->
         case findParenthesis expr "[" "]" of
