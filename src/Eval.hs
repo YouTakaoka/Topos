@@ -206,7 +206,7 @@ _validateFunction T_Function { funcName_t=name, args_t = as_t, return_t = rt } e
         else let
                 as = take l expr2
                 rest = drop l expr2
-            in case validateFuncSig (map (\ (TypeCheck x) -> x) as) as_t rt of
+            in case validateFuncSig (map unveilTypeCheck as) as_t rt of
                     Left te -> Left $ addToTypeErrorMessage te $ "Function `" ++ name ++ "`: "
                     Right t -> Right $ expr1 ++ [Tobe "("] ++ [TypeCheck t] ++ [Tobe ")"] ++ rest
 
@@ -282,43 +282,35 @@ _evalFunctionsEach mode binds ls =
         Nothing -> Right $ map (\ (Result (w, _)) -> w) res_l
         Just (Error e, _, _) -> Left e
 
-compileFunction :: EvalMode -> [Bind] -> Exp -> String -> Result
+compileFunction :: EvalMode -> [Bind] -> Exp -> String -> Either Error Function
 compileFunction mode binds rest name =
     case divListBy (Tobe ":") rest of
-    Nothing -> Error $ SyntaxError "Missing `:` in `Function` statement."
+    Nothing -> Left $ SyntaxError "Missing `:` in `Function` statement."
     Just (_, rest1, rest2) ->
         case findParenthesis rest1 "<" ">" of
-        ParError s -> Error $ ParseError s
-        ParNotFound -> Error $ SyntaxError "`<` must follow just after `Function`"
+        ParError s -> Left $ ParseError s
+        ParNotFound -> Left $ SyntaxError "`<` must follow just after `Function`"
         ParFound ([], expr1, []) ->
             case _evalFunctionSignature name expr1 of
-            Left e -> Error e
+            Left e -> Left e
             Right (TP (T_Func f_t)) ->
                 let ts = args_t f_t
                     rt = return_t f_t
                 in case divListBy (Tobe "->") rest2 of
-                    Nothing -> Error $ SyntaxError "Missing `->` in `Function` statement."
+                    Nothing -> Left $ SyntaxError "Missing `->` in `Function` statement."
                     Just (_, as, expr2)
-                        | length ts /= length as -> Error $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
+                        | length ts /= length as -> Left $ SyntaxError "Mismatch numbers of types and arguments in `Function` statement."
                         | otherwise ->
                             let ass = map (\ (Tobe a) -> a) as
                                 f = Function { funcName=name, args = zip ts ass, ret_t = rt, ret = expr2, priority_f=9 }
-                            in case mode of
-                                M_TypeCheck -> Result (TypeCheck (T_Func f_t), binds)
-                                M_Normal ->
-                                    case functionTypeCheck binds f of
-                                    Left e -> Error e
-                                    Right t ->
-                                        if t == rt
-                                            then Result (Func f, binds)
-                                            else Error $ TypeError { expected_types=[rt], got_type=t,
-                                                    message_TE="Function `" ++ name ++ "`: Return type of function mismatch. Specified type is `" ++ show rt
-                                                    ++ "` but Topos predicts `" ++ show t ++ "`" }
-        _ -> Error $ SyntaxError "Parhaps needless string got into `Function` statement."
+                            in Right f
+        _ -> Left $ SyntaxError "Parhaps needless words got into `Function` statement."
 
 _eval :: EvalMode -> [Bind] -> Exp -> Result
 _eval mode binds (Tobe "Function" : rest) =
-    compileFunction mode binds rest ""
+    case compileFunction mode binds rest "(anonymous)" of
+        Left e -> Error e
+        Right f -> functionTypeCheck mode binds f
 _eval mode binds (Tobe "define" : rest) =
     case mode of
         M_TypeCheck -> Error $ SyntaxError "Cannot use `define` statement in function literal."
@@ -326,9 +318,11 @@ _eval mode binds (Tobe "define" : rest) =
             case divListBy (Tobe "as") rest of
                 Nothing -> Error $ SyntaxError "Keyword `as` not found in `define` statement."
                 Just (_, [Tobe id], Tobe "Function" : rest2) ->
-                    let rest2' = (Tobe "Function" : rest2)
-                        bind = Bind {identifier=id, value=ToEval rest2', vtype=T_ToEval }
-                    in compileFunction mode (bind : binds) rest2 id
+                    case compileFunction mode binds rest2 id of
+                        Left e -> Error e
+                        Right f ->
+                            let b = Bind { identifier=id, vtype=_getType $ Func f, value=Func f }
+                            in functionTypeCheck mode (b:binds) f
                 _ -> Error $ SyntaxError "`Function` statement must follow just after `as` keyword."
 _eval mode binds (Tobe "let" : rest) = _bind mode binds rest
 _eval mode binds (Tobe "letn" : rest) =
@@ -415,9 +409,12 @@ _evalFunctions mode binds expr =
                             Right rslt -> _eval mode binds rslt
                             Left e -> Error e
                     Just (TypeCheck (T_Func tfunc), expr1, expr2) ->
-                        case _validateFunction tfunc expr1 expr2 of
-                            Right rslt -> _eval mode binds rslt
-                            Left e -> Error e
+                        case mode of
+                            M_Normal -> Error $ InternalError "`TypeCheck` found in Normal mode."
+                            M_TypeCheck ->
+                                case _validateFunction tfunc expr1 expr2 of
+                                    Right rslt -> _eval mode binds rslt
+                                    Left e -> Error e
                     Just (Func Operator { opName=name, operator=op }, ws1, ws2) -> -- 関数オペレータ
                         case _applyOp name op ws1 ws2 of
                             Left e -> Error e
@@ -445,12 +442,24 @@ unveilTypeCheck w =
         TypeCheck t -> t
         List ls -> T_List (unveilTypeCheck $ head ls)
         Tuple ls -> T_Tuple (map unveilTypeCheck ls)
+        _ -> _getType w
 
-functionTypeCheck :: [Bind] -> Function -> Either Error Type
-functionTypeCheck binds f = 
-    case _eval M_TypeCheck binds $ _typeExprGen f of
-        Error e -> Left e
-        Result (w, _) -> Right $ unveilTypeCheck w
+functionTypeCheck :: EvalMode -> [Bind] -> Function -> Result
+functionTypeCheck mode binds f = 
+    case mode of
+        M_TypeCheck -> Result (TypeCheck (_getType $ Func f), binds)
+        M_Normal ->
+            case _eval M_TypeCheck binds $ _typeExprGen f of
+            Error e -> Error e
+            Result (w, _) ->
+                let t = unveilTypeCheck w
+                in if t == rt
+                    then Result (Func f, binds)
+                    else Error $ TypeError { expected_types=[rt], got_type=t,
+                            message_TE="Function `" ++ funcName f ++ "`: Return type of function mismatch. Specified type is `" ++ show rt
+                            ++ "` but Topos predicts `" ++ show t ++ "`" }
+    where
+        rt = ret_t f
 
 _typeExprGen :: Function -> Exp
 _typeExprGen Function { args = as, ret_t = rt, ret = expr } =

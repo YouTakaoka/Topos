@@ -273,6 +273,7 @@ _getType (Func Operator { opName=name, operator=FuncOp (_, sig), priority=prt })
     T_Func T_Function { funcName_t=name, args_t=fst sig, return_t=snd sig, priority_ft=prt }
 _getType (Func f) = T_Func $ getFunctionSignature f
 _getType (Type _) = T_Type
+_getType (TypeCheck _) = T_TypeCheck
 
 _isConsistentType :: Exp -> Either (Type, Type) Type
 _isConsistentType [w] = Right $ _getType w
