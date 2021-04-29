@@ -103,8 +103,12 @@ let a = 2.5
 
 Variable identifiers can contain underscores, letters and digits, and must be start with a letter.
 
-A ```let``` statement returns a value. For example,
+A ```let``` statement returns a value. For example, the expression
 
 ```
-if (let a = 4) > 3 then 2 * a else a / 2
+if (let a = 4) > 3 then 2 * a else a - 2
 ```
+
+is evaludated to be ```8```.
+If you don't want it to return value, use ```letn```.
+For instance, 
