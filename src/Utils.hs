@@ -177,3 +177,9 @@ _macroGen :: Function -> Exp -> Exp
 _macroGen Function { args = as, ret_t = _, ret = expr } arguments =
     let binds = map (\ ((t, id), val) -> Bind { identifier = id, value = val, vtype = t }) $ zip as arguments
     in _mulSubst expr binds
+
+_deleteAll :: Wrd -> Exp -> Exp
+_deleteAll w expr =
+    case divListBy w expr of
+        Nothing -> expr
+        Just (_, expr1, expr2) -> expr1 ++ _deleteAll w expr2

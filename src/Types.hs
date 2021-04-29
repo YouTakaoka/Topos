@@ -163,6 +163,7 @@ instance Eq Wrd where
     (==) (ToEval te1) (ToEval te2) = te1 == te2
     (==) (Print a) (Print b) = a == b
     (==) (Type a) (Type b) = a == b
+    (==) Null Null = True
     (==) _ _ = False
 instance Show Wrd where
     show (Str s) = s
