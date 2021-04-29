@@ -385,7 +385,7 @@ _eval mode binds expr =
 
 _evalFunctions :: EvalMode -> [Bind] -> Exp -> Result -- 初期状態で第一引数は空リスト
 _evalFunctions mode binds expr =
-    let ws = map (_evalWrd mode) $ _mulSubOp mode _opls $ _mulSubst expr binds
+    let ws = _deleteAll Null $ map (_evalWrd mode) $ _mulSubOp mode _opls $ _mulSubst expr binds
     in case _examineInputList ws of
         Just e -> Error e
         Nothing ->

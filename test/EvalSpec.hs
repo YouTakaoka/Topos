@@ -34,6 +34,8 @@ spec = do
             _eval M_Normal [Bind {identifier="x", value=Int 5, vtype=T_Int}] (toExp "if x > 0 then \"hoge\" else \"fuga\"") `shouldBe` Result (Str "hoge", [Bind {identifier="x", value=Int 5, vtype=T_Int}])
         it "ifの中でlet" $
             _eval M_Normal [] (toExp "if (let a = 4) > 3 then 2 * a else a - 2") `shouldBe` Result (Int 8, [])
+        it "letnでローカル変数" $
+            _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> (letn a = 4) a * x) 3") `shouldBe` Result (Int 12, [])
         it "関数の中でif" $
             _eval M_Normal [] (toExp "(Function < Int -> String >: x -> if x > 3 then \"hoge\" else \"fuga\") 4") `shouldBe` Result (Str "hoge", [])
         it "再帰関数" $
@@ -106,7 +108,7 @@ spec = do
         it "_typeCheck" $
             _typeCheck [] (T_Func T_Function { funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }) (T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }) `shouldBe` Just [Bind { identifier="b", vtype=T_Type, value=Type T_String }, Bind { identifier="a", vtype=T_Type, value=Type T_Int }]
         it "validateFuncSig" $
-            validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function {  funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
+            validateFuncSig [T_Func T_Function {  funcName_t="", args_t=[T_Int], return_t=T_String, priority_ft=9 }, T_Int] [T_Func T_Function { funcName_t="", args_t=[T_TypeVar T_Any "a"], return_t=T_TypeVar T_Any "b", priority_ft=9 }, T_TypeVar T_Any "a"] (T_TypeVar T_Any "b") `shouldBe` Right T_String
         it "演算子の型エラー1" $
             _eval M_Normal [] (toExp "2 * \"hoge\"") `shouldBe` Error TypeError { expected_types=[T_Int, T_Double], got_type=T_String, message_TE="" }
         it "関数の型エラー(実行時) " $
@@ -114,3 +116,5 @@ spec = do
                 Error TypeError { expected_types=[T_String], got_type=T_Int, message_TE="" }
         it "関数の型エラー時に関数名を表示" $
             (message_TE $ (\ (Error x) -> x) $ _eval M_Normal sqr_binds (toExp "sqr \"hoge\"")) `shouldBe` "Function `sqr`: Type mismatch at the first argument. Expected: T_Int, but got: T_String"
+        it "letnでローカル変数（スコープ）" $
+            _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> (letn a = 4) a * x) a") `shouldBe` Error (UnknownKeywordError "a")
