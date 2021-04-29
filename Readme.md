@@ -118,5 +118,54 @@ define localVar as Function <Double -> Double>: x ->\
     (letn a = 0.5)\
     (letn b = 2.5)\
     a * x + b
-print (localVar 6.0) # => 5.5
+print (localVar 6.0)  # => 5.5
+```
+
+## Function definition
+There are two ways to define user functions.
+
+The first one is the way using the *function literal*.
+The syntax is as following:
+
+```
+Function <t_1, ..., t_n -> t_y>: x_1 ... x_n -> y
+```
+
+Where, ```x_1, ..., x_n``` are the parameters, and ```y``` is the expression of the return value, ```t_1, ..., t_n``` are the types of ```x_1, ..., x_n```, and ```t_y``` is the type of the return value.
+
+For instance,
+
+```
+let sqr = Function <Int -> Int>: x -> x * x
+print (sqr 4)  # => 16
+```
+
+Function literals can be used alone:
+
+```
+(Function <Int -> Int>: x -> x * x) 4  # => 16
+```
+
+The second is the way using ```define``` statement.
+The syntax is as following:
+
+```
+define [functionName] as Function <t_1, ..., t_n -> t_y>: x_1 ... x_n -> y
+```
+
+For instance,
+
+```
+define fact as Function <Int -> Int>:\
+    x -> if x > 0 then x * (fact (x - 1)) else 1
+```
+
+Note that the ```define``` statement is not simply a syntax sugar of the first way.
+It is the special syntax that the function name can be used in its definition.
+Therefore, the following doesn't work.
+
+```
+# *** DO NOT DO THIS! ***
+let fact = Function <Int -> Int>:\
+    x -> if x > 0 then x * (fact (x - 1)) else 1
 ```
