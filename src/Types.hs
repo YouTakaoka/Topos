@@ -179,7 +179,7 @@ instance Show Wrd where
     show (Pair t) = show t
     show (Tuple tpl) = "(" ++ intercalate "," (map show tpl) ++ ")"
     show (ToEval _) = "[ToEval]"
-    show (TypeCheck t) = show t
+    show (TypeCheck t) = "[TypeCheck:" ++ show t ++ "]"
     show (PreList ls) = "(Prelist: " ++ show ls ++ ")"
     show (Type t) = show t
 

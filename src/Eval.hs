@@ -80,6 +80,7 @@ _evalWrd mode (Tobe s) =
                 M_Normal -> w
                 M_TypeCheck -> TypeCheck $ _getType w
 _evalWrd M_TypeCheck (Str s) = TypeCheck T_String
+_evalWrd M_TypeCheck (Func f) = TypeCheck $ _getType $ Func f
 _evalWrd _ w = w
     
 _subOp :: EvalMode -> Function -> Exp -> Exp
