@@ -3,29 +3,32 @@ import Types
 import Eval
 import Utils
 import System.IO
-prompt :: IO ()
-prompt = putStr "Topos> " >> hFlush stdout
+import System.Console.Haskeline
 
-getExpression :: IO Exp
+getExpression :: InputT IO Exp
 getExpression = do
-    prompt
-    str <- getLine
-    let expr = toExp str
-    if null expr
-        then return expr
-        else
-            case last expr of
-                Tobe "\\" ->
-                    (init expr ++) <$> getExpression
-                _ -> return expr    
+    maybeLine <- getInputLine "Topos> "
+    case maybeLine of
+        Nothing     -> return [EOF] -- EOF / control-d
+        Just "exit" -> return [EOF]
+        Just line -> do
+            let expr = toExp line
+            if null expr
+                then return expr
+                else
+                    case last expr of
+                        Tobe "\\" ->
+                            (init expr ++) <$> getExpression
+                        _ -> return expr    
 
 shell :: [Bind] -> IO ()
 shell binds = do
-    expr <- getExpression
+    expr <- runInputT defaultSettings getExpression
     case _eval M_Normal binds expr of
         Error e -> do
             putStrLn $ "Error: " ++ show e
             shell binds
+        Result (EOF, _) -> return ()
         Result (Null, binds2) -> do
             shell binds2
         Result (res, binds2) -> do

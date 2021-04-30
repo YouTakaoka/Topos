@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c344cb651d414ffe658aa91778ffaf7a40f206a38b2d298019870f46f6fbdfd2
+-- hash: c3e0c0ec40164bd69d04d00e7a2c672e353b2ab9d87e06c68c6fbfe474bc7b75
 
 name:           topos
 version:        0.1.0.0
@@ -38,6 +38,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , haskeline
   default-language: Haskell2010
 
 executable topos

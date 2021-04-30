@@ -149,6 +149,7 @@ data Wrd = Str String
         | Contents Exp 
         | Tuple Exp 
         | TypeCheck Type
+        | EOF
 instance Eq Wrd where
     (==) (Str a) (Str b) = a == b
     (==) (Func Operator { opName=a }) (Func Operator { opName=b }) = a == b

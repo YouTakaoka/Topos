@@ -116,4 +116,11 @@ packages:
       sha256: 23b707600721b68533c0d4a4d4358c60946b39c2030747837ab7285530b6f6f0
   original:
     hackage: primitive-0.7.1.0@sha256:f6357d5720c1c665096c3e011467daf443198b786a708d2ff926958a24d508d4,2728
+- completed:
+    hackage: haskeline-0.8.1.2@sha256:4ab68cea3baacda5f808feb88ea9863a4ef0dadcadfb9d53a3f66b2f13a4b618,5827
+    pantry-tree:
+      size: 2955
+      sha256: ccb0f712282adaec4beb71452862bcc147d89b02430f1fe153ddc9cc29816d1e
+  original:
+    hackage: haskeline-0.8.1.2
 snapshots: []
