@@ -21,9 +21,12 @@ getExpression = do
                             (init expr ++) <$> getExpression
                         _ -> return expr    
 
+mySettings :: Settings IO
+mySettings = defaultSettings { historyFile = Just ".topos.hist" }
+
 shell :: [Bind] -> IO ()
 shell binds = do
-    expr <- runInputT defaultSettings getExpression
+    expr <- runInputT mySettings getExpression
     case _eval M_Normal binds expr of
         Error e -> do
             putStrLn $ "Error: " ++ show e
