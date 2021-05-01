@@ -93,6 +93,29 @@ Basic predefined functions are follows:
 |```fst```|```fst (a, b) -> a```|Returns the first element of given 2-tuple|```fst ("Takaoka", 31)``` => ```"Takaoka"```|
 |```snd```|```snd (a, b) -> b```|Returns the second element of given 2-tuple|```snd ("Takaoka", 31)``` => ```31```|
 
+## Comments
+In a Topos program, characters placed after '```#```' will be ignored by the interpreter and have no meaning.
+
+```
+# This line will be ignored
+print "Hello!"  # This part will be ignored
+```
+
+## Line transition
+In a statement in a Topos program, you can change line by using '```\```' synbol.
+For example,
+
+```
+define fact as Function <Int -> Int>:\
+    x -> if x > 0 then x * (fact (x - 1)) else 1
+```
+
+is equivalent to the following code:
+
+```
+define fact as Function <Int -> Int>: x -> if x > 0 then x * (fact (x - 1)) else 1
+```
+
 ## Variables
 Any value can be bound to a variable by using ```let``` keyword.
 That is, you can set the value ```2.5``` to the variable ```a``` by
