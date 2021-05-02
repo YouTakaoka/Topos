@@ -56,6 +56,14 @@ spec = do
             _eval M_Normal [] (toExp "4 ^ 0.5") `shouldBe` Result (Double 2.0, [])
         it "リスト処理（PreList）のバグ" $
             _eval M_Normal [] (toExp "[1,2,3] + map succ [4,5]") `shouldBe` Result (List [Int 1, Int 2, Int 3, Int 5, Int 6], [])
+        it "take(1)" $
+            _eval M_Normal [] (toExp "take 3 [1,2,3,4,5]") `shouldBe` Result (List [Int 1, Int 2, Int 3], [])
+        it "take(2)" $
+            _eval M_Normal [] (toExp "take 3 [1,2,3]") `shouldBe` Result (List [Int 1, Int 2, Int 3], [])
+        it "drop(1)" $
+            _eval M_Normal [] (toExp "drop 3 [1,2,3,4,5]") `shouldBe` Result (List [Int 4, Int 5], [])
+        it "drop(2)" $
+            _eval M_Normal [] (toExp "drop 3 [1,2,3]") `shouldBe` Result (List [], [])
         it "isEmpty 1" $
             _eval M_Normal [] (toExp "isEmpty []") `shouldBe` Result (Bool True, [])
         it "isEmpty 2" $
@@ -118,3 +126,7 @@ spec = do
             (message_TE $ (\ (Error x) -> x) $ _eval M_Normal sqr_binds (toExp "sqr \"hoge\"")) `shouldBe` "Function `sqr`: Type mismatch at the first argument. Expected: T_Int, but got: T_String"
         it "letnでローカル変数（スコープ）" $
             _eval M_Normal [] (toExp "(Function <Int -> Int>: x -> (letn a = 4) a * x) a") `shouldBe` Error (UnknownKeywordError "a")
+        it "takeで長さ足りなかったパターン" $
+            _eval M_Normal [] (toExp "take 4 [1,2,3]") `shouldBe` Error (ValueError "take: Length of given list is shorter than specified integer.")
+        it "dropで長さ足りなかったパターン" $
+            _eval M_Normal [] (toExp "drop 4 [1,2,3]") `shouldBe` Error (ValueError "drop: Length of given list is shorter than specified integer.")

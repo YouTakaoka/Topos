@@ -199,6 +199,8 @@ data Error =
 instance Eq Error where
     (==) (UnknownKeywordError s1) (UnknownKeywordError s2) = s1 == s2
     (==) (TypeError t1 t2 _) (TypeError t1' t2' _) = t1 == t1' && t2 == t2'
+    (==) (ValueError s1) (ValueError s2) = s1 == s2
+    (==) _ _ = False
 
 instance Show Error where
     show (UnknownKeywordError s) = "Error: Unknown keyword: " ++ s

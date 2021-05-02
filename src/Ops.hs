@@ -30,6 +30,7 @@ _opls = [
             Operator { opName="pop", operator=_pop, priority=9 },
             Operator { opName="isEmpty", operator=_isEmpty, priority=9 },
             Operator { opName="take", operator=_take, priority=9 },
+            Operator { opName="drop", operator=_drop, priority=9 },
             Operator { opName="seq", operator=_seq, priority=9 },
             Operator { opName="map", operator=_map, priority=9 },
             Operator { opName="fst", operator=_fst, priority=9 },
@@ -226,7 +227,22 @@ _take = FuncOp (_take0, (
     ))
 
 _take0 :: Exp -> Either Error Wrd
-_take0 [Int n, List ls] = Right $ List $ take n ls
+_take0 [Int n, List ls] =
+    if length ls < n
+        then Left $ ValueError "take: Length of given list is shorter than specified integer."
+        else Right $ List $ take n ls
+
+_drop :: Op
+_drop = FuncOp (_drop0, (
+        [T_Int, T_List (T_TypeVar T_Any "a")],
+        T_List (T_TypeVar T_Any "a")
+    ))
+
+_drop0 :: Exp -> Either Error Wrd
+_drop0 [Int n, List ls] =
+    if length ls < n
+        then Left $ ValueError "drop: Length of given list is shorter than specified integer."
+        else Right $ List $ drop n ls
 
 _seq0 :: Exp -> Either Error Wrd
 _seq0 (Int n : (Int m : [])) = Right $ List $ map (\ x -> Int x) [n .. m]
