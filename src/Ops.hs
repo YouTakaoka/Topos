@@ -31,6 +31,7 @@ _opls = [
             Operator { opName="isEmpty", operator=_isEmpty, priority=9 },
             Operator { opName="take", operator=_take, priority=9 },
             Operator { opName="drop", operator=_drop, priority=9 },
+            Operator { opName="length", operator=_length, priority=9 },
             Operator { opName="seq", operator=_seq, priority=9 },
             Operator { opName="map", operator=_map, priority=9 },
             Operator { opName="fst", operator=_fst, priority=9 },
@@ -218,6 +219,12 @@ _isEmpty :: Op
 _isEmpty = UnOp ((\ (List ls) -> Right $ Bool (ls == [])), [(
         T_List T_Any,
         T_Bool
+    )])
+
+_length :: Op
+_length = UnOp ((\ (List ls) -> Right $ Int (length ls)), [(
+        T_List T_Any,
+        T_Int
     )])
 
 _take :: Op

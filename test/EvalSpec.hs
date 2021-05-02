@@ -64,6 +64,8 @@ spec = do
             _eval M_Normal [] (toExp "drop 3 [1,2,3,4,5]") `shouldBe` Result (List [Int 4, Int 5], [])
         it "drop(2)" $
             _eval M_Normal [] (toExp "drop 3 [1,2,3]") `shouldBe` Result (List [], [])
+        it "length" $
+            _eval M_Normal [] (toExp "length [1,2,3]") `shouldBe` Result (Int 3, [])
         it "isEmpty 1" $
             _eval M_Normal [] (toExp "isEmpty []") `shouldBe` Result (Bool True, [])
         it "isEmpty 2" $
