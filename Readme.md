@@ -83,11 +83,15 @@ Basic predefined functions are follows:
 |---------------|-----------|------------|---------------|
 |```print```|```Int/Double/Bool/String -> Print```|Evaluates given expression and prints result to the display|```print (3 + 5)``` => ```8```|
 |```succ```|```Int -> Int``` |Adds one to the given integer and returns it|```succ 5``` => ```6```|
+|```floor```|```Double -> Int```|Retuens the largest integer which doesn't exceed the given number|```floor 5.3``` => ```Int 5```|
+|```toDouble```|```Int -> Double```|Converts the given integer to Double type|```toDouble 5``` => ```Double 5.0```|
 |```head```|```List a -> a```|Returns the first element of given list|```head [1,2,3]``` => ```1```|
 |```tail```|```List a -> List a```|Omits the first element of given list and returns it|```tail [1,2,3]``` => ```[2,3]```|
 |```pop```|```List a -> (a, List a)```|Returns the tuple compsists of first element of the given list and the rest list|```pop [1,2,3]``` => ```(1,[2,3])```|
+|```length```|```List a -> Int```|Returns the number of elements of given list|```length [1,2,3]``` => ```3```|
 |```isEmpty```|```List a -> Bool```|Returns ```True``` if the given list is empty and ```False``` otherwise|```isEmpty []``` => ```True```|
-|```take```|```Int, List a -> List a```|Returns list consists of first ```n``` elements of the list given in the second argument, where ```n``` is integer specified in the first argument|```take 2 ["foo", "bar", "baz"]``` => ```["foo", "bar"]```|
+|```take```|```Int, List a -> List a```|Returns list consists of initial ```n``` elements of the list given in the second argument, where ```n``` is integer specified in the first argument|```take 2 ["foo", "bar", "baz"]``` => ```["foo", "bar"]```|
+|```drop```|```Int, List a -> List a```|Removes initial ```n``` elements from the list given in the second argument, where ```n``` is integer specified in the first argument|```drop 2 ["foo", "bar", "baz"]``` => ```["baz"]```|
 |```seq```|```Int, Int -> List a```|Returns integer list starts with number specified in the first argument, ends with the second argument|```seq 1 3``` => ```[1,2,3]```|
 |```map```|```Function <a -> b>, List a -> List b```|Applies function given in the first argument to each element of list given in the second argument and returns it|```map succ [1,2,3]``` => ```[2,3,4]```|
 |```fst```|```fst (a, b) -> a```|Returns the first element of given 2-tuple|```fst ("Takaoka", 31)``` => ```"Takaoka"```|

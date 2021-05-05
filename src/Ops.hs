@@ -25,6 +25,8 @@ _opls = [
             Operator { opName="^", operator=_pow, priority=7 },
             Operator { opName="$", operator=_tostr, priority=8 },
             Operator { opName="succ", operator=_succ, priority=9 },
+            Operator { opName="floor", operator=_floor, priority=9 },
+            Operator { opName="toDouble", operator=_toDouble, priority=9 },
             Operator { opName="head", operator=_head, priority=9 },
             Operator { opName="tail", operator=_tail, priority=9 },
             Operator { opName="pop", operator=_pop, priority=9 },
@@ -115,6 +117,12 @@ _succ = FuncOp (_succ0, ([T_Int], T_Int))
 
 _succ0 :: FunctionOp
 _succ0 [Int x] = Right $ Int (x + 1)
+
+_floor :: Op
+_floor = FuncOp (\ [Double x] -> Right $ Int $ floor x, ([T_Double], T_Int))
+
+_toDouble :: Op
+_toDouble = FuncOp (\ [Int x] -> Right $ Double $ fromIntegral x, ([T_Int], T_Double))
 
 _pow :: Op
 _pow = BinOp (_pow0, [
